@@ -92,7 +92,7 @@ precision=tol_p, valor_raiz=valor_raiz))
 
 #Función para el metodo de la Secante
 ```{r}
-secant(f, x, tol = 1e-10, N = 100)
+
 ```
 
 #Graficas de las funciones
@@ -557,7 +557,7 @@ metodo_biseccion(f_7, 2,2.5, tol = 1e-10, N=100)
 Método Newton
 iteración 2
 ```{r}
-metodo_newton(f_7,df_7,x_0=2.5, tol = 1e-10, N=100)
+
 ```
 con este metodo la derivada no me funciona
 
