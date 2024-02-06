@@ -1,0 +1,1 @@
+{"frames":[],"message":"Error: inesperado ';' in:\n\"  graf<-ggplot(Mode)+\n    geom_boxplot(aes(choice;\"\n"}

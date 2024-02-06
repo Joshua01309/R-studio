@@ -1,0 +1,9 @@
+"0","var_num<- names(Mode)[-1]"
+"0",""
+"0","for (k in var_num) {"
+"0","  graf<-ggplot(Mode)+"
+"0","    geom_boxplot(aes(choice; eval(as.name(k)), fil=choice),"
+"2","Error: inesperado ';' in:
+""  graf<-ggplot(Mode)+
+    geom_boxplot(aes(choice;""
+"
