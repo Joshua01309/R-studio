@@ -96,19 +96,15 @@ var_num<- names(Mode)[-1]
 
 for (k in var_num) {
   graf<-ggplot(Mode)+
-    geom_boxplot(aes(choice; eval(as.name(k)), fil=choice),
+    geom_boxplot(aes(choice, eval(as.name(k)), fill=choice),
   show.legend= FALSE)+ ylab(k)+
     theme_bw()
   
-  print()
+  print(graf)
   
 }
 ```
 
 
-```{r}
-ggplot(Mode)+
-  geom_boxplot(aes(choice, eval(as.name(k))))
-```
 
 
