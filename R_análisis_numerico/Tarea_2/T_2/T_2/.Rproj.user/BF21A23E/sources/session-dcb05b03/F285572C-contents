@@ -209,8 +209,30 @@ b) Para calcular un peso promedio máximo aproximado de cada muestra, determina 
 \end{equation}
 
 ```{r}
+# Utilizando las funciones de pracma
+
+poli_m1<- polyfit(Muestras$Dia, Muestras$Muestra_1, n=6)
+poli_m2<-function(x){polyval(poli_m1, x)}
+
+# Utilizando del package polynom
+
+poli_m2<- poly.calc(Muestras$Dia, Muestras$Muestra_2)
+polif_m2<- funciton(x){polyval(poli_m1, x)}
+
+# Utilizando el package polynom
+poli_m2<- poly.calc(Muestras$Dia, Muestras$Muestra_2)
+polif_m2<- as. funciton(poli_m2)
+
+my_colors<-c("Muestra 1"="dodgerblue","Muestra 2"="tomato2", "Valores 1"="firebrick", "Valores 2"="goldenrod")
+
 Muestras<- tibble(Dia=c(0,6,10,13,17,20,28),
 Muestra_1=c(6.67,17.33,42.67,37.33,30.10,29.31,28.74),     Muestra_2=c(6.67,16.11,18.89,15.00,10.56,9.44,8.89))
+
+graf_muestras<-ggplo()+
+  geom_funtion(aes(color="Muestra 1"), fun=polif_m1, linewidth=1.2)+
+  geom_funtion(aes(color="Muestra 2"), fun=polif_m1, linewidth=1.2)+
+  
+
 
 ggplot()+
   geom_function(aes(color="Muestra 1"), fun=polif_m1, linewidth=1.2)+
