@@ -45,7 +45,150 @@ En cada inciso considera la función de valores reales, usa los polinomios inter
 
 a) $f(x)=e^{2x}$.  Puntos: $x_0=0, x_1=0.25, x_2=0.5, x_3=0.75$.  Aproximar $f(0.43)$.
 
+```{r}
+f<- function(x){exp(2*x)}
+
+x<- c(0,0.25,0.5,0.75)
+x0<-x[1]
+x1<-x[2]
+x2<-x[3]
+x3<-x[4]
+y<- f(x)
+y0<-y[1]
+y0<-y[2]
+y0<-y[3]
+y0<-y[4]
+
+L0<-function(x){((x-x1)*(x-x2)(x-x3))/((x0-x1)*(x0-x2)*(x0-x3))}
+L1<-function(x){((x-x0)*(x-x2)(x-x3))/((x1-x0)*(x1-x2)*(x1-x3))}
+L2<-function(x){((x-x1)*(x-x2)(x-x3))/((x0-x1)*(x0-x2)*(x0-x3))}
+L3<-function(x){((x-x1)*(x-x2)(x-x0))/((x3-x1)*(x3-x2)*(x3-x0))}
+
+pol_lagrange<- function(x){L0(x)*f(x0)+ L1(x)*f(x1)+L2(x)*f(x2)+L3(x)*f(x3)}
+
+my_colors<-c("f(x)"="red","L0(x)"="coral", "L1(x)"="coral1",
+             "L2(x)"="coral2", "L3(x)"="coral3", "P(x)"="green2")
+
+
+graf_pol<-ggplot()+
+  geom_function(aes(color="f(x)"), fun=f, linewidth=1.5)+
+  geom_function(aes(color="L0(x)"), fun=L0, linewidth=0.75)+
+  geom_function(aes(color="L1(x)"), fun=L1, linewidth=0.75)+
+  geom_function(aes(color="L2(x)"), fun=L2, linewidth=0.75)+
+  geom_function(aes(color="L3(x)"), fun=L3, linewidth=0.75)+
+  geom_function(aes(color="P(x)",fun=pol_lagrange, linewith=0.5))+
+  geom_function(fun=pol_lagrange, color="green")+
+  geom_point(aes(x,y), size=2.1, color="firebrick")+
+  geom_point(aes(x=0.43, y=f(0.43), color="deeppink", size=2.3)+
+    scale_color_manual((values=my:colors))+
+    labs(x,y, color="Función", title = "Gráfica 1a")+
+    scale_x_continuous(breaks=x, limits=c(-0.5,0.8))+
+  theme_bw()
+
+graf_pol
+
+```
+
+
+valor de la función $f(0.43)$
+
+```{r}
+x_p <-0.43
+
+f(0.43)
+```
+
+Aproximación por medio del polinomio
+```{r}
+pol_lagrange
+```
+Error real
+```{r}
+f(x_p)-pol_lagrange(x_p)
+```
+Error absoluto
+```{r}
+abs(f(x_p)-pol_lagrange(x_p))
+```
+Error relativo
+```{r}
+abs(f(x_p)-pol_lagrange(x_p))/abs(f(x_p))
+```
+
+
+
+
+
+
 b) $f(x)=x\,cos\,x-3x$.  Puntos: $x_0=0.1, x_1=0.2, x_2=0.3, x_3=0.4$.  Aproximar $f(0.18)$.
+
+```{r}
+f<- function(x){exp(2*x)}
+
+x<- c(0,0.25,0.5,0.75)
+x0<-x[1]
+x1<-x[2]
+x2<-x[3]
+x3<-x[4]
+y<- f(x)
+y0<-y[1]
+y0<-y[2]
+y0<-y[3]
+y0<-y[4]
+
+L0<-function(x){((x-x1)*(x-x2)(x-x3))/((x0-x1)*(x0-x2)*(x0-x3))}
+L1<-function(x){((x-x0)*(x-x2)(x-x3))/((x1-x0)*(x1-x2)*(x1-x3))}
+L2<-function(x){((x-x1)*(x-x2)(x-x3))/((x0-x1)*(x0-x2)*(x0-x3))}
+L3<-function(x){((x-x1)*(x-x2)(x-x0))/((x3-x1)*(x3-x2)*(x3-x0))}
+
+pol_lagrange<- function(x){L0(x)*f(x0)+ L1(x)*f(x1)+L2(x)*f(x2)+L3(x)*f(x3)}
+
+my_colors<-c("f(x)"="red","L0(x)"="coral", "L1(x)"="coral1",
+             "L2(x)"="coral2", "L3(x)"="coral3", "P(x)"="green2")
+
+
+graf_pol<-ggplot()+
+  geom_function(aes(color="f(x)"), fun=f, linewidth=1.5)+
+  geom_function(aes(color="L0(x)"), fun=L0, linewidth=0.75)+
+  geom_function(aes(color="L1(x)"), fun=L1, linewidth=0.75)+
+  geom_function(aes(color="L2(x)"), fun=L2, linewidth=0.75)+
+  geom_function(aes(color="L3(x)"), fun=L3, linewidth=0.75)+
+  geom_function(fun=pol_lagrange, color="green")+
+  geom_point(aes(x,y), size=2.1, color="firebrick")+
+  geom_point(aes(x=0.43, y=f(0.43), color="deeppink", size=2.3)+
+    scale_color_manual((values=my:colors))+
+    labs(x,y, color="Función", title = "Gráfica 1a")+
+    scale_x_continuous(breaks=x, limits=c(-0.5,0.8))+
+  theme_bw()
+
+  graf_pol()
+
+```
+
+
+valor de la función $f(0.43)$
+
+```{r}
+x_p <-0.43
+
+f(0.43)
+```
+
+Aproximación por medio del polinomio
+```{r}
+pol_lagrange
+```
+Error real
+```{r}
+f(x_p)-pol_lagrange(x_p)
+```
+Error absoluto
+```{r}
+abs(f(x_p)-pol_lagrange(x_p))
+```
+Error relativo
+
+
 
 c) $f(x)=log(e^x+2)$.  Puntos: $x_0=-1, x_1=-0.5, x_2=0, x_3=0.5$.  Aproximar $f(0.25)$.
 
@@ -65,6 +208,36 @@ b) Para calcular un peso promedio máximo aproximado de cada muestra, determina 
 \end{array}
 \end{equation}
 
+```{r}
+Muestras<- tibble(Dia=c(0,6,10,13,17,20,28),
+Muestra_1=c(6.67,17.33,42.67,37.33,30.10,29.31,28.74),     Muestra_2=c(6.67,16.11,18.89,15.00,10.56,9.44,8.89))
+
+ggplot()+
+  geom_function(aes(color="Muestra 1"), fun=polif_m1, linewidth=1.2)+
+  
+  geom_point(aes(Muestra$Dia, Muestras$Muestra_1), color="gold")+
+  geom_point(aes(Muestra$Dia, Muestras$Muestra_2), color="blue")+
+  theme_bw()
+```
+# Utilizando las funciones de pracma
+
+poli_m1<- polyfit(Muestras$Dia, Muestras$Muestra_1, n=6)
+poli_m2<-function(x){polyval(poli_m1, x)}
+
+# Utilizando del package polynom
+
+poli_m2<- poly.calc(Muestras$Dia, Muestras$Muestra_2)
+polif_m2<- funciton(x){polyval(poli_m1, x)}
+
+# Utilizando el package polynom
+poli_m2<- poly.calc(Muestras$Dia, Muestras$Muestra_2)
+polif_m2<- as. funciton(poli_m2)
+
+my_colors<-c("Muestra 1"="dodgerblue","Muestra 2"="tomato2")
+
+
+
+
 
 # Ejercicio 3
 
@@ -77,6 +250,28 @@ b) $f(x) = sen(log\,x)$, $[1,3]$.
 c) $f(x) = e^{x}+e^{-x}$, $[0,2]$. 
 
 d) $f(x) = cos \,x+sen\,x$, $[0,2\pi]$.
+
+
+
+
+
+
+
+
+```{r}
+abs(f(x_p)-pol_lagrange(x_p))/abs(f(x_p))
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
