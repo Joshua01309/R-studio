@@ -1,0 +1,302 @@
+---
+title: "Interpolación. Ejemplos."
+author: "Análisis Numérico."
+date: "Febrero del 2024"
+output: 
+  html_document:
+    toc: true
+    toc_depth: 1
+    theme: cerulean
+---
+
+
+
+
+
+<style>
+body {
+text-align: justify}
+</style>
+
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(knitr)
+library(tidyverse)
+library(pracma)
+library(plotly)
+```
+
+
+
+
+
+# Polinomio de Taylor para $f(x)=e^x$, alrededor de $x_0=0$
+
+```{r}
+f <- function(x){exp(x)}
+p0 <- function(x){1}
+p1 <- function(x){1+x}
+p2 <- function(x){1+x+x^2/2}
+p3 <- function(x){p2(x)+x^3/6}
+p4 <- function(x){p3(x)+x^4/24}
+p5 <- function(x){p4(x)+x^5/120}
+
+my_colors <- c("f(x)"= "firebrick2", "p_0(x)"="coral", "p_1(x)"="coral2", "p_2(x)"="coral4",
+               "p_3(x)"="goldenrod", "p_4(x)"="goldenrod2", "p_5(x)"="goldenrod4")
+
+graf_tay <- ggplot()+
+            geom_function(aes(color="f(x)"), fun=f, linewidth=1.2)+
+            geom_function(aes(color="p_0(x)"), fun=p0, linewidth=0.75)+
+            geom_function(aes(color="p_1(x)"), fun=p1, linewidth=0.75)+
+            geom_function(aes(color="p_2(x)"), fun=p2, linewidth=0.75)+
+            geom_function(aes(color="p_3(x)"), fun=p3, linewidth=0.75)+
+            geom_function(aes(color="p_4(x)"), fun=p4, linewidth=0.75)+
+            geom_function(aes(color="p_5(x)"), fun=p5, linewidth=0.75)+
+            xlim(-1,4)+
+            labs(x="x", y="y", color="Función")+
+            scale_color_manual(values=my_colors)+
+            theme_bw()
+graf_tay
+
+
+
+```
+
+
+
+# Ejemplo 2
+
+Encontrar el polinomio de grado uno que contiene a los puntos $(2,4)$ y $(5,1)$
+
+
+```{r}
+x <- c(2,5)
+x0 <- 2
+x1 <- 5
+y <- c(4,1)
+y0 <- 4
+y1 <- 1
+pol_function <- function(x){-x+6}
+
+L0 <- function(x){(x-x1)/(x0-x1)}
+L1 <- function(x){(x-x0)/(x1-x0)}
+
+pol_L <- function(x){L0(x)*y0+L1(x)*y1}
+
+my_colors <- c("p(x)"="dodgerblue3", "L0(x)"="firebrick", "L1(x)"="goldenrod3", "p_L(x)"="red")
+
+graf_pol <- ggplot()+
+             geom_function(aes(color="p(x)"), fun=pol_function, linewidth=1.2)+
+             geom_point(aes(x,y), size=2, color="chocolate2")+
+             geom_function(aes(color="L0(x)"), fun=L0)+
+             geom_function(aes(color="L1(x)"), fun=L1)+
+             geom_function(aes(color="p_L(x)"), fun=pol_L, linewidth=0.75, linetype="dashed")+
+             xlim(1.5, 5.5)+
+             labs(x="x", y="y", color="Función")+
+             scale_color_manual(values=my_colors)+
+             theme_bw()
+
+
+graf_pol
+
+
+```
+
+# Polinomio grado 3
+
+
+```{r}
+x <-  c(0, 1, 2, 3)
+x0 <- 0 
+x1 <- 1 
+x2 <- 2 
+x3 <- 3
+y <-  c(1, -4, -7, -2)
+y0 <- 1
+y1 <- -4
+y2 <- -7
+y3 <- -2
+
+pol_function <- function(x){x^3-2*x^2-4*x+1}
+
+L0 <- function(x){((x-x1)*(x-x2)*(x-x3))/((x0-x1)*(x0-x2)*(x0-x3))}
+L1 <- function(x){((x-x0)*(x-x2)*(x-x3))/((x1-x0)*(x1-x2)*(x1-x3))}
+L2 <- function(x){((x-x0)*(x-x1)*(x-x3))/((x2-x0)*(x2-x1)*(x2-x3))}
+L3 <- function(x){((x-x0)*(x-x1)*(x-x2))/((x3-x0)*(x3-x1)*(x3-x2))}
+
+pol_L <- function(x){L0(x)*y0+L1(x)*y1+L2(x)*y2+L3(x)*y3}
+
+my_colors <- c("p(x)"="green2", "L0(x)"="seagreen1", "L1(x)"="seagreen3", "L2(x)"="olivedrab", "L3(x)"="olivedrab3", "p_L(x)"="red")
+
+
+
+graf_pol <- ggplot()+
+        geom_function(aes(color="p(x)"), fun=pol_function, linewidth=1.3)+
+        geom_function(aes(color="L0(x)"), fun=L0, linewidth=0.75)+
+        geom_function(aes(color="L1(x)"), fun=L1, linewidth=0.75)+
+        geom_function(aes(color="L2(x)"), fun=L2, linewidth=0.75)+
+        geom_function(aes(color="L3(x)"), fun=L3, linewidth=0.75)+
+        geom_function(aes(color="p_L(x)"), fun=pol_L, linewidth=0.75)+
+        geom_point(aes(x,y), size=3, color="red3")+
+        xlim(-0.25, 3.25)+
+        labs(x="x", y="y", color="Función")+
+        scale_color_manual(values=my_colors)+
+        theme_bw()
+        
+ggplotly(graf_pol)
+
+```
+
+
+# Ejemplo 2
+
+Encontrar el polinomio de grado uno que contiene a los puntos $(2,5)$ y $(4,1)$
+
+
+```{r}
+x <- c(2,4)
+x0 <- 2
+x1 <- 5
+y <- c(5,1)
+y0 <- 5
+y1 <- 1
+pol_function <- function(x){-2*x+9}
+
+L0 <- function(x){(x-x1)/(x0-x1)}
+L1 <- function(x){(x-x0)/(x1-x0)}
+
+pol_L <- function(x){L0(x)*y0+L1(x)*y1}
+
+my_colors <- c("p(x)"="dodgerblue3", "L0(x)"="firebrick", "L1(x)"="goldenrod3", "p_L(x)"="red")
+
+graf_pol <- ggplot()+
+             geom_function(aes(color="p(x)"), fun=pol_function, linewidth=1.2)+
+             geom_point(aes(x,y), size=2, color="chocolate2")+
+             geom_function(aes(color="L0(x)"), fun=L0)+
+             geom_function(aes(color="L1(x)"), fun=L1)+
+             geom_function(aes(color="p_L(x)"), fun=pol_L, linewidth=0.75, linetype="dashed")+
+             xlim(1.5, 5.5)+
+             labs(x="x", y="y", color="Función")+
+             scale_color_manual(values=my_colors)+
+             theme_bw()
+
+
+graf_pol
+
+
+```
+
+# Polinomio grado 3
+
+
+```{r}
+x <-  c(0, 1, 2, 3)
+x0 <- 0 
+x1 <- 1 
+x2 <- 2 
+x3 <- 3
+y <-  c(1, -4, -7, -2)
+y0 <- 1
+y1 <- -4
+y2 <- -7
+y3 <- -2
+
+pol_function <- function(x){x^3-2*x^2-4*x+1}
+
+L0 <- function(x){((x-x1)*(x-x2)*(x-x3))/((x0-x1)*(x0-x2)*(x0-x3))}
+L1 <- function(x){((x-x0)*(x-x2)*(x-x3))/((x1-x0)*(x1-x2)*(x1-x3))}
+L2 <- function(x){((x-x0)*(x-x1)*(x-x3))/((x2-x0)*(x2-x1)*(x2-x3))}
+L3 <- function(x){((x-x0)*(x-x1)*(x-x2))/((x3-x0)*(x3-x1)*(x3-x2))}
+
+pol_L <- function(x){L0(x)*y0+L1(x)*y1+L2(x)*y2+L3(x)*y3}
+
+my_colors <- c("p(x)"="green2", "L0(x)"="seagreen1", "L1(x)"="seagreen3", "L2(x)"="olivedrab", "L3(x)"="olivedrab3", "p_L(x)"="red")
+
+
+
+graf_pol <- ggplot()+
+        geom_function(aes(color="p(x)"), fun=pol_function, linewidth=1.3)+
+        geom_function(aes(color="L0(x)"), fun=L0, linewidth=0.75)+
+        geom_function(aes(color="L1(x)"), fun=L1, linewidth=0.75)+
+        geom_function(aes(color="L2(x)"), fun=L2, linewidth=0.75)+
+        geom_function(aes(color="L3(x)"), fun=L3, linewidth=0.75)+
+        geom_function(aes(color="p_L(x)"), fun=pol_L, linewidth=0.75)+
+        geom_point(aes(x,y), size=3, color="red3")+
+        xlim(-0.25, 3.25)+
+        labs(x="x", y="y", color="Función")+
+        scale_color_manual(values=my_colors)+
+        theme_bw()
+        
+ggplotly(graf_pol)
+
+```
+
+f<- function(x){exp(x)}
+my_colors<-c("f(x))
+
+```{r}
+f<- function(x){exp(x)}
+my_colors<-c("f(x)"="deeppink")
+
+x0<-0
+x1<-3
+
+Lo<-function(x){x-x1/(x0-x1)}
+L1<-function(x){(x-x0)/(x1-x0)}
+pol_L <- function(x){L0(x)*f(x0)+L1(x)*f(x1)}
+
+graf_funcion <- ggplot()+
+  geom_function(aes(color="f(x)"), fun=f, linewidh=1.2)+
+  geom_function(aes(color="p_1(x)"), fun=pol_L, linewidh=1.2)+
+  
+  xlim(-0.5,3.2)
+theme_minimal()
+
+graf_funcion
+```
+
+library(matlib)
+library(tidyverse)
+library(pracma)
+
+R1<-c(1,0,0,0,0,0,0,0)
+R2<-c(1,1,1,1,-1,0,0,0)
+R3<-c(0,1,2,3,0,-1,0,0)
+R4<-c(0,0,2,0,0,0,0,0)
+R5<-c(0,0,2,6,0,0,-2,0)
+R6<-c(0,0,0,0,1,0,0,0)
+R7<-c(0,0,0,0,1,1,1,1)
+R8<-c(0,0,0,0,0,0,2,6)
+A<-matrix(c(R1,R2,R3,R4,R5,R6,R7,R8), nrow=8, byrow=TRUE)
+
+b<-c(2,0,0,0,0,3,5,0)
+  
+solve(A, b, fractions=TRUE)
+
+x<-c(1,2,3)
+y<- c(2,3,5)
+
+S0<-function(x){2+3/4*(x-1)+1/4*(x-1)^3}
+S1<-function(x){3+3/2*(x-2)+1/4*(x-2)^2-1/4*(x-2)^3}
+
+ggplot()+
+  geom_function(fun=S0, color="blue", linewidth=1.5, xlim=c(1,2))+
+  geom_function(fun=S1, color="goldenrod", linewidth=1.5, xlim=c(2,3))+
+  geom_point(aes(x,y), color="firebrick", size=2)+
+  theme_minimal()
+
+inter_ejem<-cubicspline(x,y)
+inter_funcion<-function(x){ppval(inter_ejem, x)}
+
+inter_funcion(1.5)
+
+ggplot()+
+  geom_function(fun=S0, color="blue", linewidth=1.5, xlim=c(1,2))+
+  geom_function(fun=S1, color="goldenrod", linewidth=1.5, xlim=c(2,3))+
+  geom_function(fun=inter_funcion, color="green2", linewidth=1.5, xlim=c(1,3))+
+  geom_point(aes(x,y), color="firebrick", size=2)+
+  theme_minimal()
+
+
