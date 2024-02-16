@@ -230,7 +230,12 @@ Muestra_1=c(6.67,17.33,42.67,37.33,30.10,29.31,28.74),     Muestra_2=c(6.67,16.1
 
 graf_muestras<-ggplo()+
   geom_funtion(aes(color="Muestra 1"), fun=polif_m1, linewidth=1.2)+
-  geom_funtion(aes(color="Muestra 2"), fun=polif_m1, linewidth=1.2)+
+  geom_funtion(aes(color="Muestra 2"), fun=polif_m2, linewidth=1.2)+
+  geom_point(aes(Muestras$Dia, Muestras$Muestra_2), color="goldenrod")+
+  scale_color_manual(values=my_colors)+
+  scale_x_continuous(breaks = Muestras$Dia)+
+  labs(x="Dia", y="Masa promedio (mg)", color="Muestra", title = "Larvas de dos muestras", subtitle = "Masa")+
+  theme_bw()
   
 
 
@@ -272,23 +277,6 @@ b) $f(x) = sen(log\,x)$, $[1,3]$.
 c) $f(x) = e^{x}+e^{-x}$, $[0,2]$. 
 
 d) $f(x) = cos \,x+sen\,x$, $[0,2\pi]$.
-
-
-
-
-
-
-
-
-```{r}
-abs(f(x_p)-pol_lagrange(x_p))/abs(f(x_p))
-
-
-
-
-
-
-
 
 
 

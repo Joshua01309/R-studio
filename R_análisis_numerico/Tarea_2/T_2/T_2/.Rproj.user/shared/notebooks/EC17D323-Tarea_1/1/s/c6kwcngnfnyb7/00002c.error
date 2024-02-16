@@ -1,0 +1,1 @@
+{"frames":[{"func":"metodo_newton(f_10, df_10, x_0 = -3, tol = 1e-10, N = 100)","file":"","line_number":0,"end_line_number":0,"character_number":0,"end_character_number":0}],"message":"Error in if (tol_p < tol) { : valor ausente donde TRUE/FALSE es necesario\n"}
