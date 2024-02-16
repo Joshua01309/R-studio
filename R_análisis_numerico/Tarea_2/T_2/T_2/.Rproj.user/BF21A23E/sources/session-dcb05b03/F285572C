@@ -3,9 +3,9 @@
     "path": "~/Github/R-studio/R_análisis_numerico/Tarea_2/T_2/T_2/Tarea_2.Rmd",
     "project_path": "Tarea_2.Rmd",
     "type": "r_markdown",
-    "hash": "0",
+    "hash": "24050484",
     "contents": "",
-    "dirty": true,
+    "dirty": false,
     "created": 1707847980039.0,
     "source_on_save": false,
     "relative_order": 1,
@@ -13,15 +13,15 @@
         "source_window_id": "",
         "Source": "Source",
         "last_setup_crc32": "dcb05b03d914947",
-        "cursorPosition": "281,0",
-        "scrollLine": "263"
+        "cursorPosition": "280,0",
+        "scrollLine": "275"
     },
-    "folds": "23|27|30|0|\n47|6|89|0|\n94|6|98|0|\n101|6|103|0|\n105|6|107|0|\n109|6|111|0|\n113|6|115|0|\n",
-    "lastKnownWriteTime": 1708020803,
+    "folds": "24|27|31|0|\n48|6|91|0|\n95|6|99|0|\n102|6|104|0|\n106|6|108|0|\n110|6|112|0|\n114|6|116|0|\n122|6|165|0|\n169|6|173|0|\n176|6|178|0|\n180|6|182|0|\n184|6|186|0|\n188|6|190|0|\n196|6|238|0|\n241|6|245|0|\n248|6|250|0|\n252|6|254|0|\n256|6|258|0|\n260|6|262|0|\n282|6|312|0|\n324|6|370|0|\n375|6|421|0|\n426|6|472|0|\n477|6|523|0|\n",
+    "lastKnownWriteTime": 1708065809,
     "encoding": "UTF-8",
     "collab_server": "",
     "source_window": "",
-    "last_content_update": 1708023818218,
+    "last_content_update": 1708065809572,
     "read_only": false,
     "read_only_alternatives": []
 }

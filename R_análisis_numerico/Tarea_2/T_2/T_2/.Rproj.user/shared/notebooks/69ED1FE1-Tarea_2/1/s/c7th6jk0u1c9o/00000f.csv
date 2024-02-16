@@ -1,0 +1,9 @@
+"0","pol_lagrange"
+"1","function(x) {
+"
+"1","  L0(x)*f(x0) + L1(x)*f(x1) + L2(x)*f(x2) + L3(x)*f(x3)
+"
+"1","}
+"
+"1","<bytecode: 0x000001b8c736e878>
+"
