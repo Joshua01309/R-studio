@@ -1,0 +1,4 @@
+"0","der_aprox(df, oli_derivada,0.43)"
+"2","Error in der_aprox(df, oli_derivada, 0.43) : 
+  objeto 'derivadar_spline' no encontrado
+"

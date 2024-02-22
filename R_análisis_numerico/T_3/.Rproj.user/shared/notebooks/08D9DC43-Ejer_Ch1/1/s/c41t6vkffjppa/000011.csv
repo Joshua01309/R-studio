@@ -1,0 +1,3 @@
+"0","ggplot(Mode)+ "
+"0","  geom_bar(aes(choice), color=""black"", fill=""#6DB562"")+"
+"0","  theme_bw()"

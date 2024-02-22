@@ -1,5 +1,5 @@
 ---
-title: "1. Datos, Modelos y Software. Ejercicios"
+title: " Murillo Alba Josué Iván 1. Datos, Modelos y Software. Ejercicios"
 date: "Febrero 2024"
 output: 
   html_document:
@@ -29,6 +29,8 @@ library(tidyverse)
 library(discrtr) # A companion package for the book Introduction to Discrete Choice Analysis with `R`
 library(mlogit) # Multinomial Logit Models
 library(readr) # Read Rectangular Text Data
+library(ggplot2)
+library(plotly)
 ```
 
 
@@ -56,38 +58,50 @@ summary(Mode$choice)
 
 ```{r}
 ggplot(Mode)+ 
-  geom_bar(aes(choice), color="black", fill="#566AAA")+
+  geom_bar(aes(choice), color="black", fill="#6DB562")+
   theme_bw()
 ```
 
 ```{r}
 summary(Mode)
 ```
+In general, what is the most expensive mode? The least expensive?
 
 ```{r}
-ggplot(Mode)+
-  geom_density(aes(cost.car), color="black", fill="blue", alpha=0.6)+
-  geom_density(aes(cost.carpool), color="black", fill="red", alpha=0.6)+
-  geom_density(aes(cost.bus), color="black", fill="orange", alpha=0.6)+
-  geom_density(aes(cost.rail), color="black", fill="gold3", alpha=0.6)+
+graf_costo<-ggplot(Mode) +
+  geom_density(aes(cost.car, fill = "Costo de auto"), alpha = 0.6) +
+  geom_density(aes(cost.carpool, fill = "Costo de carpools"), alpha = 0.6) +
+  geom_density(aes(cost.bus, fill = "Costo de autobús"), alpha = 0.6) +
+  geom_density(aes(cost.rail, fill = "Costo de ferrocarril"), alpha = 0.6) +
+  scale_fill_manual(values = c("#0078BD", "#D61F33", "#F6D276", "#00B686"), name = "Variable") +
+  labs(fill = "Variable") +
   theme_bw()
+
+ggplotly(graf_costo)
+
 ```
 
 
 
-In general, what is the most expensive mode? The least expensive?
+
 
 Create a plot showing the univariate distributions of time by car and time by bus. Discuss.
 
+
 ```{r}
-ggplot(Mode)+
-  geom_density(aes(time.car), color="black", fill="blue", alpha=0.4)+
-  geom_density(aes(time.carpool), color="black", fill="red", alpha=0.4)+
-  geom_density(aes(time.bus), color="black", fill="brown", alpha=0.4)+
-  geom_density(aes(time.rail), color="black", fill="gold3", alpha=0.4)+
+graf_tiempo<-ggplot(Mode) +
+  geom_density(aes(time.car, fill = "Tiempo en auto"), alpha = 0.6) +
+  geom_density(aes(time.carpool, fill = "Tiempo en carpools"), alpha = 0.6) +
+  geom_density(aes(time.bus, fill = "Tiempo en autobús"), alpha = 0.6) +
+  geom_density(aes(time.rail, fill = "Tiempo en ferrocarril"), alpha = 0.6) +
+  scale_fill_manual(values = c("#0078BD", "#D61F33", "#F6D276", "#00B686"), name = "Variable") +
+  labs(fill = "Variable") +
   theme_bw()
 
+ggplotly(graf_tiempo)
+
 ```
+
 
 How do choices relate to cost by the different modes?
 
