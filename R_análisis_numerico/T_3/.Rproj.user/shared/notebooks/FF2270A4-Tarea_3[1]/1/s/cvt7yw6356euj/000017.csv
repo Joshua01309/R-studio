@@ -1,0 +1,6 @@
+"0","datos<- tibble(temp=c(50,60,65,75,80), "
+"0","                rho=c(988,985.7,980.5,974.8,971.6))"
+"0","sp_temp<-cubicspline(datos$temp, datos$rho)"
+"0",""
+"0","sp_temp_f<-function(x){ppval(sp_temp_f, x)}"
+"0",""
