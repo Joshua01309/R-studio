@@ -1,0 +1,40 @@
+---
+title: "Los 4 Momentos."
+author: " Murillo Alba Josue Ivan"
+date: "Marzo del 2024"
+output: 
+  prettydoc::html_pretty:
+    toc: true
+    theme: architect
+header-includes:
+   - \usepackage{amsmath}
+---
+
+
+
+
+
+<style>
+body {
+text-align: justify}
+</style>
+
+
+
+```{r}
+library(tibble)
+
+# Suponiendo que "Datos" es una columna dentro del dataframe "Muestras"
+Datos <- tibble(Datos = Muestras$Datos)
+
+```
+
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(knitr)
+library(tidyverse)
+library(pracma)
+library(plotly)
+library(polynom)

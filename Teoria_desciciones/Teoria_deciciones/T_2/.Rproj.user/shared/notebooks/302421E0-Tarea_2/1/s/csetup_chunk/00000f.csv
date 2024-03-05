@@ -1,0 +1,43 @@
+"0","knitr::opts_chunk$set(echo = TRUE)"
+"0","library(knitr)"
+"0","library(tidyverse)"
+"0","library(pracma)"
+"2","
+Attaching package: ‘pracma’
+
+"
+"2","The following object is masked from ‘package:purrr’:
+
+    cross
+
+"
+"0","library(plotly)"
+"2","
+Attaching package: ‘plotly’
+
+"
+"2","The following object is masked from ‘package:ggplot2’:
+
+    last_plot
+
+"
+"2","The following object is masked from ‘package:stats’:
+
+    filter
+
+"
+"2","The following object is masked from ‘package:graphics’:
+
+    layout
+
+"
+"0","library(polynom)"
+"2","
+Attaching package: ‘polynom’
+
+"
+"2","The following object is masked from ‘package:pracma’:
+
+    integral
+
+"

@@ -836,6 +836,48 @@ d) $f(x) = cos \,x+sen\,x$, $[0,2\pi]$.
 Dada la partición $x_0=0, x_1=0.5, x_2=1$, del intervalo $[0,1]$, encuentra el spline cúbico $S$ para $f(x)=e^{2x}$.  Aproxima $\int_0^{1} e^{2x}\,dx$ con  $\int_0^{1} S(x)\,dx$ y compara el resultado con el valor real.
 
 
+```{r}
+f<-function(x)(exp(2*x))
+
+my_spline_function<-function(x){ppval(cubicspline(c(0, 0.5, 1), f(c(0, 0.5, 1)))x)}
+
+graf<-ggplot()+
+  geom_function(fun=f, color="cyan", linewidth=1.2)+
+  geom_function(my_spline_function, color="firebrick", linewidth=0.5)
+  stat_function(fun=f, geom="area", fill="pink", alpha=0.3)+
+  theme_light()
+
+ggplotly(graf)
+
+```
+
+
+```{r}
+pracma::integral(my_spline_function, 0, 1)
+pracma::integral(f, 0, 1)
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 f<-function(x){sin(log(x))}
 x0<-1

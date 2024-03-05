@@ -3,17 +3,17 @@
     "path": "~/Github/R-studio/Teoria_desciciones/Teoria_deciciones/T_2/Ejer_Ch2 (1).Rmd",
     "project_path": "Ejer_Ch2 (1).Rmd",
     "type": "r_markdown",
-    "hash": "2255465598",
+    "hash": "0",
     "contents": "",
-    "dirty": false,
+    "dirty": true,
     "created": 1709210943517.0,
     "source_on_save": false,
     "relative_order": 1,
     "properties": {
         "source_window_id": "",
         "Source": "Source",
-        "cursorPosition": "22,0",
-        "scrollLine": "16",
+        "cursorPosition": "150,0",
+        "scrollLine": "139",
         "last_setup_crc32": "d12972e2945719aa"
     },
     "folds": "",
@@ -21,7 +21,7 @@
     "encoding": "UTF-8",
     "collab_server": "",
     "source_window": "",
-    "last_content_update": 1709245297255,
+    "last_content_update": 1709565655024,
     "read_only": false,
     "read_only_alternatives": []
 }

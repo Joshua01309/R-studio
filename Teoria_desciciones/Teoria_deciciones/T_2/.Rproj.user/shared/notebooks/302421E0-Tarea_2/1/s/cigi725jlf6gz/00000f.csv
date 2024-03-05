@@ -1,0 +1,4 @@
+"0","library(tibble)"
+"0",""
+"0","# Suponiendo que ""Datos"" es una columna dentro del dataframe ""Muestras"""
+"0","Datos <- tibble(Datos = Muestras$Datos)"
