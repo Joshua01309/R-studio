@@ -1,0 +1,5 @@
+"0","#Varianza"
+"0","var_sep<-var(Muestras$Datos)"
+"2","Warning: Unknown or uninitialised column: `Datos`."
+"2","Error in var(Muestras$Datos) : 'x' is NULL
+"

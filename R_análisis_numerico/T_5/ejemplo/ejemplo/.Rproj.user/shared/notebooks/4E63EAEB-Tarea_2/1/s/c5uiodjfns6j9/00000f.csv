@@ -1,0 +1,4 @@
+"0","kurtosis(Muestras$Datos, na.rm = FALSE, type = 3)"
+"2","Error in kurtosis(Muestras$Datos, na.rm = FALSE, type = 3) : 
+  no se pudo encontrar la función ""kurtosis""
+"

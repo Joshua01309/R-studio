@@ -1,0 +1,58 @@
+"0","datos <- read_xlsx(""Indicadores.xlsx"")"
+"0","datos$Periodo <- ym(datos$Periodo)"
+"0","#datos <- datos[ , 1:7]"
+"0","glimpse(datos)"
+"1","Rows: 374"
+"1",""
+"1","
+"
+"1","Columns: 43"
+"1",""
+"1","
+"
+"1","$ Periodo                               [3m[38;5;246m<date>[39m[23m 1993-01-01, 1993-02-01, 1993-03-01, 1993-04-01, 1993-05-01, 1993-06…
+$ actividad_economica                   [3m[38;5;246m<dbl>[39m[23m 55.43471, 56.45693, 58.90052, 57.13581, 57.89182, 57.47544, 57.90236…
+$ actividades_primarias                 [3m[38;5;246m<dbl>[39m[23m 58.79620, 60.76382, 55.96495, 58.98916, 61.76208, 63.64113, 72.62865…
+$ actividad_industrial                  [3m[38;5;246m<dbl>[39m[23m 63.30772, 64.88903, 68.07038, 64.52451, 64.38270, 62.47108, 64.79190…
+$ volumen_fisico_construccion           [3m[38;5;246m<dbl>[39m[23m 65.06671, 72.30150, 72.20018, 65.19047, 65.26574, 64.26312, 65.93277…
+$ actividades_terciarias                [3m[38;5;246m<dbl>[39m[23m 50.77526, 51.42722, 53.85521, 52.83547, 53.98911, 54.29422, 53.16840…
+$ bienes_servicios_por_menor            [3m[38;5;246m<dbl>[39m[23m NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, …
+$ inversion_fija_bruta                  [3m[38;5;246m<dbl>[39m[23m 53.16104, 56.32532, 58.22727, 53.71490, 52.49153, 50.28112, 54.28775…
+$ precios_consumidor                    [3m[38;5;246m<dbl>[39m[23m 12.97732, 13.08335, 13.15959, 13.23548, 13.31114, 13.38580, 13.45012…
+$ precios_consumidor_subyacente         [3m[38;5;246m<dbl>[39m[23m 14.12747, 14.28536, 14.43021, 14.52630, 14.59082, 14.65334, 14.71408…
+$ precios_productor                     [3m[38;5;246m<dbl>[39m[23m NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, …
+$ tasa_desocupacion_urbana              [3m[38;5;246m<dbl>[39m[23m NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, …
+$ tendencia_empleo_manufacturas         [3m[38;5;246m<dbl>[39m[23m -12, -11, -7, -14, -23, -10, -12, -15, -15, -13, -6, -24, -9, -2, -2…
+$ Asegurados_permanentes_IMSS           [3m[38;5;246m<dbl>[39m[23m NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, …
+$ expectativa_personal_ocupado          [3m[38;5;246m<dbl>[39m[23m NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, …
+$ importaciones_totales                 [3m[38;5;246m<dbl>[39m[23m 4615.875, 5052.105, 5716.663, 5189.932, 5200.380, 5929.171, 5537.398…
+$ importaciones_no_petroleras           [3m[38;5;246m<dbl>[39m[23m 4443.623, 4833.342, 5530.090, 4972.830, 5035.239, 5722.855, 5336.774…
+$ exportaciones_totales                 [3m[38;5;246m<dbl>[39m[23m 3491.025, 3824.112, 4454.157, 4131.085, 4125.457, 4789.999, 4151.908…
+$ exportaciones_petroleras              [3m[38;5;246m<dbl>[39m[23m 619.493, 595.083, 708.446, 680.576, 683.047, 676.320, 652.679, 645.2…
+$ exportaciones_no_petroleras           [3m[38;5;246m<dbl>[39m[23m 2871.532, 3229.029, 3745.711, 3450.509, 3442.410, 4113.679, 3499.229…
+$ precio_promedio_petroleo_crudo        [3m[38;5;246m<dbl>[39m[23m 13.55, 14.27, 14.51, 14.67, 14.20, 13.07, 12.83, 12.91, 12.98, 13.14…
+$ tasa_interes_interbancaria_equilibrio [3m[38;5;246m<dbl>[39m[23m 27.05, 26.97, 25.36, 24.05, 23.58, 22.35, 20.84, 20.33, 19.50, 18.80…
+$ Cetes_28_dias                         [3m[38;5;246m<dbl>[39m[23m 16.72, 17.74, 17.47, 16.17, 15.04, 15.50, 13.85, 13.68, 13.71, 13.13…
+$ tasa_fondeo_gubernamental             [3m[38;5;246m<dbl>[39m[23m NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, …
+$ tipo_cambio_nominal                   [3m[38;5;246m<dbl>[39m[23m 3.1100, 3.0989, 3.1083, 3.0955, 3.1227, 3.1213, 3.1236, 3.1126, 3.11…
+$ tipo_cambio_real                      [3m[38;5;246m<dbl>[39m[23m 79.9239, 78.9370, 75.0528, 73.4863, 74.1314, 73.3886, 72.0550, 71.81…
+$ indice_precios_cotizaciones_BMV       [3m[38;5;246m<dbl>[39m[23m 25.61012, 23.76554, 27.06551, 25.29575, 24.36030, 25.08498, 26.45099…
+$ reservas_internacionales              [3m[38;5;246m<dbl>[39m[23m 64373.54, 66293.64, 64791.88, 74222.93, 72639.93, 69518.18, 70236.38…
+$ indicador_confianza_empresarial       [3m[38;5;246m<dbl>[39m[23m NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, …
+$ indicador_agregado_tendencia          [3m[38;5;246m<dbl>[39m[23m NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, …
+$ indicador_pedidos_manufactureros      [3m[38;5;246m<dbl>[39m[23m NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, …
+$ confianza_consumidor                  [3m[38;5;246m<dbl>[39m[23m NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, …
+$ expectativa_uso_planta_equipo         [3m[38;5;246m<dbl>[39m[23m NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, …
+$ expectativa_inventarios_insumos       [3m[38;5;246m<dbl>[39m[23m NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, …
+$ indice_produccion_industrial_EUA      [3m[38;5;246m<dbl>[39m[23m 66.0943, 67.0509, 67.0848, 66.0598, 66.1019, 68.0383, 65.7046, 67.99…
+$ produccion_manufacturera_EUA          [3m[38;5;246m<dbl>[39m[23m 61.3505, 62.8559, 63.4776, 63.0389, 63.4522, 64.7602, 61.1453, 63.86…
+$ comercio_por_menor_EUA                [3m[38;5;246m<dbl>[39m[23m 137020, 134462, 153025, 158615, 163519, 162964, 164590, 163989, 1592…
+$ tasa_desempleo_EUA                    [3m[38;5;246m<dbl>[39m[23m 8.0, 7.8, 7.4, 6.9, 6.8, 7.2, 7.0, 6.6, 6.4, 6.4, 6.2, 6.1, 7.3, 7.1…
+$ empleo_EUA                            [3m[38;5;246m<dbl>[39m[23m 108099, 108702, 109136, 110140, 111103, 111693, 110825, 110936, 1119…
+$ tasa_bonos_tesoro_EUA                 [3m[38;5;246m<dbl>[39m[23m 6.60, 6.26, 5.98, 5.97, 6.04, 5.96, 5.81, 5.68, 5.36, 5.33, 5.72, 5.…
+$ Standard_Poor                         [3m[38;5;246m<dbl>[39m[23m 435.23, 441.70, 450.16, 443.08, 445.25, 448.06, 447.29, 454.13, 459.…
+$ Dow_Jones                             [3m[38;5;246m<dbl>[39m[23m 3310.027, 3370.814, 3435.113, 3427.548, 3527.427, 3516.079, 3539.473…
+$ confianza_consumidor_EUA              [3m[38;5;246m<dbl>[39m[23m 89.3, 86.6, 85.9, 85.6, 80.3, 81.5, 77.0, 77.3, 77.9, 82.7, 81.2, 88…"
+"1",""
+"1","
+"
