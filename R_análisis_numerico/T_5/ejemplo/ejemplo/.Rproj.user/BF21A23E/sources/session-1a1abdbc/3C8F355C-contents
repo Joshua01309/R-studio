@@ -314,6 +314,19 @@ ggplotly(graf_pol)
 
 b) Para calcular un peso promedio máximo aproximado de cada muestra, determina el máximo del polinomio interpolante.
 
+```{r}
+
+# Cálculo del peso promedio máximo aproximado de la Muestra 1
+peso_max_muestra1 <- optimize(polif_m1, interval = c(0, 28), maximum = TRUE)$maximum
+
+# Cálculo del peso promedio máximo aproximado de la Muestra 2
+peso_max_muestra2 <- optimize(polif_m2, interval = c(0, 28), maximum = TRUE)$maximum
+
+peso_max_muestra1
+peso_max_muestra2
+
+```
+
 
 
 # Ejercicio 3
@@ -322,15 +335,46 @@ Construye los polinomios interpolantes de grados $n=1,2,3,4$ para las siguientes
 
 a) $f(x) = e^{2x}\, cos 3x$, $[0,2]$. 
 
-```{r}
 
+```{r}
+library(ggplot2)
+library(plotly)
+
+f <- function(x) { exp(2*x)*cos(3*x) }
+
+a <- 0
+b <- 2
+ei <- c(a, b)
+
+poli_1 <- as.function(poly.calc(ei, f(ei)))
+ei_2 <- seq(a, b, length.out = 3)
+poli_2 <- as.function(poly.calc(ei_2, f(ei_2)))
+ei_3 <- seq(a, b, length.out = 4)
+poli_3 <- as.function(poly.calc(ei_3, f(ei_3)))
+ei_4 <- seq(a, b, length.out = 5)
+poli_4 <- as.function(poly.calc(ei_4, f(ei_4)))
+
+graf <- ggplot() +
+  geom_function(fun = f, xlim = c(a, b), linewidth = 1.2, aes(color = "f(x)")) +
+  geom_function(fun = poli_1, xlim = c(a, b), linewidth = 1.2, aes(color = "Polinomio 1")) +
+  geom_function(fun = poli_2, xlim = c(a, b), linewidth = 1.2, aes(color = "Polinomio 2")) +
+  geom_function(fun = poli_3, xlim = c(a, b), linewidth = 1.2, aes(color = "Polinomio 3")) +
+  geom_function(fun = poli_4, xlim = c(a, b), linewidth = 1.2, aes(color = "Polinomio 4")) +
+  scale_color_manual(values = c("#2A5783", "#41B7C4", "#7ECDBB", "#E9F7B9", "#D72E3E"),
+                     labels = c("f(x)", "Polinomio 1", "Polinomio 2", "Polinomio 3", "Polinomio 4")) +
+  theme_linedraw() +
+  labs(title = "Gráfico de funciones y polinomios", x = "x", y = "f(x)")
+
+ggplotly(graf)
 ```
 
 
 
 
+
+
 ```{r}
-f <- function(x) { exp(2*x) }
+f <- function(x) { exp(2*x)*cos(3*x) }
 
 x <- c(0, 0.5, 1, 1.5, 2)
 x0 <- x[1]
@@ -380,52 +424,35 @@ ggplotly(graf_pol)
 
 b) $f(x) = sen(log\,x)$, $[1,3]$.
 
+
 ```{r}
-f <- function(x) {sin(log(x))}
 
-x <- c(1, 1.5, 2, 2.5, 3)
-x0 <- x[1]
-x1 <- x[2]
-x2 <- x[3]
-x3 <- x[4]
-x4 <- x[5]
-y <- f(x)
-y0 <- y[1]
-y1 <- y[2]
-y2 <- y[3]
-y3 <- y[4]
-y4 <- y[5]
+f <- function(x) { sin(log(x)) }
 
-L0 <- function(x) { ((x-x1)*(x-x2)*(x-x3)*(x-x4))/((x0-x1)*(x0-x2)*(x0-x3)*(x0-x4)) }
-L1 <- function(x) { ((x-x0)*(x-x2)*(x-x3)*(x-x4))/((x1-x0)*(x1-x2)*(x1-x3)*(x1-x4)) }
-L2 <- function(x) { ((x-x0)*(x-x1)*(x-x3)*(x-x4))/((x2-x0)*(x2-x1)*(x2-x3)*(x2-x4)) }
-L3 <- function(x) { ((x-x0)*(x-x1)*(x-x2)*(x-x4))/((x3-x0)*(x3-x1)*(x3-x2)*(x3-x2)) }
-L4 <- function(x) { ((x-x0)*(x-x1)*(x-x2)*(x-x3))/((x4-x0)*(x4-x1)*(x4-x2)*(x4-x3)) }
+a <-1 
+b <- 3
+ei <- c(a, b)
 
-pol_lagrange <- function(x) {
-  L0(x)*f(x0) + L1(x)*f(x1) + L2(x)*f(x2) + L3(x)*f(x3) + L4(x)*f(x4)
-}
+poli_1 <- as.function(poly.calc(ei, f(ei)))
+ei_2 <- seq(a, b, length.out = 3)
+poli_2 <- as.function(poly.calc(ei_2, f(ei_2)))
+ei_3 <- seq(a, b, length.out = 4)
+poli_3 <- as.function(poly.calc(ei_3, f(ei_3)))
+ei_4 <- seq(a, b, length.out = 5)
+poli_4 <- as.function(poly.calc(ei_4, f(ei_4)))
 
-my_colors <- c("f(x)"="#2A5783", "L0(x)"="#41B7C4", "L1(x)"="#7ECDBB",
-               "L2(x)"="#B6E4B3", "L3(x)"="#E9F7B9", "L4(x)"="#D72E3E", "P(x)"="#297A3F")
+graf <- ggplot() +
+  geom_function(fun = f, xlim = c(a, b), linewidth = 1.2, aes(color = "f(x)")) +
+  geom_function(fun = poli_1, xlim = c(a, b), linewidth = 1.2, aes(color = "Polinomio 1")) +
+  geom_function(fun = poli_2, xlim = c(a, b), linewidth = 1.2, aes(color = "Polinomio 2")) +
+  geom_function(fun = poli_3, xlim = c(a, b), linewidth = 1.2, aes(color = "Polinomio 3")) +
+  geom_function(fun = poli_4, xlim = c(a, b), linewidth = 1.2, aes(color = "Polinomio 4")) +
+  scale_color_manual(values = c("#2A5783", "#41B7C4", "#7ECDBB", "#E9F7B9", "#D72E3E"),
+                     labels = c("f(x)", "Polinomio 1", "Polinomio 2", "Polinomio 3", "Polinomio 4")) +
+  theme_linedraw() +
+  labs(title = "Gráfico de funciones y polinomios", x = "x", y = "f(x)")
 
-graf_pol <- ggplot() +
-  geom_function(aes(color="f(x)"), fun=f, linewidth=1.5) +
-  geom_function(aes(color="L0(x)"), fun=L0, linewidth=0.75) +
-  geom_function(aes(color="L1(x)"), fun=L1, linewidth=0.75) +
-  geom_function(aes(color="L2(x)"), fun=L2, linewidth=0.75) +
-  geom_function(aes(color="L3(x)"), fun=L3, linewidth=0.75) +
-  geom_function(aes(color="L4(x)"), fun=L4, linewidth=0.75) +
-  geom_function(aes(color="P(x)"), fun=pol_lagrange, linewidth=0.5) +
-  geom_function(fun=pol_lagrange, color="#FFCC9E") +
-  geom_point(aes(x, y), size=2.1, color="#F2862C") +
-  geom_point(aes(x=0.43, y=f(0.43)), color="#71B966", size=2.3) + # Corrección aquí
-  scale_color_manual(values=my_colors) +
-  labs(x="x", y="y", color="Función", title="Gráfica 1a") +
-  scale_x_continuous(breaks=x, limits=c(1, 3)) +
-  theme_bw()
-
-ggplotly(graf_pol)
+ggplotly(graf)
 ```
 
 
@@ -434,49 +461,30 @@ c) $f(x) = e^{x}+e^{-x}$, $[0,2]$.
 ```{r}
 f <- function(x) { exp(x)+exp(-x) }
 
-x <- c(0, 0.5, 1, 1.5, 2)
-x0 <- x[1]
-x1 <- x[2]
-x2 <- x[3]
-x3 <- x[4]
-x4 <- x[5]
-y <- f(x)
-y0 <- y[1]
-y1 <- y[2]
-y2 <- y[3]
-y3 <- y[4]
-y4 <- y[5]
+a <- 0
+b <- 2
+ei <- c(a, b)
 
-L0 <- function(x) { ((x-x1)*(x-x2)*(x-x3)*(x-x4))/((x0-x1)*(x0-x2)*(x0-x3)*(x0-x4)) }
-L1 <- function(x) { ((x-x0)*(x-x2)*(x-x3)*(x-x4))/((x1-x0)*(x1-x2)*(x1-x3)*(x1-x4)) }
-L2 <- function(x) { ((x-x0)*(x-x1)*(x-x3)*(x-x4))/((x2-x0)*(x2-x1)*(x2-x3)*(x2-x4)) }
-L3 <- function(x) { ((x-x0)*(x-x1)*(x-x2)*(x-x4))/((x3-x0)*(x3-x1)*(x3-x2)*(x3-x2)) }
-L4 <- function(x) { ((x-x0)*(x-x1)*(x-x2)*(x-x3))/((x4-x0)*(x4-x1)*(x4-x2)*(x4-x3)) }
+poli_1 <- as.function(poly.calc(ei, f(ei)))
+ei_2 <- seq(a, b, length.out = 3)
+poli_2 <- as.function(poly.calc(ei_2, f(ei_2)))
+ei_3 <- seq(a, b, length.out = 4)
+poli_3 <- as.function(poly.calc(ei_3, f(ei_3)))
+ei_4 <- seq(a, b, length.out = 5)
+poli_4 <- as.function(poly.calc(ei_4, f(ei_4)))
 
-pol_lagrange <- function(x) {
-  L0(x)*f(x0) + L1(x)*f(x1) + L2(x)*f(x2) + L3(x)*f(x3) + L4(x)*f(x4)
-}
+graf <- ggplot() +
+  geom_function(fun = f, xlim = c(a, b), linewidth = 1.2, aes(color = "f(x)")) +
+  geom_function(fun = poli_1, xlim = c(a, b), linewidth = 1.2, aes(color = "Polinomio 1")) +
+  geom_function(fun = poli_2, xlim = c(a, b), linewidth = 1.2, aes(color = "Polinomio 2")) +
+  geom_function(fun = poli_3, xlim = c(a, b), linewidth = 1.2, aes(color = "Polinomio 3")) +
+  geom_function(fun = poli_4, xlim = c(a, b), linewidth = 1.2, aes(color = "Polinomio 4")) +
+  scale_color_manual(values = c("#2A5783", "#41B7C4", "#7ECDBB", "#E9F7B9", "#D72E3E"),
+                     labels = c("f(x)", "Polinomio 1", "Polinomio 2", "Polinomio 3", "Polinomio 4")) +
+  theme_linedraw() +
+  labs(title = "Gráfico de funciones y polinomios", x = "x", y = "f(x)")
 
-my_colors <- c("f(x)"="#2A5783", "L0(x)"="#41B7C4", "L1(x)"="#7ECDBB",
-               "L2(x)"="#B6E4B3", "L3(x)"="#E9F7B9", "L4(x)"="#D72E3E", "P(x)"="#297A3F")
-
-graf_pol <- ggplot() +
-  geom_function(aes(color="f(x)"), fun=f, linewidth=1.5) +
-  geom_function(aes(color="L0(x)"), fun=L0, linewidth=0.75) +
-  geom_function(aes(color="L1(x)"), fun=L1, linewidth=0.75) +
-  geom_function(aes(color="L2(x)"), fun=L2, linewidth=0.75) +
-  geom_function(aes(color="L3(x)"), fun=L3, linewidth=0.75) +
-  geom_function(aes(color="L4(x)"), fun=L4, linewidth=0.75) +
-  geom_function(aes(color="P(x)"), fun=pol_lagrange, linewidth=0.5) +
-  geom_function(fun=pol_lagrange, color="#FFCC9E") +
-  geom_point(aes(x, y), size=2.1, color="#F2862C") +
-  geom_point(aes(x=0.43, y=f(0.43)), color="#71B966", size=2.3) + # Corrección aquí
-  scale_color_manual(values=my_colors) +
-  labs(x="x", y="y", color="Función", title="Gráfica 1a") +
-  scale_x_continuous(breaks=x, limits=c(0, 2)) +
-  theme_bw()
-
-ggplotly(graf_pol)
+ggplotly(graf)
 ```
 
 
@@ -485,49 +493,30 @@ d) $f(x) = cos \,x+sen\,x$, $[0,2\pi]$.
 ```{r}
 f <- function(x) { cos(x)+sin(x) }
 
-x <- c(0, pi/2, pi, 3*pi/2, 2*pi)
-x0 <- x[1]
-x1 <- x[2]
-x2 <- x[3]
-x3 <- x[4]
-x4 <- x[5]
-y <- f(x)
-y0 <- y[1]
-y1 <- y[2]
-y2 <- y[3]
-y3 <- y[4]
-y4 <- y[5]
+a <-0 
+b <- 2*pi
+ei <- c(a, b)
 
-L0 <- function(x) { ((x-x1)*(x-x2)*(x-x3)*(x-x4))/((x0-x1)*(x0-x2)*(x0-x3)*(x0-x4)) }
-L1 <- function(x) { ((x-x0)*(x-x2)*(x-x3)*(x-x4))/((x1-x0)*(x1-x2)*(x1-x3)*(x1-x4)) }
-L2 <- function(x) { ((x-x0)*(x-x1)*(x-x3)*(x-x4))/((x2-x0)*(x2-x1)*(x2-x3)*(x2-x4)) }
-L3 <- function(x) { ((x-x0)*(x-x1)*(x-x2)*(x-x4))/((x3-x0)*(x3-x1)*(x3-x2)*(x3-x2)) }
-L4 <- function(x) { ((x-x0)*(x-x1)*(x-x2)*(x-x3))/((x4-x0)*(x4-x1)*(x4-x2)*(x4-x3)) }
+poli_1 <- as.function(poly.calc(ei, f(ei)))
+ei_2 <- seq(a, b, length.out = 3)
+poli_2 <- as.function(poly.calc(ei_2, f(ei_2)))
+ei_3 <- seq(a, b, length.out = 4)
+poli_3 <- as.function(poly.calc(ei_3, f(ei_3)))
+ei_4 <- seq(a, b, length.out = 5)
+poli_4 <- as.function(poly.calc(ei_4, f(ei_4)))
 
-pol_lagrange <- function(x) {
-  L0(x)*f(x0) + L1(x)*f(x1) + L2(x)*f(x2) + L3(x)*f(x3) + L4(x)*f(x4)
-}
+graf <- ggplot() +
+  geom_function(fun = f, xlim = c(a, b), linewidth = 1.2, aes(color = "f(x)")) +
+  geom_function(fun = poli_1, xlim = c(a, b), linewidth = 1.2, aes(color = "Polinomio 1")) +
+  geom_function(fun = poli_2, xlim = c(a, b), linewidth = 1.2, aes(color = "Polinomio 2")) +
+  geom_function(fun = poli_3, xlim = c(a, b), linewidth = 1.2, aes(color = "Polinomio 3")) +
+  geom_function(fun = poli_4, xlim = c(a, b), linewidth = 1.2, aes(color = "Polinomio 4")) +
+  scale_color_manual(values = c("#2A5783", "#41B7C4", "#7ECDBB", "#E9F7B9", "#D72E3E"),
+                     labels = c("f(x)", "Polinomio 1", "Polinomio 2", "Polinomio 3", "Polinomio 4")) +
+  theme_linedraw() +
+  labs(title = "Gráfico de funciones y polinomios", x = "x", y = "f(x)")
 
-my_colors <- c("f(x)"="#2A5783", "L0(x)"="#41B7C4", "L1(x)"="#7ECDBB",
-               "L2(x)"="#B6E4B3", "L3(x)"="#E9F7B9", "L4(x)"="#D72E3E", "P(x)"="#297A3F")
-
-graf_pol <- ggplot() +
-  geom_function(aes(color="f(x)"), fun=f, linewidth=1.5) +
-  geom_function(aes(color="L0(x)"), fun=L0, linewidth=0.75) +
-  geom_function(aes(color="L1(x)"), fun=L1, linewidth=0.75) +
-  geom_function(aes(color="L2(x)"), fun=L2, linewidth=0.75) +
-  geom_function(aes(color="L3(x)"), fun=L3, linewidth=0.75) +
-  geom_function(aes(color="L4(x)"), fun=L4, linewidth=0.75) +
-  geom_function(aes(color="P(x)"), fun=pol_lagrange, linewidth=0.5) +
-  geom_function(fun=pol_lagrange, color="#FFCC9E") +
-  geom_point(aes(x, y), size=2.1, color="#F2862C") +
-  #geom_point(aes(x=0.43, y=f(0.43)), color="#71B966", size=2.3) + # Corrección aquí
-  scale_color_manual(values=my_colors) +
-  labs(x="x", y="y", color="Función", title="Gráfica 1a") +
-  scale_x_continuous(breaks=x, limits=c(0, 2*pi)) +
-  theme_bw()
-
-ggplotly(graf_pol)
+ggplotly(graf)
 ```
 
 
