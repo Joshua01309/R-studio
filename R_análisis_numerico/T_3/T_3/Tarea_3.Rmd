@@ -739,6 +739,23 @@ ggplotly(graf_pol)
 
 b) Para calcular un peso promedio máximo aproximado de cada muestra, determina el máximo del spline cúbico.
 
+```{r}
+# Cálculo del peso promedio máximo aproximado de la Muestra 1
+max_valor_m1 <- max(sp_m1_f(Muestras$Dia))
+dia_max_m1 <- Muestras$Dia[which.max(sp_m1_f(Muestras$Dia))]
+print(paste("Valor máximo Muestra 1:", max_valor_m1))
+peso_max_muestra1 <- optimize(sp_m1_f, interval = c(0, 28), maximum = TRUE)$maximum
+
+# Cálculo del peso promedio máximo aproximado de la Muestra 2
+max_valor_m2 <- max(sp_m2_f(Muestras$Dia))
+dia_max_m2 <- Muestras$Dia[which.max(sp_m2_f(Muestras$Dia))]
+print(paste("Valor máximo Muestra 2:", max_valor_m2))
+peso_max_muestra2 <- optimize(sp_m2_f, interval = c(0, 28), maximum = TRUE)$maximum
+
+peso_max_muestra1
+peso_max_muestra2
+```
+
 
 # Ejercicio 4
 
@@ -804,6 +821,21 @@ print(graf_muestras)
 
 b) Aproximar la densidad para $T=63 °C$ y también la derivada.
 
+```{r}
+
+# Aproximación de la densidad para T=63 °C
+densidad_aprox <- ppval(sp_temp, 63)
+
+# Aproximación de la derivada para T=63 °C utilizando diferencias finitas
+h <- 0.01  # Paso de h para las diferencias finitas
+derivada_aprox <- (ppval(sp_temp, 63 + h) - ppval(sp_temp, 63 - h)) / (2 * h)
+
+cat("Aproximación de la densidad para T=63 °C:", densidad_aprox, "\n")
+cat("Aproximación de la derivada para T=63 °C:", derivada_aprox, "\n")
+```
+
+
+
 
 # Ejercicio 5
 
@@ -812,13 +844,166 @@ Construye los splines cúbicos condicionados en $n$ nodos, donde $n= 4,5, 10, 20
 a) $f(x) = e^{2x}\, cos 3x$, $[0,2]$. 
 
 ```{r}
-f<-function(x){exp(2*x)}
+f <- function(x){exp(2*x)*cos(2*x)}
+df <- function(x){-2*exp(2*x)*sin(2*x)+2*exp(2*x)*cos(2*x)}
+
+x_0 <- 0
+x_n <- 0.75
+n <- 20
+
+x_nodos <- seq(x_0,x_n,length.out=n)
+y_nodos <- f(x_nodos)
+
+mispline <- cubicspline(x_nodos,y_nodos,endp2nd=TRUE,der=c(df(x_0),df(x_n)))
+mispline_f <- function(x){ppval(mispline,x)}
+
+my_colors <- c("f(x)"="blue","S(x)"="purple","Valores"="pink")
+
+grafica_spline <- ggplot()+
+  geom_function(aes(color="f(x)"),fun=f)+
+  geom_function(aes(color="S(x)"),fun=mispline_f,linewidth=0.75)+
+  geom_point(aes(x_nodos,y_nodos,color="Valores"),size=3)+
+  scale_color_manual(values=my_colors)+
+  scale_x_continuous(breaks=x_nodos,limits=c(x_0,x_n))+
+  labs(x="x",y="y",color="Función")+
+  theme_classic()
+
+ggplotly(grafica_spline)
 ```
+
+```{r}
+df 
+kar_derivada <-spline_der(mispline) 
+
+der_nodos <- df(x_nodos)
+
+my_colors <- c("f'(x)"="green","S'(x)"="tomato3","Valores"="firebrick")
+
+grafica_derivada <- ggplot()+
+  geom_function(aes(color="f'(x)"),fun=df)+
+  geom_function(aes(color="S'(x)"),fun=kar_derivada,linewidth=0.75)+
+  geom_point(aes(x_nodos,der_nodos,color="Valores"),size=3)+
+  scale_color_manual(values=my_colors)+
+  scale_x_continuous(breaks=x_nodos,limits=c(x_0,x_n))+
+  labs(x="x",y="y",color="Función")+
+  theme_classic()
+
+ggplotly(grafica_derivada)
+```
+
+```{r}
+library(tibble)
+library(pracma)
+library(ggplot2)
+library(plotly)
+
+f <- function(x) {exp(2*x) * cos(3*x)}
+df <- function(x) {-2*exp(2*x)*sin(3*x) + 3*exp(2*x)*cos(3*x)}
+
+x_0 <- 0
+x_n <- 2
+
+n_values <- c(4, 5, 10, 20)
+
+my_colors <- c("f(x)" = "blue", "Valores" = "pink")
+
+grafica_spline <- ggplot() +
+  geom_function(aes(color = "f(x)"), fun = f) +
+  geom_point(aes(x = x_nodos, y = y_nodos, color = "Valores"), size = 3) +
+  scale_color_manual(values = my_colors) +
+  scale_x_continuous(limits = c(x_0, x_n)) +
+  labs(x = "x", y = "y", color = "Función") +
+  theme_classic()
+
+grafica_derivada <- ggplot() +
+  geom_function(aes(color = "f'(x)"), fun = df) +
+  geom_point(aes(x = x_nodos, y = der_nodos, color = "Valores"), size = 3) +
+  scale_color_manual(values = my_colors) +
+  scale_x_continuous(limits = c(x_0, x_n)) +
+  labs(x = "x", y = "y", color = "Función") +
+  theme_classic()
+
+for (n in n_values) {
+  x_nodos <- seq(x_0, x_n, length.out = n)
+  y_nodos <- f(x_nodos)
+
+  mispline <- cubicspline(x_nodos, y_nodos, endp2nd = TRUE, der = c(df(x_0), df(x_n)))
+  mispline_f <- function(x) ppval(mispline, x)
+
+  h <- (x_n - x_0) / n
+  kar_derivada <- function(x) (mispline_f(x + h) - mispline_f(x - h)) / (2 * h)
+  der_nodos <- df(x_nodos)
+
+  grafica_spline <- grafica_spline +
+    geom_function(aes(color = paste("S(x)", n)), fun = mispline_f, linewidth = 0.75) +
+    scale_color_manual(values = setNames(rainbow(length(n_values)), paste("S(x)", n_values)))
+
+  grafica_derivada <- grafica_derivada +
+    geom_function(aes(color = paste("S'(x)", n)), fun = kar_derivada, linewidth = 0.75) +
+    scale_color_manual(values = setNames(rainbow(length(n_values)), paste("S'(x)", n_values)))
+}
+
+ggplotly(grafica_spline)
+ggplotly(grafica_derivada)
+```
+
+
+
 
 
 b) $f(x) = sen(log\,x)$, $[1,3]$.
 
 
+```{r}
+f <- function(x) {sin(log(x))}
+df <- function(x) {(cos(x)*log(x))/x}
+
+x_0 <- 1
+x_n <- 3
+
+n_values <- c(4, 5, 10, 20)
+
+my_colors <- c("f(x)" = "blue", "Valores" = "pink")
+
+grafica_spline <- ggplot() +
+  geom_function(aes(color = "f(x)"), fun = f) +
+  geom_point(aes(x = x_nodos, y = y_nodos, color = "Valores"), size = 3) +
+  scale_color_manual(values = my_colors) +
+  scale_x_continuous(limits = c(x_0, x_n)) +
+  labs(x = "x", y = "y", color = "Función") +
+  theme_classic()
+
+grafica_derivada <- ggplot() +
+  geom_function(aes(color = "f'(x)"), fun = df) +
+  geom_point(aes(x = x_nodos, y = der_nodos, color = "Valores"), size = 3) +
+  scale_color_manual(values = my_colors) +
+  scale_x_continuous(limits = c(x_0, x_n)) +
+  labs(x = "x", y = "y", color = "Función") +
+  theme_classic()
+
+for (n in n_values) {
+  x_nodos <- seq(x_0, x_n, length.out = n)
+  y_nodos <- f(x_nodos)
+
+  mispline <- cubicspline(x_nodos, y_nodos, endp2nd = TRUE, der = c(df(x_0), df(x_n)))
+  mispline_f <- function(x) ppval(mispline, x)
+
+  h <- (x_n - x_0) / n
+  kar_derivada <- function(x) (mispline_f(x + h) - mispline_f(x - h)) / (2 * h)
+  der_nodos <- df(x_nodos)
+
+  grafica_spline <- grafica_spline +
+    geom_function(aes(color = paste("S(x)", n)), fun = mispline_f, linewidth = 0.75) +
+    scale_color_manual(values = setNames(rainbow(length(n_values)), paste("S(x)", n_values)))
+
+  grafica_derivada <- grafica_derivada +
+    geom_function(aes(color = paste("S'(x)", n)), fun = kar_derivada, linewidth = 0.75) +
+    scale_color_manual(values = setNames(rainbow(length(n_values)), paste("S'(x)", n_values)))
+}
+
+ggplotly(grafica_spline)
+ggplotly(grafica_derivada)
+```
 
 
 
@@ -827,7 +1012,111 @@ b) $f(x) = sen(log\,x)$, $[1,3]$.
 
 c) $f(x) = e^{x}+e^{-x}$, $[0,2]$. 
 
+```{r}
+f <- function(x) {exp(x)+exp(-x)}
+df <- function(x) {exp(x)-exp(-x)}
+
+x_0 <- 0
+x_n <- 2
+
+n_values <- c(4, 5, 10, 20)
+
+my_colors <- c("f(x)" = "blue", "Valores" = "pink")
+
+grafica_spline <- ggplot() +
+  geom_function(aes(color = "f(x)"), fun = f) +
+  geom_point(aes(x = x_nodos, y = y_nodos, color = "Valores"), size = 3) +
+  scale_color_manual(values = my_colors) +
+  scale_x_continuous(limits = c(x_0, x_n)) +
+  labs(x = "x", y = "y", color = "Función") +
+  theme_classic()
+
+grafica_derivada <- ggplot() +
+  geom_function(aes(color = "f'(x)"), fun = df) +
+  geom_point(aes(x = x_nodos, y = der_nodos, color = "Valores"), size = 3) +
+  scale_color_manual(values = my_colors) +
+  scale_x_continuous(limits = c(x_0, x_n)) +
+  labs(x = "x", y = "y", color = "Función") +
+  theme_classic()
+
+for (n in n_values) {
+  x_nodos <- seq(x_0, x_n, length.out = n)
+  y_nodos <- f(x_nodos)
+
+  mispline <- cubicspline(x_nodos, y_nodos, endp2nd = TRUE, der = c(df(x_0), df(x_n)))
+  mispline_f <- function(x) ppval(mispline, x)
+
+  h <- (x_n - x_0) / n
+  kar_derivada <- function(x) (mispline_f(x + h) - mispline_f(x - h)) / (2 * h)
+  der_nodos <- df(x_nodos)
+
+  grafica_spline <- grafica_spline +
+    geom_function(aes(color = paste("S(x)", n)), fun = mispline_f, linewidth = 0.75) +
+    scale_color_manual(values = setNames(rainbow(length(n_values)), paste("S(x)", n_values)))
+
+  grafica_derivada <- grafica_derivada +
+    geom_function(aes(color = paste("S'(x)", n)), fun = kar_derivada, linewidth = 0.75) +
+    scale_color_manual(values = setNames(rainbow(length(n_values)), paste("S'(x)", n_values)))
+}
+
+ggplotly(grafica_spline)
+ggplotly(grafica_derivada)
+```
+
+
 d) $f(x) = cos \,x+sen\,x$, $[0,2\pi]$.
+
+```{r}
+f <- function(x) {cos(x)+sin(x)}
+df <- function(x) {-sin(x)+cos(x)}
+
+x_0 <- 0
+x_n <- 2
+
+n_values <- c(4, 5, 10, 20)
+
+my_colors <- c("f(x)" = "blue", "Valores" = "pink")
+
+grafica_spline <- ggplot() +
+  geom_function(aes(color = "f(x)"), fun = f) +
+  geom_point(aes(x = x_nodos, y = y_nodos, color = "Valores"), size = 3) +
+  scale_color_manual(values = my_colors) +
+  scale_x_continuous(limits = c(x_0, x_n)) +
+  labs(x = "x", y = "y", color = "Función") +
+  theme_classic()
+
+grafica_derivada <- ggplot() +
+  geom_function(aes(color = "f'(x)"), fun = df) +
+  geom_point(aes(x = x_nodos, y = der_nodos, color = "Valores"), size = 3) +
+  scale_color_manual(values = my_colors) +
+  scale_x_continuous(limits = c(x_0, x_n)) +
+  labs(x = "x", y = "y", color = "Función") +
+  theme_classic()
+
+for (n in n_values) {
+  x_nodos <- seq(x_0, x_n, length.out = n)
+  y_nodos <- f(x_nodos)
+
+  mispline <- cubicspline(x_nodos, y_nodos, endp2nd = TRUE, der = c(df(x_0), df(x_n)))
+  mispline_f <- function(x) ppval(mispline, x)
+
+  h <- (x_n - x_0) / n
+  kar_derivada <- function(x) (mispline_f(x + h) - mispline_f(x - h)) / (2 * h)
+  der_nodos <- df(x_nodos)
+
+  grafica_spline <- grafica_spline +
+    geom_function(aes(color = paste("S(x)", n)), fun = mispline_f, linewidth = 0.75) +
+    scale_color_manual(values = setNames(rainbow(length(n_values)), paste("S(x)", n_values)))
+
+  grafica_derivada <- grafica_derivada +
+    geom_function(aes(color = paste("S'(x)", n)), fun = kar_derivada, linewidth = 0.75) +
+    scale_color_manual(values = setNames(rainbow(length(n_values)), paste("S'(x)", n_values)))
+}
+
+ggplotly(grafica_spline)
+ggplotly(grafica_derivada)
+```
+
 
 
 
@@ -837,17 +1126,18 @@ Dada la partición $x_0=0, x_1=0.5, x_2=1$, del intervalo $[0,1]$, encuentra el 
 
 
 ```{r}
-f<-function(x)(exp(2*x))
+f <- function(x) (exp(2*x))
 
-my_spline_function<-function(x){ppval(cubicspline(c(0, 0.5, 1), f(c(0, 0.5, 1)))x)}
+my_spline_function <- function(x) {ppval(cubicspline(c(0, 0.5, 1), f(c(0, 0.5, 1))), x)}
 
-graf<-ggplot()+
-  geom_function(fun=f, color="cyan", linewidth=1.2)+
-  geom_function(my_spline_function, color="firebrick", linewidth=0.5)
-  stat_function(fun=f, geom="area", fill="pink", alpha=0.3)+
+graf <- ggplot() +
+  geom_function(fun = f, color = "cyan", linewidth = 1.2) +
+  geom_function(fun = my_spline_function, color = "firebrick", linewidth = 0.5) +
+  stat_function(fun = f, geom = "area", fill = "pink", alpha = 0.3) +
   theme_light()
 
 ggplotly(graf)
+
 
 ```
 
