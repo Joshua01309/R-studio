@@ -317,15 +317,22 @@ b) Para calcular un peso promedio máximo aproximado de cada muestra, determina 
 ```{r}
 
 # Cálculo del peso promedio máximo aproximado de la Muestra 1
+max_valor_m1 <- max(polif_m1(Muestras$Dia))
+dia_max_m1 <- Muestras$Dia[which.max(polif_m1(Muestras$Dia))]
+print(paste("Valor máximo Muestra 1:", max_valor_m1))
 peso_max_muestra1 <- optimize(polif_m1, interval = c(0, 28), maximum = TRUE)$maximum
 
 # Cálculo del peso promedio máximo aproximado de la Muestra 2
+max_valor_m2 <- max(polif_m2(Muestras$Dia))
+dia_max_m2 <- Muestras$Dia[which.max(polif_m2(Muestras$Dia))]
+print(paste("Valor máximo Muestra 2:", max_valor_m2))
 peso_max_muestra2 <- optimize(polif_m2, interval = c(0, 28), maximum = TRUE)$maximum
 
 peso_max_muestra1
 peso_max_muestra2
 
 ```
+
 
 
 

@@ -1,0 +1,5 @@
+"0","f<-function(x)(exp(2*x))"
+"0",""
+"0","my_spline_function<-function(x){ppval(cubicspline(c(0, 0.5, 1), f(c(0, 0.5, 1)))x)}"
+"2","Error: unexpected symbol en ""my_spline_function<-function(x){ppval(cubicspline(c(0, 0.5, 1), f(c(0, 0.5, 1)))x""
+"

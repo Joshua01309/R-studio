@@ -1,0 +1,1 @@
+{"frames":[],"message":"Error: unexpected symbol en \"my_spline_function<-function(x){ppval(cubicspline(c(0, 0.5, 1), f(c(0, 0.5, 1)))x\"\n"}
