@@ -1,0 +1,4 @@
+"0","car_alluvia <- Car |> "
+"0","  select(college, type1, type2, choice) |> "
+"0","  group_by(college, type1, type2, choice) |> "
+"0","  summarize(frequency = n(), .groups = ""drop"")"

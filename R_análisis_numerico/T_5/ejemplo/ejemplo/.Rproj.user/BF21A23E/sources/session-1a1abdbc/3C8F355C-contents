@@ -323,6 +323,13 @@ Construye los polinomios interpolantes de grados $n=1,2,3,4$ para las siguientes
 a) $f(x) = e^{2x}\, cos 3x$, $[0,2]$. 
 
 ```{r}
+
+```
+
+
+
+
+```{r}
 f <- function(x) { exp(2*x) }
 
 x <- c(0, 0.5, 1, 1.5, 2)

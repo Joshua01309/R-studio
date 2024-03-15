@@ -1,26 +1,25 @@
 {
-    "id": "A57C5E47",
-    "path": "C:/Users/ivanj/AppData/Local/Microsoft/Windows/INetCache/IE/JDLI6CH7/Regresion_lineal_indicadores[1].Rmd",
+    "id": "BBC99F87",
+    "path": "~/Github/R-studio/Teoria_desciciones/Teoria_deciciones/T_2/Ejer_Ch2 (1).Rmd",
     "project_path": null,
     "type": "r_markdown",
-    "hash": "0",
+    "hash": "2255465598",
     "contents": "",
     "dirty": false,
-    "created": 1710441809518.0,
+    "created": 1710448360483.0,
     "source_on_save": false,
-    "relative_order": 3,
+    "relative_order": 4,
     "properties": {
         "source_window_id": "",
         "Source": "Source",
-        "cursorPosition": "82,0",
-        "scrollLine": "67"
+        "last_setup_crc32": "1a1abdbc945719aa"
     },
     "folds": "",
-    "lastKnownWriteTime": 1710441802,
+    "lastKnownWriteTime": 1709211616,
     "encoding": "UTF-8",
     "collab_server": "",
     "source_window": "",
-    "last_content_update": 1710441802,
+    "last_content_update": 1710448606696,
     "read_only": false,
     "read_only_alternatives": []
 }
