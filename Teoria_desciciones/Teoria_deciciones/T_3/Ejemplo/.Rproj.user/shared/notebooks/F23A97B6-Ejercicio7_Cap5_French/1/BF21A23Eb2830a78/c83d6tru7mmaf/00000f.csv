@@ -1,0 +1,6 @@
+"0","mc_commute_long <- mc_commute_wide |> "
+"0","mlogit.data(shape=""wide"","
+"0","            # Name of column with the choices"
+"0","            choice = ""choice"","
+"0","            # Numbers of columns with attributes that vary by alternative"
+"0","            varying = 3:22)"

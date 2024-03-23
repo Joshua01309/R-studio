@@ -1,0 +1,5 @@
+"0","# Cálculo del peso promedio máximo aproximado de la Muestra 1"
+"0","max_valor_m1 <- max(sp_m1_f(Muestras$Dia))"
+"2","Error in sp_m1_f(Muestras$Dia) : 
+  no se pudo encontrar la función ""sp_m1_f""
+"

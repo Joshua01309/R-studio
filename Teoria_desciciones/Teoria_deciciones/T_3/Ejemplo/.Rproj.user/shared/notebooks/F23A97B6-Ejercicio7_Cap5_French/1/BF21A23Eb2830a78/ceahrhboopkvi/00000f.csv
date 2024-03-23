@@ -1,0 +1,4 @@
+"0","f1 <- mFormula(choice ~ time)"
+"2","Error in is.name(callee) && length(object) > 20 : 
+  'length = 2' in coercion to 'logical(1)'
+"

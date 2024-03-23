@@ -109,4 +109,107 @@ ggplot()+
 ```
 
 
+```{r}
+library(knitr)
+library(tidyverse)
+library(discrtr) # A companion package for the book Introduction to Discrete Choice Analysis with `R`
+library(dplyr) # A Grammar of Data Manipulation
+library(ggplot2) # Create Elegant Data Visualisations Using the Grammar of Graphics
+library(mlogit) # Multinomial Logit Models
+library(readr) # Read Rectangular Text Data
+#library(stargazer) # Well-Formatted Regression and Summary Statistics Tables
+library(gplots) # Various R Programming Tools for Plotting Data
+library(ggmosaic) # Mosaic Plots in the 'ggplot2' Framework
+library(treemapify)
+library(ggridges)
+library(ggalluvial)
+library(evd)
+library(htmlwidgets) # HTML Widgets for R
+library(kableExtra) # Construct Complex Table with kable and Pipe Syntax
+library(plotly) # Create interactive web graphics
+library(tidyr) # Tidy messy data
+library(webshot2) # Take screenshots of web pages
+```
+
+
+```{r}
+data("mc_commute_wide", package = "discrtr")
+mc_commute_wide[1:6, 1:10]
+```
+
+```{r}
+example_wide <- mc_commute_wide %>% dplyr::select(id, choice, starts_with("time")) |> 
+               filter(id %in% c(566910139, 566873140, 566872636))
+example_wide
+```
+
+```{r}
+example_wide |>  pivot_longer(cols = starts_with("time."), names_prefix = "time.", names_to="alternative", values_to="time")
+```
+
+```{r}
+example_long <- mc_commute_wide %>% filter(id %in% c(566910139, 566873140, 566872636)) |> 
+                mlogit.data(shape="wide", choice="choice", varying=3:22)
+```
+
+
+```{r}
+data.frame(example_long) |>  dplyr::select(id, choice, alt, starts_with("time"), idx)
+```
+
+```{r}
+data.frame(example_long$idx)
+```
+
+
+```{r}
+f1 <- mFormula(choice ~ time)
+```
+```{r}
+f1 |> model.matrix(example_long)
+```
+
+
+```{r}
+f2 <- mFormula(choice ~ time | sidewalk_density)
+f2 |>  model.matrix(example_long)
+```
+
+```{r}
+f3 <- mFormula(choice ~ 0 | sidewalk_density | time)
+f3 |>  model.matrix(example_long)
+```
+
+```{r}
+mc_commute_long <- mc_commute_wide |> 
+mlogit.data(shape="wide",
+            # Name of column with the choices
+            choice = "choice",
+            # Numbers of columns with attributes that vary by alternative
+            varying = 3:22)
+```
+
+```{r}
+# Function `mlogit()` is used to estimate logit models
+# It needs a multi-part formula and a data set in long form
+model1 <- mlogit(f1, mc_commute_long)
+# Function `summary()` give the summary of data objects,
+# including the output of model estimation algorithms
+summary(model1)
+```
+
+```{r}
+# Function `mlogit()` is used to estimate logit models
+# It needs a multi-part formula and a data set in long form
+model2 <- mlogit(f2, mc_commute_long, relevel="walk")
+# Function `summary()` give the summary of data objects,
+# including the output of model estimation algorithms
+summary(model2)
+```
+
+
+
+
+
+
 
