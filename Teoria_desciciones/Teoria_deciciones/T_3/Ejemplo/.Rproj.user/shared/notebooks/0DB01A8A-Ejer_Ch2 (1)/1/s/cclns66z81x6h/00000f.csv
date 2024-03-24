@@ -1,0 +1,3 @@
+"0","Car |>  ggplot() +"
+"0","  geom_mosaic(aes(x = product(type2, fuel4), fill = type2)) +"
+"0","  labs(x = ""Combustible"", y = ""Mode"", fill = ""Mode"")"

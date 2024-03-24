@@ -1,0 +1,5 @@
+"0","Car |> group_by(choice) |> summarize(n = n()) |> "
+"0","  ggplot(aes(x = choice, xend = choice, y = n, yend = 0)) +"
+"0","  geom_point(color = ""black"", fill = ""white"", size = 6) + "
+"0","  geom_segment(linewidth = 1) +"
+"0","  labs(x = ""Elección de vehiculo"", y = ""Number of respondents"")"

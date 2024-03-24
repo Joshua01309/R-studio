@@ -1,0 +1,5 @@
+"0","Car |> group_by(choice, type2) |> "
+"0","  summarize(n = n(), .groups = ""drop"") |> "
+"0","  ggplot(aes(x = choice, y = type2)) +"
+"0","  geom_tile(aes(fill = n)) +"
+"0","  labs(x = ""Mode"", y = ""type 2"", fill = ""Number of respondents"")"

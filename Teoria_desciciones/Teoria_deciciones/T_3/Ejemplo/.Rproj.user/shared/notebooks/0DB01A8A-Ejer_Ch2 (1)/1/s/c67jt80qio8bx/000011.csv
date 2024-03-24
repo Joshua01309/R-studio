@@ -1,0 +1,3 @@
+"0","Car |> ggplot(aes(x = type2, fill = choice)) + "
+"0","  geom_bar(position = ""fill"") + "
+"0","  labs(y = ""Proportion"", x = ""tipe 2"", fill=""Mode"")"

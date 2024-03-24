@@ -1,0 +1,4 @@
+"0","Car |>  ggplot(aes(x = college, y = price1, fill = college)) +"
+"0","  geom_violin(trim = FALSE) +"
+"0","  geom_boxplot(width = 0.1, fill = ""white"") + "
+"0","  labs(x=""Colegio"", y = expression(""Precio""), fill = ""College"")"

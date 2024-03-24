@@ -1,0 +1,4 @@
+"0","Car |> group_by(type1) |> summarize(n = n()) |> "
+"0","ggplot(aes(fill = type1, area = n)) +"
+"0","  geom_treemap() +"
+"0","  labs(title = ""Opcion tipo 1"", fill=""Tipo"")"

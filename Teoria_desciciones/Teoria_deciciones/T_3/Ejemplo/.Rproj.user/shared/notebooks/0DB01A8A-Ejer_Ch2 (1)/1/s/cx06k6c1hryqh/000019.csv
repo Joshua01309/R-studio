@@ -1,0 +1,5 @@
+"0","Car %>% ggplot(aes(x = speed6, y = type1, fill = type1)) +"
+"0","  geom_density_ridges(jittered_points = TRUE, bandwidth = 3.5, "
+"0","                      position = position_points_jitter(width = 0.05, height = 0),"
+"0","                      point_shape = '|', point_size = 3, point_alpha = 1, alpha = 0.7) +"
+"0","  labs(y=""type1"", x = expression(""speed6""), fill = ""type1"")"

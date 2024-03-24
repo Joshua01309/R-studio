@@ -72,6 +72,160 @@ car_alluvia <- Car |>
 5. Choose four relevant categorical variables from this data set and describe them
 using univariate, bivariate, and multivariate techniques. Discuss your results.
 
+Univariate
+
+```{r}
+Car |> ggplot(aes(x = college)) + 
+  geom_bar(color = "black", fill = "white") + 
+  labs(x = "Educación Escolar", y="Numero de encuestados")
+```
+
+```{r}
+Car |> group_by(choice) |> summarize(n = n()) |> 
+  ggplot(aes(x = choice, xend = choice, y = n, yend = 0)) +
+  geom_point(color = "black", fill = "white", size = 6) + 
+  geom_segment(linewidth = 1) +
+  labs(x = "Elección de vehiculo", y = "Number of respondents")
+```
+
+```{r}
+Car |> group_by(type1) |> summarize(n = n()) |> 
+ggplot(aes(fill = type1, area = n)) +
+  geom_treemap() +
+  labs(title = "Opcion tipo 1", fill="Tipo")
+```
+
+```{r}
+Car |> group_by(type2) |> summarize(n = n()) |> 
+ggplot(aes(fill = type2, area = n)) +
+  geom_treemap() +
+  labs(title = "Opcion tipo 2", fill="Tipo")
+```
+
+Bivariado
+
+```{r}
+Car |>  select(choice, cost1) |> summary()
+```
+
+
+```{r}
+Car |>  ggplot(aes(x = choice, y = cost1)) +
+  geom_boxplot()
+```
+```{r}
+Car |>  ggplot(aes(x = college, y = price1, fill = college)) +
+  geom_violin(trim = FALSE) +
+  geom_boxplot(width = 0.1, fill = "white") + 
+  labs(x="Colegio", y = expression("Precio"), fill = "College")
+```
+
+```{r}
+Car %>% ggplot(aes(x = speed6, y = type1, fill = type1)) +
+  geom_density_ridges(jittered_points = TRUE, bandwidth = 3.5, 
+                      position = position_points_jitter(width = 0.05, height = 0),
+                      point_shape = '|', point_size = 3, point_alpha = 1, alpha = 0.7) +
+  labs(y="type1", x = expression("speed 6"), fill = "type 1")
+```
+
+Relación entre dos variables categóricas
+
+```{r}
+tableau <- table(Car$choice, Car$fuel1)
+
+balloonplot(
+  as.table(tableau),
+  xlab = "Eleccción",
+  ylab = "Combustible",
+  dotsize = 3/max(strwidth(19), strheight(19)),
+  dotcolor = "skyblue",
+  text.size = 0.65,
+  main = "Modo como una funcion de combutible 1",
+  label = TRUE,
+  label.size = 0.80,
+  scale.method = c("volume"),
+  scale.range = c("absolute"),
+  colmar = 1, rowmar = 2,
+  show.zeros = TRUE,
+  show.margins = TRUE,
+  cum.margins = TRUE
+)
+```
+
+```{r}
+tableau <- table(Car$choice, Car$college)
+
+balloonplot(
+  as.table(tableau),
+  xlab = "Eleccion",
+  ylab = "Colegio",
+  dotsize = 3/max(strwidth(19), strheight(19)),
+  dotcolor = "skyblue",
+  text.size = 0.65,
+  main = "Modo como una funcion de colegio",
+  label = TRUE,
+  label.size = 0.80,
+  scale.method = c("volume"),
+  scale.range = c("absolute"),
+  colmar = 1, rowmar = 2,
+  show.zeros = TRUE,
+  show.margins = TRUE,
+  cum.margins = TRUE
+)
+```
+
+```{r}
+Car |>  ggplot() +
+  geom_mosaic(aes(x = product(type1, fuel4), fill = type1)) +
+  labs(x = "Combustible 4", y = "Mode", fill = "Mode")
+```
+
+```{r}
+Car |>  ggplot() +
+  geom_mosaic(aes(x = product(type2, fuel4), fill = type2)) +
+  labs(x = "Combustible 4", y = "Mode", fill = "Mode")
+```
+
+```{r}
+Car |> group_by(choice, type2) |> 
+  summarize(n = n(), .groups = "drop") |> 
+  ggplot(aes(x = choice, y = type2)) +
+  geom_tile(aes(fill = n)) +
+  labs(x = "Mode", y = "type 2", fill = "Number of respondents")
+```
+
+```{r}
+Car |> ggplot(aes(x = type2, fill = choice)) + 
+  geom_bar(position = "fill") + 
+  labs(y = "Proportion", x = "tipe 2", fill="Mode")
+```
+
+Multivariate
+
+```{r}
+ggplot(data = Car, aes(x = speed6, y = type1, fill = fuel1)) +
+  geom_density_ridges(jittered_points = TRUE, bandwidth = 3.5, 
+                      position = position_points_jitter(width = 0.05, height = 0), 
+                      point_shape = '|', point_size = 3, point_alpha = 1, alpha = 0.7) + 
+  labs(y="type1 1", x = expression("Speed 6"), 
+       fill = "Fuel 1")
+```
+
+```{r}
+ggplot(data = Car |>  group_by(choice, college) |> 
+         summarize(n = n(), pollution1 = mean(pollution1), .groups = "drop"),
+       aes(area = n, fill = pollution1, label = college, subgroup = choice)) +
+  geom_treemap() +
+  geom_treemap_subgroup_border(size = 5)+
+  geom_treemap_subgroup_text(fontface = "bold", colour = "white", place = "topleft",
+                             size = 13, grow = FALSE) +
+  geom_treemap_text(fontface = "italic", colour = "lightgray", place = "centre", size = 10,
+                    grow = FALSE) +
+  labs(title = "Preferencia por modo-colegio y contaminación", 
+       fill = expression("contaminacion"))
+```
+
+
 
 
 ```{r}
@@ -86,12 +240,7 @@ car_alluvia |>
 ```
 
 
-6. What ideas about individuals’ choices regarding car do you develop from this
-EDA exercise?
-
-
 ```{r}
-
 car_alluvia |> 
   ggplot(aes(y = frequency, axis1 = college, axis2 = type1, axis3=choice)) +
   geom_alluvium(aes(fill = college), width = 1/12, color = "black") +
@@ -101,6 +250,12 @@ car_alluvia |>
   scale_fill_brewer(type = "qual", palette = "Dark2") + 
   theme_minimal()
 ```
+
+6. What ideas about individuals’ choices regarding car do you develop from this
+EDA exercise?
+
+
+la mayoria de los encuestados fueron personas con colegio, estas en su mayoria tienen preferencia hacia un auto regular en el tipo 1, la mayoria del combustible utilizado es el methanol, la mayoria de las elecciones rondan entre el modo 3 y 5 tanto para los que estan o no en el colegio
 
 
 
