@@ -1,0 +1,27 @@
+{
+    "id": "C4162A99",
+    "path": "~/Github/R-studio/R_análisis_numerico/T_5/ejemplo/Ejemplo_ST/Time_Series_Indicadores.Rmd",
+    "project_path": "Time_Series_Indicadores.Rmd",
+    "type": "r_markdown",
+    "hash": "1390026001",
+    "contents": "",
+    "dirty": false,
+    "created": 1711376769039.0,
+    "source_on_save": false,
+    "relative_order": 1,
+    "properties": {
+        "source_window_id": "",
+        "Source": "Source",
+        "cursorPosition": "47,14",
+        "scrollLine": "38",
+        "last_setup_crc32": "a223fee6d2d0603a"
+    },
+    "folds": "",
+    "lastKnownWriteTime": 1711376405,
+    "encoding": "UTF-8",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1711378559816,
+    "read_only": false,
+    "read_only_alternatives": []
+}
