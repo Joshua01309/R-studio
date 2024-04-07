@@ -1,0 +1,5 @@
+"0","ggplot(datos)+"
+"0","  geom_histogram(aes(precios_consumidor, fill=factor(year(Periodo))), color=""black"")+"
+"0","  labs(fill=""Año"")+"
+"0","  theme_bw()"
+"0",""

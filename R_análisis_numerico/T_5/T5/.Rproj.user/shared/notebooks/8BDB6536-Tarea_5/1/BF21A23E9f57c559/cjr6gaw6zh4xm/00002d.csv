@@ -1,3 +1,0 @@
-"0","datos <- read_xlsx(""Indicadores.xlsx"")"
-"2","Error: `path` does not exist: ‘Indicadores.xlsx’
-"

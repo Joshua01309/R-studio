@@ -72,16 +72,599 @@ g) Selecciona un par de años consecutivos y realiza la interpolación con splin
 
 h) Redacta tus conclusiones.
 
+#Precios consumidor {.tabset}
 
-2. Grafica los diagramas de dispersión (por medio de una matriz) de los indicadores seleccionados.
+## Histograma
 
-3. Grafica la matriz de correlación.
+```{r echo=FALSE}
+ggplot(datos)+
+  geom_histogram(aes(precios_consumidor, fill=factor(year(Periodo))), color="black")+
+  labs(fill="Año")+
+  theme_bw()
 
-4. Lleva a cabo tres análisis de regresión lineal simple.
+```
 
-5. Realiza un análisis de regresión no lineal.
+## Resumen
 
-6. Lleva a cabo dos análisis de regresión lineal múltiple (dos variables independientes o predictores).
+```{r echo=FALSE}
+summary(datos$precios_consumidor)
+
+```
+## Serie temporal
+
+```{r echo=FALSE}
+precios_consumidor_ts<-ts(datos$precios_consumidor, start=c(1993, 1), frequency=12)
+precios_consumidor_xts<-as.xts(precios_consumidor_ts)
+
+ts_info(precios_consumidor_xts)
+ts_plot(precios_consumidor_xts, slider = TRUE)
+
+```
+
+## Descomposición
+
+```{r echo=FALSE}
+plot(decompose(precios_consumidor_ts, type = "additive"))
+
+```
+
+
+## Autocorrelación
+
+```{r echo=FALSE}
+acf(precios_consumidor_ts)
+```
+
+
+
+## Autorregresión {.tabset}
+
+### coeficiente
+
+```{r echo=FALSE}
+precios_consumidor_ar<-ar(precios_consumidor_ts, method = "mle", order.max = 3 )
+
+precios_consumidor_ar
+
+```
+### Gráfica 
+
+```{r echo=FALSE}
+ts.plot(precios_consumidor_ts, precios_consumidor_ts-precios_consumidor_ar$resid, lty=1:2, col=c("blue", "red"))
+
+```
+
+
+### Residuos
+
+```{r echo=FALSE}
+ts_plot(precios_consumidor_ar$resid)
+
+```
+
+## Spline
+
+```{r echo=FALSE}
+data_2022_2023<- datos|> filter(year(Periodo) %in% c(2022, 2023))
+data_2022_2023$Mes<-1:24
+
+precio_consumidor_sp<-function(x){ppval(cubicspline(data_2022_2023$Mes, data_2022_2023$precios_consumidor), x)}
+
+my_color<-c("Datos"="red", "Spline"="goldenrod2")
+
+grafica<-ggplot(data_2022_2023)+
+  geom_line(aes(Mes, precios_consumidor, color="Datos"), linewidth=0.75)+
+  geom_function(aes(color="Spline"), fun=precio_consumidor_sp, xlim=c(1,24), n=200)+
+  geom_point(aes(Mes, precios_consumidor), color="red", size=1.8)+
+  scale_color_manual(values=my_color)+
+  labs(color="")+
+  theme_bw()
+  
+ggplotly(grafica)
+
+```
+
+## Conclusiones
+
+
+#Actividad Economica {.tabset}
+
+## Histograma
+
+```{r echo=FALSE}
+ggplot(datos)+
+  geom_histogram(aes(actividad_economica, fill=factor(year(Periodo))), color="black")+
+  labs(fill="Año")+
+  theme_bw()
+
+```
+
+## Resumen
+
+```{r echo=FALSE}
+summary(datos$actividad_economica)
+
+```
+## Serie temporal
+
+```{r echo=FALSE}
+actividad_economica_ts<-ts(na.omit(datos$actividad_economica), start=c(1993, 1), frequency=12)
+actividad_economica_xts<-as.xts(actividad_economica_ts)
+
+ts_info(actividad_economica_xts)
+ts_plot(actividad_economica_xts, slider = TRUE)
+
+```
+
+## Descomposición
+
+```{r echo=FALSE}
+plot(decompose(actividad_economica_ts, type = "additive"))
+
+```
+
+
+## Autocorrelación
+
+```{r echo=FALSE}
+acf(actividad_economica_ts)
+```
+
+
+
+## Autorregresión {.tabset}
+
+### coeficiente
+
+```{r echo=FALSE}
+actividad_economica_ar<-ar(actividad_economica_ts, method = "mle", order.max = 3 )
+
+actividad_economica_ar
+
+```
+### Gráfica 
+
+```{r echo=FALSE}
+ts.plot(actividad_economica_ts, actividad_economica_ts-actividad_economica_ar$resid, lty=1:2, col=c("blue", "red"))
+
+```
+
+
+### Residuos
+
+```{r echo=FALSE}
+ts_plot(actividad_economica_ar$resid)
+
+```
+
+## Spline
+
+```{r echo=FALSE}
+data_2022_2023<- datos|> filter(year(Periodo) %in% c(2022, 2023))
+data_2022_2023$Mes<-1:24
+
+precio_consumidor_sp<-function(x){ppval(cubicspline(data_2022_2023$Mes, data_2022_2023$actividad_economica), x)}
+
+my_color<-c("Datos"="red", "Spline"="goldenrod2")
+
+grafica<-ggplot(data_2022_2023)+
+  geom_line(aes(Mes, actividad_economica, color="Datos"), linewidth=0.75)+
+  geom_function(aes(color="Spline"), fun=precio_consumidor_sp, xlim=c(1,24), n=200)+
+  geom_point(aes(Mes, actividad_economica), color="red", size=1.8)+
+  scale_color_manual(values=my_color)+
+  labs(color="")+
+  theme_bw()
+  
+ggplotly(grafica)
+
+```
+
+
+
+
+## Conclusiones
+
+
+#Actividad Industrial {.tabset}
+
+## Histograma
+
+```{r echo=FALSE}
+ggplot(datos)+
+  geom_histogram(aes(actividad_industrial, fill=factor(year(Periodo))), color="black")+
+  labs(fill="Año")+
+  theme_bw()
+
+```
+
+## Resumen
+
+```{r echo=FALSE}
+summary(datos$actividad_industrial)
+
+```
+## Serie temporal
+
+```{r echo=FALSE}
+actividad_industrial_ts<-ts(na.omit(datos$actividad_industrial), start=c(1993, 1), frequency=12)
+actividad_industrial_xts<-as.xts(actividad_industrial_ts)
+
+ts_info(actividad_industrial_xts)
+ts_plot(actividad_industrial_xts, slider = TRUE)
+
+```
+
+## Descomposición
+
+```{r echo=FALSE}
+plot(decompose(actividad_industrial_ts, type = "additive"))
+
+```
+
+
+## Autocorrelación
+
+```{r echo=FALSE}
+acf(actividad_industrial_ts)
+```
+
+
+
+## Autorregresión {.tabset}
+
+## coeficiente
+
+```{r echo=FALSE}
+actividad_industrial_ar<-ar(actividad_industrial_ts, method = "mle", order.max = 3 )
+
+actividad_industrial_ar
+
+```
+### Gráfica 
+
+```{r echo=FALSE}
+ts.plot(actividad_industrial_ts, actividad_industrial_ts-actividad_industrial_ar$resid, lty=1:2, col=c("blue", "red"))
+
+```
+
+
+### Residuos
+
+```{r echo=FALSE}
+ts_plot(actividad_industrial_ar$resid)
+
+```
+
+## Spline
+
+```{r echo=FALSE}
+data_2022_2023<- datos|> filter(year(Periodo) %in% c(2022, 2023))
+data_2022_2023$Mes<-1:24
+
+precio_consumidor_sp<-function(x){ppval(cubicspline(data_2022_2023$Mes, data_2022_2023$actividad_industrial), x)}
+
+my_color<-c("Datos"="red", "Spline"="goldenrod2")
+
+grafica<-ggplot(data_2022_2023)+
+  geom_line(aes(Mes, actividad_industrial, color="Datos"), linewidth=0.75)+
+  geom_function(aes(color="Spline"), fun=precio_consumidor_sp, xlim=c(1,24), n=200)+
+  geom_point(aes(Mes, actividad_industrial), color="red", size=1.8)+
+  scale_color_manual(values=my_color)+
+  labs(color="")+
+  theme_bw()
+  
+ggplotly(grafica)
+
+```
+
+
+
+
+## Conclusiones
+
+
+
+# Exportaciones totales {.tabset}
+
+## Histograma
+
+```{r echo=FALSE}
+ggplot(datos)+
+  geom_histogram(aes(exportaciones_totales, fill=factor(year(Periodo))), color="black")+
+  labs(fill="Año")+
+  theme_bw()
+
+```
+
+## Resumen
+
+```{r echo=FALSE}
+summary(datos$exportaciones_totales)
+
+```
+## Serie temporal
+
+```{r echo=FALSE}
+exportaciones_totales_ts<-ts(na.omit(datos$exportaciones_totales), start=c(1993, 1), frequency=12)
+exportaciones_totales_xts<-as.xts(exportaciones_totales_ts)
+
+ts_info(exportaciones_totales_xts)
+ts_plot(exportaciones_totales_xts, slider = TRUE)
+
+```
+
+## Descomposición
+
+```{r echo=FALSE}
+plot(decompose(exportaciones_totales_ts, type = "additive"))
+
+```
+
+
+## Autocorrelación
+
+```{r echo=FALSE}
+acf(exportaciones_totales_ts)
+```
+
+
+
+## Autorregresión {.tabset}
+
+### coeficiente
+
+```{r echo=FALSE}
+exportaciones_totales_ar<-ar(exportaciones_totales_ts, method = "mle", order.max = 3 )
+
+exportaciones_totales_ar
+
+```
+### Gráfica 
+
+```{r echo=FALSE}
+ts.plot(exportaciones_totales_ts, exportaciones_totales_ts-exportaciones_totales_ar$resid, lty=1:2, col=c("blue", "red"))
+
+```
+
+
+### Residuos
+
+```{r echo=FALSE}
+ts_plot(exportaciones_totales_ar$resid)
+
+```
+
+## Spline
+
+```{r echo=FALSE}
+data_2022_2023<- datos|> filter(year(Periodo) %in% c(2022, 2023))
+data_2022_2023$Mes<-1:24
+
+precio_consumidor_sp<-function(x){ppval(cubicspline(data_2022_2023$Mes, data_2022_2023$exportaciones_totales), x)}
+
+my_color<-c("Datos"="red", "Spline"="goldenrod2")
+
+grafica<-ggplot(data_2022_2023)+
+  geom_line(aes(Mes, exportaciones_totales, color="Datos"), linewidth=0.75)+
+  geom_function(aes(color="Spline"), fun=precio_consumidor_sp, xlim=c(1,24), n=200)+
+  geom_point(aes(Mes, exportaciones_totales), color="red", size=1.8)+
+  scale_color_manual(values=my_color)+
+  labs(color="")+
+  theme_bw()
+  
+ggplotly(grafica)
+
+```
+
+
+
+
+## Conclusiones
+
+
+
+
+
+
+
+
+#Cetes 28 dias {.tabset}
+
+## Histograma
+
+```{r echo=FALSE}
+ggplot(datos)+
+  geom_histogram(aes(Cetes_28_dias, fill=factor(year(Periodo))), color="black")+
+  labs(fill="Año")+
+  theme_bw()
+
+```
+
+## Resumen
+
+```{r echo=FALSE}
+summary(datos$Cetes_28_dias)
+
+```
+## Serie temporal
+
+```{r echo=FALSE}
+Cetes_28_dias_ts<-ts(na.omit(datos$Cetes_28_dias), start=c(1993, 1), frequency=12)
+Cetes_28_dias_xts<-as.xts(Cetes_28_dias_ts)
+
+ts_info(Cetes_28_dias_xts)
+ts_plot(Cetes_28_dias_xts, slider = TRUE)
+
+```
+
+## Descomposición
+
+```{r echo=FALSE}
+plot(decompose(Cetes_28_dias_ts, type = "additive"))
+
+```
+
+
+## Autocorrelación
+
+```{r echo=FALSE}
+acf(Cetes_28_dias_ts)
+```
+
+
+
+## Autorregresión {.tabset}
+
+### coeficiente
+
+```{r echo=FALSE}
+Cetes_28_dias_ar<-ar(Cetes_28_dias_ts, method = "mle", order.max = 3 )
+
+Cetes_28_dias_ar
+
+```
+### Gráfica 
+
+```{r echo=FALSE}
+ts.plot(Cetes_28_dias_ts, Cetes_28_dias_ts-Cetes_28_dias_ar$resid, lty=1:2, col=c("blue", "red"))
+
+```
+
+
+### Residuos
+
+```{r echo=FALSE}
+ts_plot(Cetes_28_dias_ar$resid)
+
+```
+
+## Spline
+
+```{r echo=FALSE}
+data_2022_2023<- datos|> filter(year(Periodo) %in% c(2022, 2023))
+data_2022_2023$Mes<-1:24
+
+precio_consumidor_sp<-function(x){ppval(cubicspline(data_2022_2023$Mes, data_2022_2023$Cetes_28_dias), x)}
+
+my_color<-c("Datos"="red", "Spline"="goldenrod2")
+
+grafica<-ggplot(data_2022_2023)+
+  geom_line(aes(Mes, Cetes_28_dias, color="Datos"), linewidth=0.75)+
+  geom_function(aes(color="Spline"), fun=precio_consumidor_sp, xlim=c(1,24), n=200)+
+  geom_point(aes(Mes, Cetes_28_dias), color="red", size=1.8)+
+  scale_color_manual(values=my_color)+
+  labs(color="")+
+  theme_bw()
+  
+ggplotly(grafica)
+
+```
+
+
+## Conclusiones
+
+
+#Tasa de bonos de tesoro EUA {.tabset}
+
+## Histograma
+
+```{r echo=FALSE}
+ggplot(datos)+
+  geom_histogram(aes(tasa_bonos_tesoro_EUA, fill=factor(year(Periodo))), color="black")+
+  labs(fill="Año")+
+  theme_bw()
+
+```
+
+## Resumen
+
+```{r echo=FALSE}
+summary(datos$tasa_bonos_tesoro_EUA)
+
+```
+## Serie temporal
+
+```{r echo=FALSE}
+tasa_bonos_tesoro_EUA_ts<-ts(na.omit(datos$tasa_bonos_tesoro_EUA), start=c(1993, 1), frequency=12)
+tasa_bonos_tesoro_EUA_xts<-as.xts(tasa_bonos_tesoro_EUA_ts)
+
+ts_info(tasa_bonos_tesoro_EUA_xts)
+ts_plot(tasa_bonos_tesoro_EUA_xts, slider = TRUE)
+
+```
+
+## Descomposición
+
+```{r echo=FALSE}
+plot(decompose(tasa_bonos_tesoro_EUA_ts, type = "additive"))
+
+```
+
+
+## Autocorrelación
+
+```{r echo=FALSE}
+acf(tasa_bonos_tesoro_EUA_ts)
+```
+
+
+
+## Autorregresión {.tabset}
+
+### coeficiente
+
+```{r echo=FALSE}
+tasa_bonos_tesoro_EUA_ar<-ar(tasa_bonos_tesoro_EUA_ts, method = "mle", order.max = 3 )
+
+tasa_bonos_tesoro_EUA_ar
+
+```
+### Gráfica 
+
+```{r echo=FALSE}
+ts.plot(tasa_bonos_tesoro_EUA_ts, tasa_bonos_tesoro_EUA_ts-tasa_bonos_tesoro_EUA_ar$resid, lty=1:2, col=c("blue", "red"))
+
+```
+
+
+### Residuos
+
+```{r echo=FALSE}
+ts_plot(tasa_bonos_tesoro_EUA_ar$resid)
+
+```
+
+## Spline
+
+```{r echo=FALSE}
+data_2022_2023<- datos|> filter(year(Periodo) %in% c(2022, 2023))
+data_2022_2023$Mes<-1:24
+
+precio_consumidor_sp<-function(x){ppval(cubicspline(data_2022_2023$Mes, data_2022_2023$tasa_bonos_tesoro_EUA), x)}
+
+my_color<-c("Datos"="red", "Spline"="goldenrod2")
+
+grafica<-ggplot(data_2022_2023)+
+  geom_line(aes(Mes, tasa_bonos_tesoro_EUA, color="Datos"), linewidth=0.75)+
+  geom_function(aes(color="Spline"), fun=precio_consumidor_sp, xlim=c(1,24), n=200)+
+  geom_point(aes(Mes, tasa_bonos_tesoro_EUA), color="red", size=1.8)+
+  scale_color_manual(values=my_color)+
+  labs(color="")+
+  theme_bw()
+  
+ggplotly(grafica)
+
+```
+
+
+
+
+## Conclusiones
+
+
+
+
+
 
 
 

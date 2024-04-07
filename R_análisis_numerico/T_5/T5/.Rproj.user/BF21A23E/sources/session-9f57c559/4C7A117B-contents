@@ -1,0 +1,127 @@
+---
+title: "Capítulo 5"
+date: "Marzo 2024"
+output: 
+  html_document:
+    toc: true
+    toc_depth: 1
+    theme: cerulean
+---
+
+
+<style>
+body {
+text-align: justify}
+</style>
+
+<style type="text/css">
+body{/*Normal*/
+     font-size: 20px;
+}
+</style>
+
+```{r}
+library(knitr)
+library(tidyverse)
+library(discrtr) # A companion package for the book Introduction to Discrete Choice Analysis with `R`
+library(dplyr) # A Grammar of Data Manipulation
+library(ggplot2) # Create Elegant Data Visualisations Using the Grammar of Graphics
+library(mlogit) # Multinomial Logit Models
+library(readr) # Read Rectangular Text Data
+#library(stargazer) # Well-Formatted Regression and Summary Statistics Tables
+library(gplots) # Various R Programming Tools for Plotting Data
+library(ggmosaic) # Mosaic Plots in the 'ggplot2' Framework
+library(treemapify)
+library(ggridges)
+library(ggalluvial)
+library(evd)
+library(htmlwidgets) # HTML Widgets for R
+library(kableExtra) # Construct Complex Table with kable and Pipe Syntax
+library(plotly) # Create interactive web graphics
+library(tidyr) # Tidy messy data
+library(webshot2) # Take screenshots of web pages
+```
+
+```{r}
+data("mc_commute_wide", package = "discrtr")
+summary(mc_commute_wide)
+```
+
+
+```{r}
+example_long <- mc_commute_wide %>% filter(id %in% c(566910139, 566873140, 566872636)) |> 
+                mlogit.data(shape="wide", choice="choice", varying=3:22)
+```
+
+```{r}
+f2 <- mFormula(choice ~ time | sidewalk_density)
+f2 |>  model.matrix(example_long)
+```
+```{r}
+# Function `mlogit()` is used to estimate logit models
+# It needs a multi-part formula and a data set in long form
+model2 <- mlogit(f2, mc_commute_long, relevel="walk")
+# Function `summary()` give the summary of data objects,
+# including the output of model estimation algorithms
+summary(model2)
+```
+
+1. In the example in this chapter we estimated the probabilities of choosing differ-
+ent modes by sidewalk density setting travel time to the in-sample median. Use
+
+model2 to calculate the probability of choosing different modes by in-sample
+median sidewalk density but now for travel times of 20, 30, and 40 min. Discuss
+the results.
+
+```{r}
+# Suponiendo que model2 ya ha sido estimado previamente
+# Puedes usar la función predict() para obtener las probabilidades de elección para los diferentes modos
+# Aquí estoy asumiendo que tienes un objeto llamado model2 ya estimado
+
+# Calcular las probabilidades para los tiempos de viaje específicos
+times <- c(20, 30, 40)
+# Obtener las probabilidades de elección para los diferentes modos en función de la densidad de acera mediana
+probabilities <- predict(model2, example_long, newdata = data.frame(time = times))
+
+# Imprimir las probabilidades calculadas
+print(probabilities)
+
+```
+
+
+
+2. Estimate a model using formula f3 (call it model3). Discuss the output of this
+model.
+
+
+
+```{r}
+f3 <- mFormula(choice ~ 0 | sidewalk_density | time)
+f3 |>  model.matrix(example_long)
+```
+
+```{r}
+# Function `mlogit()` is used to estimate logit models
+# It needs a multi-part formula and a data set in long form
+model3 <- mlogit(f3, mc_commute_long)
+# Function `summary()` give the summary of data objects,
+# including the output of model estimation algorithms
+summary(model3)
+```
+
+
+
+3. Use model3 to calculate the probability of choosing different modes by in-
+sample median sidewalk density but now for travel times of 20, 30, and 40 min.
+
+Discuss the results.
+4. In the general case, what is the value of the log-likelihood of the null (Equally
+Likely) model?
+5. Use the likelihood ratio test to compare model3 to model2? Discuss the results.
+What restrictions would you need to impose in model3 to obtain model2?
+
+
+
+
+
+

@@ -1,0 +1,2 @@
+"0","plot(decompose(precios_consumidor_ts, type = ""additive""))"
+"0",""

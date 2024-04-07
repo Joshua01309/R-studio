@@ -1,0 +1,2 @@
+"0","ts.plot(precios_consumidor_ts, precios_consumidor_ts-precios_consumidor_ar$resid, lty=1:2, col=c(""blue"", ""red""))"
+"0",""

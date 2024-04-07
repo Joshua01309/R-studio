@@ -1,0 +1,65 @@
+"0","library(knitr)"
+"0","library(tidyverse)"
+"0","library(discrtr) # A companion package for the book Introduction to Discrete Choice Analysis with `R`"
+"0","library(dplyr) # A Grammar of Data Manipulation"
+"0","library(ggplot2) # Create Elegant Data Visualisations Using the Grammar of Graphics"
+"0","library(mlogit) # Multinomial Logit Models"
+"2","Loading required package: dfidx
+"
+"2","
+Attaching package: ‘dfidx’
+
+"
+"2","The following object is masked from ‘package:MASS’:
+
+    select
+
+"
+"2","The following object is masked from ‘package:stats’:
+
+    filter
+
+"
+"0","library(readr) # Read Rectangular Text Data"
+"0","#library(stargazer) # Well-Formatted Regression and Summary Statistics Tables"
+"0","library(gplots) # Various R Programming Tools for Plotting Data"
+"2","
+Attaching package: ‘gplots’
+
+"
+"2","The following object is masked from ‘package:stats’:
+
+    lowess
+
+"
+"0","library(ggmosaic) # Mosaic Plots in the 'ggplot2' Framework"
+"0","library(treemapify)"
+"0","library(ggridges)"
+"0","library(ggalluvial)"
+"0","library(evd)"
+"2","Warning: package ‘evd’ was built under R version 4.3.3"
+"2","
+Attaching package: ‘evd’
+
+"
+"2","The following object is masked from ‘package:car’:
+
+    subsets
+
+"
+"0","library(htmlwidgets) # HTML Widgets for R"
+"0","library(kableExtra) # Construct Complex Table with kable and Pipe Syntax"
+"2","Warning: package ‘kableExtra’ was built under R version 4.3.3"
+"2","
+Attaching package: ‘kableExtra’
+
+"
+"2","The following object is masked from ‘package:dplyr’:
+
+    group_rows
+
+"
+"0","library(plotly) # Create interactive web graphics"
+"0","library(tidyr) # Tidy messy data"
+"0","library(webshot2) # Take screenshots of web pages"
+"2","Warning: package ‘webshot2’ was built under R version 4.3.3"

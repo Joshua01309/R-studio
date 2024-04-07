@@ -1,0 +1,3 @@
+"0","example_wide <- mc_commute_wide %>% dplyr::select(id, choice, starts_with(""time"")) |> "
+"0","               filter(id %in% c(566910139, 566873140, 566872636))"
+"0","example_wide"

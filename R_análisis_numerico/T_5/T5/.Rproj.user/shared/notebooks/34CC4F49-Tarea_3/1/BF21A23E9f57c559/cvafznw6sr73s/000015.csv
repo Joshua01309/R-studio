@@ -1,0 +1,11 @@
+"0","# Suponiendo que model2 ya ha sido estimado previamente"
+"0","# Puedes usar la función predict() para obtener las probabilidades de elección para los diferentes modos"
+"0","# Aquí estoy asumiendo que tienes un objeto llamado model2 ya estimado"
+"0",""
+"0","# Calcular las probabilidades para los tiempos de viaje específicos"
+"0","times <- c(20, 30, 40)"
+"0","# Obtener las probabilidades de elección para los diferentes modos en función de la densidad de acera mediana"
+"0","probabilities <- predict(model2, example_long, newdata = data.frame(time = times))"
+"2","Error in predict.mlogit(model2, example_long, newdata = data.frame(time = times)) : 
+  the number of rows of the data.frame should be a multiple of the number of alternatives
+"
