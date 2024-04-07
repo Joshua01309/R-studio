@@ -72,7 +72,7 @@ g) Selecciona un par de años consecutivos y realiza la interpolación con splin
 
 h) Redacta tus conclusiones.
 
-#Precios consumidor {.tabset}
+# Precios consumidor {.tabset}
 
 ## Histograma
 
@@ -167,7 +167,7 @@ ggplotly(grafica)
 ## Conclusiones
 
 
-#Actividad Economica {.tabset}
+# Actividad Economica {.tabset}
 
 ## Histograma
 
@@ -265,7 +265,7 @@ ggplotly(grafica)
 ## Conclusiones
 
 
-#Actividad Industrial {.tabset}
+# Actividad Industrial {.tabset}
 
 ## Histograma
 
@@ -468,7 +468,7 @@ ggplotly(grafica)
 
 
 
-#Cetes 28 dias {.tabset}
+# Cetes 28 dias {.tabset}
 
 ## Histograma
 
@@ -564,7 +564,7 @@ ggplotly(grafica)
 ## Conclusiones
 
 
-#Tasa de bonos de tesoro EUA {.tabset}
+# Tasa de bonos de tesoro EUA {.tabset}
 
 ## Histograma
 
