@@ -1,2 +1,0 @@
-"0","example_long <- mc_commute_wide %>% filter(id %in% c(566910139, 566873140, 566872636)) |> "
-"0","                mlogit.data(shape=""wide"", choice=""choice"", varying=3:22)"
