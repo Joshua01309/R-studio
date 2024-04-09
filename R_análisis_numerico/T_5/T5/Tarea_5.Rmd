@@ -670,4 +670,134 @@ ggplotly(grafica)
 
 
 
+# 2da parte
+
+2. Grafica los diagramas de dispersión (por medio de una matriz) de los indicadores seleccionados.
+
+
+```{r echo=FALSE, fig.height=15, fig.width=15}
+data_select<-datos[ , c(2,4,9, 18,23, 40)]
+scatterplotMatrix(~actividad_economica+ actividad_industrial+precios_consumidor+exportaciones_totales+Cetes_28_dias+tasa_bonos_tesoro_EUA , regLine=TRUE, smooth=FALSE, diagonal=list(method="histogram") , data=data_select)
+```
+
+
+
+3. Grafica la matriz de correlación.
+
+```{r echo=FALSE}
+cor_indicadores<- cor(na.omit(data_select))
+corrplot(cor_indicadores, method="color")
+
+```
+
+
+4. Lleva a cabo tres análisis de regresión lineal simple.
+
+
+```{r}
+ggplot(datos)+
+  geom_point(aes(actividad_economica, exportaciones_totales), color="#EEE234", size=1.5)+
+  geom_smooth(aes(actividad_economica, exportaciones_totales), color="red4", linewidth=1.2, method = "lm")+
+  theme_bw()
+```
+
+
+```{r}
+rl_ei <- lm(exportaciones_totales~ actividad_economica, data=datos)
+summary(rl_ei)
+```
+
+```{r}
+ggplot(datos)+
+  geom_point(aes(tasa_bonos_tesoro_EUA, Cetes_28_dias), color="#EEE234", size=1.5)+
+  geom_smooth(aes(tasa_bonos_tesoro_EUA, Cetes_28_dias), color="red4", linewidth=1.2, method = "lm")+
+  theme_bw()
+```
+
+
+```{r}
+rl_ei <- lm(Cetes_28_dias~ tasa_bonos_tesoro_EUA, data=datos)
+summary(rl_ei)
+```
+
+```{r}
+ggplot(datos)+
+  geom_point(aes(actividad_industrial, precios_consumidor), color="#EEE234", size=1.5)+
+  geom_smooth(aes(actividad_industrial, precios_consumidor), color="red4", linewidth=1.2, method = "lm")+
+  theme_bw()
+```
+
+
+```{r}
+rl_ei <- lm(precios_consumidor~ actividad_industrial, data=datos)
+summary(rl_ei)
+```
+
+
+
+
+
+5. Realiza un análisis de regresión no lineal.
+
+```{r}
+data_comp <- datos |> dplyr::select(Periodo, actividad_economica, Cetes_28_dias)
+data_comp <- na.omit(data_comp)
+
+rc_ei <- lm(Cetes_28_dias~ actividad_economica+ I(actividad_economica^2), data=data_comp)
+
+summary(rc_ei)
+
+data_comp <- mutate(data_comp, Cetes_28_dias_ajuste=rc_ei$fitted.values)
+```
+
+
+```{r}
+ggplot(data_comp)+
+  geom_point(aes(actividad_economica, Cetes_28_dias), color="#EEE234", size=1.5)+
+  geom_line(aes(actividad_economica, Cetes_28_dias_ajuste), color="red4", linewidth=1.2)+
+  theme_bw()
+```
+
+
+
+6. Lleva a cabo dos análisis de regresión lineal múltiple (dos variables independientes o predictores).
+
+# Actividad economica RLM {.tabset}
+
+## Coeficientes
+
+```{r echo=FALSE}
+reg_multiple<- lm(actividad_economica~actividad_industrial+ exportaciones_totales, data=data_select)
+
+summary(reg_multiple)
+```
+
+
+## Scatterplot
+
+```{r webgl=TRUE}
+scatter3d(actividad_economica~actividad_industrial+ exportaciones_totales, data= data_select, fit="linear", residuals=TRUE, bg="white", axis.scales=TRUE, 
+          grid=TRUE, ellipsoid=FALSE)
+```
+
+
+# Tasa de bonos de EUA RLM {.tabset}
+
+## Coeficientes
+
+```{r echo=FALSE}
+reg_multiple<- lm(tasa_bonos_tesoro_EUA~Cetes_28_dias+ precios_consumidor, data=data_select)
+
+summary(reg_multiple)
+```
+
+## Scatterplot
+
+```{r webgl=TRUE}
+scatter3d(tasa_bonos_tesoro_EUA~Cetes_28_dias+ precios_consumidor, data= data_select, fit="linear", residuals=TRUE, bg="white", axis.scales=TRUE, 
+          grid=TRUE, ellipsoid=FALSE)
+```
+
+
+
 

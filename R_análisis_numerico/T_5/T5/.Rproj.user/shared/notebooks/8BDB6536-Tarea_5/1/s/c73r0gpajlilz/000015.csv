@@ -1,0 +1,2 @@
+"0","data_select<-datos[ , c(2,4,9, 18,23, 40)]"
+"0","scatterplotMatrix(~actividad_economica+ actividad_industrial+precios_consumidor+exportaciones_totales+Cetes_28_dias+tasa_bonos_tesoro_EUA , regLine=TRUE, smooth=FALSE, diagonal=list(method=""histogram"") , data=data_select)"

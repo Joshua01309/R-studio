@@ -1,0 +1,4 @@
+"0","ggplot(datos)+"
+"0","  geom_point(aes(actividad_economica, exportaciones_totales), color=""#EEE234"", size=1.5)+"
+"0","  geom_smooth(aes(actividad_economica, exportaciones_totales), color=""red4"", linewidth=1.2, method = ""lm"")+"
+"0","  theme_bw()"

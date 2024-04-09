@@ -1,0 +1,4 @@
+"0","ggplot(data_comp)+"
+"0","  geom_point(aes(actividad_economica, Cetes_28_dias), color=""#EEE234"", size=1.5)+"
+"0","  geom_line(aes(actividad_economica, Cetes_28_dias_ajuste), color=""red4"", linewidth=1.2)+"
+"0","  theme_bw()"

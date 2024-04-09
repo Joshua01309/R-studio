@@ -1,0 +1,2 @@
+"0","scatter3d(tasa_bonos_tesoro_EUA~Cetes_28_dias+ precios_consumidor, data= data_select, fit=""linear"", residuals=TRUE, bg=""white"", axis.scales=TRUE, "
+"0","          grid=TRUE, ellipsoid=FALSE)"

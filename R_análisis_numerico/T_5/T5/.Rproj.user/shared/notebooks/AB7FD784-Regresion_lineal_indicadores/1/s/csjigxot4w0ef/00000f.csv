@@ -1,0 +1,4 @@
+"0","ggplot(datos)+"
+"0","  geom_line(aes(Periodo, exportaciones_totales), color=""red"")+"
+"0","  geom_line(aes(Periodo, actividad_industrial*550), color=""blue"")+"
+"0","  theme_bw()"

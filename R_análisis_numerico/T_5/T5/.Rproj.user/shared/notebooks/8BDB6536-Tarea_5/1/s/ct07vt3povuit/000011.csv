@@ -1,0 +1,3 @@
+"0","cor_indicadores<- cor(na.omit(data_select))"
+"0","corrplot(cor_indicadores, method=""color"")"
+"0",""

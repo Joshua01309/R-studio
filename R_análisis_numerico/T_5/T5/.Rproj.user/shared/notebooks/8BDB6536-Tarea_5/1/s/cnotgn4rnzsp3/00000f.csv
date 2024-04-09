@@ -1,0 +1,4 @@
+"0","scatter3d(actividad_economica~actividad_industrial+ exportaciones_totales, data= data_select, fit=""linear"", residuals=TRUE, bg=""white"", axis.scales=TRUE, "
+"0","          grid=TRUE, ellipsoid=FALSE)"
+"0",""
+"0",""
