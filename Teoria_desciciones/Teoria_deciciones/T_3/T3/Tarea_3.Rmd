@@ -61,6 +61,117 @@ model2 to calculate the probability of choosing different modes by in-sample
 median sidewalk density but now for travel times of 20, 30, and 40 min. Discuss
 the results.
 
+```{r}
+mc_commute_long <- mc_commute_wide |> 
+mlogit.data(shape="wide",
+            # Name of column with the choices
+            choice = "choice",
+            # Numbers of columns with attributes that vary by alternative
+            varying = 3:22)
+```
+
+```{r}
+f2 <- mFormula(choice ~ time | sidewalk_density)
+f2 |>  model.matrix(example_long)
+```
+
+
+```{r}
+class(f2)
+```
+
+
+
+```{r}
+model2 <- mlogit(f2, mc_commute_long)
+
+summary(model2)
+```
+
+
+```{r}
+summary(mc_commute_long$sidewalk_density)
+```
+
+```{r}
+mc_commute_predict <- mc_commute_long[1:52, ]
+```
+
+
+```{r}
+mc_commute_predict$sidewalk_density <- rep(seq(from=0, to=60, by=5), each=4)
+```
+
+```{r}
+mc_commute_predict |>  data.frame() |>  select(sidewalk_density) |>  slice_head(n=10)
+```
+
+```{r}
+median(mc_commute_predict$time, na.rm=TRUE)
+```
+
+
+```{r}
+mc_commute_predict$time <- 10
+```
+
+
+```{r}
+mc_commute_predict %>% data.frame() %>% select(time, sidewalk_density) %>% summary()
+```
+
+
+
+
+```{r}
+probs <- predict(model2, newdata=mc_commute_predict)
+```
+
+```{r}
+print(probs)
+```
+
+```{r}
+# Se carga el paquete mlogit
+library(mlogit)
+
+# Se cargan los datos de ejemplo
+data(mc_commute_long)
+
+# Se estima el modelo mlogit original
+model2 <- mlogit(choice ~ time | sidewalk_density, mc_commute_long)
+
+# Se obtiene la mediana del tiempo de viaje
+median_time <- median(mc_commute_long$time, na.rm = TRUE)
+
+# Se crea un marco de datos para predecir probabilidades
+mc_commute_predict <- mc_commute_long[1:52, ]
+
+# Se establecen valores de tiempo de viaje
+tiempos <- c(10,20, 30, 40)
+
+# Se calcula la densidad media de la acera
+mean_sidewalk_density <- mean(mc_commute_long$sidewalk_density)
+
+# Se itera sobre los tiempos de viaje
+for (tiempo in tiempos) {
+  # Se reemplaza el tiempo en el marco de datos predictivo
+  mc_commute_predict$time <- tiempo
+
+  # Se calculan las probabilidades
+  probs <- predict(model2, newdata = mc_commute_predict)
+
+  # Se imprimen los resultados
+  print(paste("Probabilidades para tiempo de viaje:", tiempo))
+  print(probs)
+}
+
+```
+
+
+
+
+
 
 2. Estimate a model using formula f3 (call it model3). Discuss the output of this
 model.
