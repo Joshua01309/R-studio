@@ -132,17 +132,7 @@ print(probs)
 ```
 
 ```{r}
-# Se carga el paquete mlogit
-library(mlogit)
 
-# Se cargan los datos de ejemplo
-data(mc_commute_long)
-
-# Se estima el modelo mlogit original
-model2 <- mlogit(choice ~ time | sidewalk_density, mc_commute_long)
-
-# Se obtiene la mediana del tiempo de viaje
-median_time <- median(mc_commute_long$time, na.rm = TRUE)
 
 # Se crea un marco de datos para predecir probabilidades
 mc_commute_predict <- mc_commute_long[1:52, ]
@@ -177,7 +167,6 @@ for (tiempo in tiempos) {
 model.
 
 
-
 ```{r}
 f3 <- mFormula(choice ~ 0 | sidewalk_density | time)
 f3 |>  model.matrix(example_long)
@@ -192,17 +181,82 @@ model3 <- mlogit(f3, mc_commute_long)
 summary(model3)
 ```
 
+```{r}
+class(f3)
+```
+
+
+
+```{r}
+probs <- predict(model3, newdata=mc_commute_predict)
+```
+
+```{r}
+print(probs)
+```
+
 
 
 3. Use model3 to calculate the probability of choosing different modes by in-
 sample median sidewalk density but now for travel times of 20, 30, and 40 min.
 
 Discuss the results.
+
+
+```{r}
+# Se crea un marco de datos para predecir probabilidades
+mc_commute_predict <- mc_commute_long[1:52, ]
+
+# Se establecen valores de tiempo de viaje
+tiempos <- c(10,20, 30, 40)
+
+# Se calcula la densidad media de la acera
+mean_sidewalk_density <- mean(mc_commute_long$sidewalk_density)
+
+# Se itera sobre los tiempos de viaje
+for (tiempo in tiempos) {
+  # Se reemplaza el tiempo en el marco de datos predictivo
+  mc_commute_predict$time <- tiempo
+
+  # Se calculan las probabilidades
+  probs <- predict(model3, newdata = mc_commute_predict)
+
+  # Se imprimen los resultados
+  print(paste("Probabilidades para tiempo de viaje:", tiempo))
+  print(probs)
+}
+
+```
+
+
+
+
+
 4. In the general case, what is the value of the log-likelihood of the null (Equally
 Likely) model?
+
+```{r}
+f0 <- mFormula(choice ~ 1)
+model0 <- mlogit(f0, mc_commute_long)
+summary(model0)
+```
+
+```{r}
+1-as.numeric(model2$logLik)/as.numeric(model0$logLik)
+```
+
+```{r}
+1-as.numeric(model3$logLik)/as.numeric(model0$logLik)
+```
+
+
+
 5. Use the likelihood ratio test to compare model3 to model2? Discuss the results.
 What restrictions would you need to impose in model3 to obtain model2?
 
+```{r}
+lrtest(model2, model3)
+```
 
 
 

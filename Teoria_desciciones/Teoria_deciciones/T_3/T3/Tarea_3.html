@@ -690,19 +690,7 @@ summary(model2)</code></pre>
 ## 11 0.01510533 0.04358057 0.03232680 0.9089873
 ## 12 0.01279350 0.04231084 0.02761229 0.9172834
 ## 13 0.01082299 0.04103075 0.02355815 0.9245881</code></pre>
-<pre class="r"><code># Se carga el paquete mlogit
-library(mlogit)
-
-# Se cargan los datos de ejemplo
-data(mc_commute_long)
-
-# Se estima el modelo mlogit original
-model2 &lt;- mlogit(choice ~ time | sidewalk_density, mc_commute_long)
-
-# Se obtiene la mediana del tiempo de viaje
-median_time &lt;- median(mc_commute_long$time, na.rm = TRUE)
-
-# Se crea un marco de datos para predecir probabilidades
+<pre class="r"><code># Se crea un marco de datos para predecir probabilidades
 mc_commute_predict &lt;- mc_commute_long[1:52, ]
 
 # Se establecen valores de tiempo de viaje
@@ -857,15 +845,161 @@ summary(model3)</code></pre>
 ## Log-Likelihood: -684.75
 ## McFadden R^2:  0.55744 
 ## Likelihood ratio test : chisq = 1725 (p.value = &lt; 2.22e-16)</code></pre>
+<pre class="r"><code>class(f3)</code></pre>
+<pre><code>## [1] &quot;mFormula&quot; &quot;Formula&quot;  &quot;formula&quot;</code></pre>
+<pre class="r"><code>probs &lt;- predict(model3, newdata=mc_commute_predict)</code></pre>
+<pre class="r"><code>print(probs)</code></pre>
+<pre><code>##             Car     Cycle          HSR         Walk
+## 1  0.0019166424 0.9972829 0.0004740001 0.0003264314
+## 2  0.0007708754 0.9988263 0.0001950852 0.0002077367
+## 3  0.0041388470 0.9943795 0.0010037937 0.0004779055
+## 4  0.0008665116 0.9986947 0.0002186406 0.0002201559
+## 5  0.0008665116 0.9986947 0.0002186406 0.0002201559
+## 6  0.0023823927 0.9966681 0.0005859479 0.0003635932
+## 7  0.0015947952 0.9977110 0.0003962437 0.0002979903
+## 8  0.0021735857 0.9969431 0.0005358351 0.0003474360
+## 9  0.0041388470 0.9943795 0.0010037937 0.0004779055
+## 10 0.0023823927 0.9966681 0.0005859479 0.0003635932
+## 11 0.0011961910 0.9982461 0.0002993761 0.0002583652
+## 12 0.0035078893 0.9951974 0.0008543452 0.0004403681
+## 13 0.0023823927 0.9966681 0.0005859479 0.0003635932</code></pre>
 <ol start="3" style="list-style-type: decimal">
 <li>Use model3 to calculate the probability of choosing different modes
 by in- sample median sidewalk density but now for travel times of 20,
 30, and 40 min.</li>
 </ol>
-<p>Discuss the results. 4. In the general case, what is the value of the
-log-likelihood of the null (Equally Likely) model? 5. Use the likelihood
-ratio test to compare model3 to model2? Discuss the results. What
-restrictions would you need to impose in model3 to obtain model2?</p>
+<p>Discuss the results.</p>
+<pre class="r"><code># Se crea un marco de datos para predecir probabilidades
+mc_commute_predict &lt;- mc_commute_long[1:52, ]
+
+# Se establecen valores de tiempo de viaje
+tiempos &lt;- c(10,20, 30, 40)
+
+# Se calcula la densidad media de la acera
+mean_sidewalk_density &lt;- mean(mc_commute_long$sidewalk_density)
+
+# Se itera sobre los tiempos de viaje
+for (tiempo in tiempos) {
+  # Se reemplaza el tiempo en el marco de datos predictivo
+  mc_commute_predict$time &lt;- tiempo
+
+  # Se calculan las probabilidades
+  probs &lt;- predict(model3, newdata = mc_commute_predict)
+
+  # Se imprimen los resultados
+  print(paste(&quot;Probabilidades para tiempo de viaje:&quot;, tiempo))
+  print(probs)
+}</code></pre>
+<pre><code>## [1] &quot;Probabilidades para tiempo de viaje: 10&quot;
+##           Car      Cycle        HSR      Walk
+## 1  0.02825568 0.05423439 0.05250811 0.8650018
+## 2  0.01781907 0.08516918 0.03388507 0.8631267
+## 3  0.04087688 0.03622783 0.07449484 0.8484005
+## 4  0.01893364 0.08049782 0.03589829 0.8646702
+## 5  0.01893364 0.08049782 0.03589829 0.8646702
+## 6  0.03142314 0.04849293 0.05807357 0.8620104
+## 7  0.02579933 0.05953878 0.04816696 0.8664949
+## 8  0.03005181 0.05084590 0.05566834 0.8634340
+## 9  0.04087688 0.03622783 0.07449484 0.8484005
+## 10 0.03142314 0.04849293 0.05807357 0.8620104
+## 11 0.02233016 0.06874178 0.04199444 0.8669336
+## 12 0.03781952 0.03957958 0.06921288 0.8533880
+## 13 0.03142314 0.04849293 0.05807357 0.8620104
+## [1] &quot;Probabilidades para tiempo de viaje: 20&quot;
+##           Car     Cycle        HSR      Walk
+## 1  0.05051619 0.6275318 0.04792810 0.2740239
+## 2  0.02410357 0.7456155 0.02340150 0.2068795
+## 3  0.08815257 0.5056332 0.08202048 0.3241937
+## 4  0.02661259 0.7322736 0.02576118 0.2153526
+## 5  0.02661259 0.7322736 0.02576118 0.2153526
+## 6  0.05955194 0.5947863 0.05619062 0.2894712
+## 7  0.04378254 0.6539260 0.04173310 0.2605584
+## 8  0.05559584 0.6087847 0.05257979 0.2830397
+## 9  0.08815257 0.5056332 0.08202048 0.3241937
+## 10 0.05955194 0.5947863 0.05619062 0.2894712
+## 11 0.03476706 0.6926804 0.03338157 0.2391709
+## 12 0.07870407 0.5330751 0.07353718 0.3146837
+## 13 0.05955194 0.5947863 0.05619062 0.2894712
+## [1] &quot;Probabilidades para tiempo de viaje: 30&quot;
+##            Car     Cycle         HSR        Walk
+## 1  0.012071052 0.9704794 0.005847141 0.011602443
+## 2  0.004920797 0.9851563 0.002439140 0.007483729
+## 3  0.025478263 0.9458157 0.012103083 0.016602977
+## 4  0.005524526 0.9838237 0.002730314 0.007921447
+## 5  0.005524526 0.9838237 0.002730314 0.007921447
+## 6  0.014929161 0.9650204 0.007191876 0.012858531
+## 7  0.010080143 0.9743847 0.004905523 0.010629612
+## 8  0.013651104 0.9674428 0.006591485 0.012314572
+## 9  0.025478263 0.9458157 0.012103083 0.016602977
+## 10 0.014929161 0.9650204 0.007191876 0.012858531
+## 11 0.007595719 0.9794220 0.003723459 0.009258823
+## 12 0.021729145 0.9525108 0.010365525 0.015394520
+## 13 0.014929161 0.9650204 0.007191876 0.012858531
+## [1] &quot;Probabilidades para tiempo de viaje: 40&quot;
+##             Car     Cycle          HSR         Walk
+## 1  0.0019166424 0.9972829 0.0004740001 0.0003264314
+## 2  0.0007708754 0.9988263 0.0001950852 0.0002077367
+## 3  0.0041388470 0.9943795 0.0010037937 0.0004779055
+## 4  0.0008665116 0.9986947 0.0002186406 0.0002201559
+## 5  0.0008665116 0.9986947 0.0002186406 0.0002201559
+## 6  0.0023823927 0.9966681 0.0005859479 0.0003635932
+## 7  0.0015947952 0.9977110 0.0003962437 0.0002979903
+## 8  0.0021735857 0.9969431 0.0005358351 0.0003474360
+## 9  0.0041388470 0.9943795 0.0010037937 0.0004779055
+## 10 0.0023823927 0.9966681 0.0005859479 0.0003635932
+## 11 0.0011961910 0.9982461 0.0002993761 0.0002583652
+## 12 0.0035078893 0.9951974 0.0008543452 0.0004403681
+## 13 0.0023823927 0.9966681 0.0005859479 0.0003635932</code></pre>
+<ol start="4" style="list-style-type: decimal">
+<li>In the general case, what is the value of the log-likelihood of the
+null (Equally Likely) model?</li>
+</ol>
+<pre class="r"><code>f0 &lt;- mFormula(choice ~ 1)
+model0 &lt;- mlogit(f0, mc_commute_long)
+summary(model0)</code></pre>
+<pre><code>## 
+## Call:
+## mlogit(formula = choice ~ 1, data = mc_commute_long, method = &quot;nr&quot;)
+## 
+## Frequencies of alternatives:choice
+##      Car    Cycle      HSR     Walk 
+## 0.204364 0.034182 0.244364 0.517091 
+## 
+## nr method
+## 6 iterations, 0h:0m:0s 
+## g&#39;(-H)^-1g = 9.89E-06 
+## successive function values within tolerance limits 
+## 
+## Coefficients :
+##                    Estimate Std. Error  z-value Pr(&gt;|z|)    
+## (Intercept):Cycle -1.788207   0.157592 -11.3470  &lt; 2e-16 ***
+## (Intercept):HSR    0.178756   0.080839   2.2113  0.02702 *  
+## (Intercept):Walk   0.928318   0.070464  13.1743  &lt; 2e-16 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Log-Likelihood: -1547.2
+## McFadden R^2:  0 
+## Likelihood ratio test : chisq = 0 (p.value = 1)</code></pre>
+<pre class="r"><code>1-as.numeric(model2$logLik)/as.numeric(model0$logLik)</code></pre>
+<pre><code>## [1] 0.5085353</code></pre>
+<pre class="r"><code>1-as.numeric(model3$logLik)/as.numeric(model0$logLik)</code></pre>
+<pre><code>## [1] 0.5574425</code></pre>
+<ol start="5" style="list-style-type: decimal">
+<li>Use the likelihood ratio test to compare model3 to model2? Discuss
+the results. What restrictions would you need to impose in model3 to
+obtain model2?</li>
+</ol>
+<pre class="r"><code>lrtest(model2, model3)</code></pre>
+<pre><code>## Likelihood ratio test
+## 
+## Model 1: choice ~ time | sidewalk_density
+## Model 2: choice ~ 0 | sidewalk_density | time
+##   #Df  LogLik Df  Chisq Pr(&gt;Chisq)    
+## 1   7 -760.42                         
+## 2  10 -684.75  3 151.34  &lt; 2.2e-16 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
 
 
 
