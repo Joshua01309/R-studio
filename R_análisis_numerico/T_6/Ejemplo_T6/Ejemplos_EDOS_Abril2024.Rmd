@@ -112,6 +112,61 @@ ggplot()+
 
 ```
 
+
+```{r}
+f<-function(t,y){
+  y-t^2+1
+}
+df<-function(t,y){
+  -2*t+f(t,y)
+}
+
+ddf<-function(t,y){
+  4*t+f(t,y)
+}
+
+my_taylor2 <- function(f, df, ddf, a,b, N, y0){
+  h <- (b-a)/N
+  T <- a
+  W <- y0
+  for (k in 1:N) {
+    w_new <- W[k]+ h*f(T[k], W[k])+h^2/2*df(T[k], W[k])+h^3/6*ddf(T[k], W[k])
+    T <- c(T, T[k]+h)
+    W <- c(W, w_new)
+  }
+  resultados <- list("T"=T, "W"=W)
+  return(resultados)
+}
+
+
+sol_aprox_2 <- my_taylor2(f, df,ddf, 0, 2, 100, 0.5)
+
+
+my_colors=c("y(x)"="firebrick", "w(x)"="dodgerblue", "w_2(x)"="pink")
+
+sol_graf<-ggplot()+
+  geom_function(aes(color="y(x)"),fun=y_sol, xlim=c(0,2))+
+  geom_line(aes(sol_aprox$T,sol_aprox$W, color="w(x)"))+
+  geom_line(aes(sol_aprox_2$T,sol_aprox_2$W, color="w_2(x)"))+
+  #geom_point(aes(sol_aprox$T,sol_aprox$W), color="green", size=3)+
+  scale_color_manual(values=my_colors)+
+  labs(x="t", y="y(t)", color=" ")+
+  theme_bw()
+
+ggplotly(sol_graf)
+
+```
+
+
+
+
+
+
+
+
+
+
+
 ## Gráficas del error y de la cota
 
 ```{r}
@@ -189,7 +244,6 @@ graf_error<-ggplot()+
 
 ggplotly(graf_error)
 ```
-
 
 
 

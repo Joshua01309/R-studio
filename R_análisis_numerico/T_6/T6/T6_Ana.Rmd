@@ -1,0 +1,190 @@
+---
+title: " Murillo Alba Josué Iván Ecuaciones Diferenciales Ordinarias"
+author: " Tarea 6 Análisis Numérico"
+date: "Abril 2024"
+output: 
+  html_document:
+    toc: true
+    toc_depth: 1
+    theme: cerulean
+---
+
+
+
+
+
+<style>
+body {
+text-align: justify}
+</style>
+
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(knitr)
+library(tidyverse)
+library(pracma)
+library(plotly)
+library(polynom)
+```
+
+# Problema 1 {.tabset} 
+  Newton's Law of Cooling states that the rate of cooling of an object is proportional to the temperature difference between the object and its surroundings. Suppose t
+ is time, T
+ is the temperature of the object, and Ts
+ is the surrounding temperature. The following differential equation describes Newton's Law
+dTdt=k(T−Ts),
+where k
+ is a constant.
+
+Suppose that we consider a 90∘C
+ cup of coffee in a 24∘C
+ room. Suppose it is known that the coffee cools at a rate of 2∘C/min.
+ when it is 70∘C.
+ Answer the following questions.
+ 
+
+##  Find the constant k
+ 
+```{r}
+T0 <- 70  
+Ts <- 24  
+dT_dt <- -2  
+
+k <- dT_dt / (T0 - Ts)
+cat("k es:", k, "1/min\n")
+
+```
+ 
+## What is the limiting value of the temperature?
+
+Para encontrar el valor límite de T, establecemos el lado izquierdo de la ecuación en cero (ya que la tasa de cambio se acerca a cero en el equilibrio):
+
+0=k(T0-Ts)
+T=Ts=24°C
+Por lo tanto, el valor límite de la temperatura es de 24°C. En el equilibrio, la taza de café eventualmente se enfriará a la temperatura ambiente.
+
+## Use Euler's method with step size h=2, T(10)
+
+```{r}
+f <- function(T0, Ts, k, h, t) {
+  T <- T0
+  for (i in 1:(t/h)) {
+    T <- T + h * k * (T - Ts)
+  }
+  return(T)
+}
+
+T0 <- 90  
+Ts <- 24  
+h <- 2    
+t <- 10   # Tiempo total en minutos
+k <- -0.04347826
+
+
+T10 <- f(T0, Ts, k, h, t)
+
+print(paste("T(10) ≈", T10, "°C"))
+```
+
+# Problema 2 {.tabset}
+Use Euler's method with the given step size to estimate y(1.4)
+ where y(x)
+ is the solution of the initial-value problem
+y′=x−xy,y(1)=0.
+
+## . Estimate y(1.4) h=0.2
+
+```{r}
+dy <- function(x,y){
+  x-x*y
+}
+y_sol <- function(x){
+  1-exp(1/2-x^2/2)
+}
+
+my_euler <- function(dy, a,b, N, y0){
+  h <- 0.2
+  T <- a
+  W <- y0
+  for (k in 1:N) {
+    w_new <- W[k]+ h*dy(T[k], W[k])
+    T <- c(T, T[k]+h)
+    W <- c(W, w_new)
+  }
+  resultados <- list("T"=T, "W"=W)
+  return(resultados)
+}
+
+sol_aprox <- my_euler(dy, 1, 1.4, 100, 0)
+
+indice <- which(sol_aprox$T == 1.4)
+print(sol_aprox$W[indice])
+
+
+my_colors=c("y(x)"="firebrick", "w(x)"="dodgerblue")
+
+graf<-ggplot()+
+  geom_function(aes(color="y(x)"),fun=y_sol, xlim=c(1,1.4))+
+  geom_line(aes(sol_aprox$T,sol_aprox$W, color="w(x)"))+
+  scale_color_manual(values=my_colors)+
+  labs(x="t", y="y(t)", color=" ")+
+  coord_cartesian(xlim = c(1, 1.4))+
+  theme_bw()
+
+ggplotly(graf)
+
+
+```
+
+## . Estimate y(1.4) h=0.1
+
+
+```{r}
+dy <- function(x,y){
+  x-x*y
+}
+y_sol <- function(x){
+  1-exp(1/2-x^2/2)
+}
+
+my_euler <- function(dy, a,b, N, y0){
+  h <- (b-a)/N
+  T <- a
+  W <- y0
+  for (k in 1:N) {
+    w_new <- W[k]+ h*dy(T[k], W[k])
+    T <- c(T, T[k]+h)
+    W <- c(W, w_new)
+  }
+  resultados <- list("T"=T, "W"=W)
+  return(resultados)
+}
+
+sol_aprox <- my_euler(dy, 1, 1.4, 4, 0)
+
+indice <- which.min(abs(sol_aprox$T - 1.4))
+print(paste("El valor de W en T = 1.4 es:", sol_aprox$W[indice]))
+
+my_colors=c("y(x)"="firebrick", "w(x)"="dodgerblue")
+
+graf<-ggplot()+
+  geom_function(aes(color="y(x)"),fun=y_sol, xlim=c(1,1.4))+
+  geom_line(aes(sol_aprox$T,sol_aprox$W, color="w(x)"))+
+  scale_color_manual(values=my_colors)+
+  labs(x="t", y="y(t)", color=" ")+
+  coord_cartesian(xlim = c(1, 1.4))+
+  theme_bw()
+
+ggplotly(graf)
+
+```
+
+
+
+
+
+
+
+
