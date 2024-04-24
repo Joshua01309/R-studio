@@ -181,6 +181,228 @@ ggplotly(graf)
 
 ```
 
+# Problema 3 
+
+Suppose that we use the Improved Euler's method to approximate the solution to the differential equation 
+$ \frac{dy}{dx}=x−2y; \quad y(0.1)=1$.
+Let 
+$f(x,y)=x−2y.$
+
+We let $x0=0.1$
+ and $y0=1$
+ and pick a step size h=0.25.
+ The improved Euler method is the the following algorithm. From (xn,yn),
+ our approximation to the solution of the differential equation at the n
+-th stage, we find the next stage by computing the x
+-step $xn+1=xn+h$,
+ and then $k1$,
+ the slope at $(x_n,y_n).$
+ The predicted new value of the solution is zn+1=yn+h⋅k1.
+ Then we find the slope at the predicted new point k2=f(xn+1,zn+1)
+ and get the corrected point by averaging slopes
+yn+1=yn+h2(k1+k2).
+
+```{r}
+f <- function(x, y) {
+  x - 2 * y
+}
+
+y_sol <- function(x) {
+  x / 2 + (6 * exp(1 / 5 - 2 * x) / 5) - 1 / 4
+}
+
+euler_modificado <- function(f, a, b, N, y0) {
+  h <- (b - a) / N
+  X <- seq(a, b, by = h)
+  Y <- y0
+  K1<-numeric()
+  K2<-numeric()
+  Z<-numeric()
+  for (k in 1:N) {
+    K1[k]<- f(X[k], Y[k])
+    Z[k]=Y[k]+h*K1[k]
+    K2[k]=f(X[k+1], Z[k])
+    Y[k + 1] <- Y[k] + h / 2 *(K1[k]+ K2[k])
+   # Y[k + 1] <- Y[k] + h / 2 * (f(X[k], Y[k])+f(X[k + 1], Y[k] + h * f(X[k], Y[k])))
+    
+
+  }
+  resultados <- list("X" = X, "Y" = Y, "K1"=K1, "Z"=Z, "K2"=K2)
+  return(resultados)
+}
+
+sol_aprox<-euler_modificado(f,0.1, 1.1,4,1)
+
+
+graf <- ggplot() +
+  geom_function(fun = y_sol, xlim = c(0.1, 1.1), color = "red4", linewidth = .7) +
+  geom_line(aes(x = sol_aprox$X, y = sol_aprox$Y), color = "cyan3", linewidth = .7) +
+  theme_test()
+
+ggplotly(graf)
+
+
+
+```
+
+# Problema 4 
+Suppose that we use Euler's method to approximate the solution to the differential equation
+$ \frac{dy}{dx}=x^2/y; \quad y(0.1)=8$
+
+Let $f(x,y)=x^2/y.$
+
+We let $x0=0.1$
+ and $y0=8$
+ and pick a step size $h=0.2.$
+ Euler's method is the the following algorithm. From xn
+ and yn,
+ our approximations to the solution of the differential equation at the nth stage, we find the next stage by computing
+xn+1=xn+h,yn+1=yn+h⋅f(xn,yn).
+
+```{r}
+f <- function(x, y) {
+  x^2/y
+}
+
+euler_modificado <- function(f, a, b, N, y0) {
+  h <- (b - a) / N
+  X <- seq(a, b, by = h)
+  Y <- numeric(N + 1)
+  Y[1] <- y0
+  for (k in 1:N) {
+    Y[k + 1] <- Y[k] + h * f(X[k], Y[k])
+  }
+  resultados <- list("X" = X, "Y" = Y)
+  return(resultados)
+}
+
+sol_aprox <- euler_modificado(f, 0.1, 1.1, 5, 8)
+
+
+graf <- ggplot() +
+  geom_function(fun = y_sol, xlim = c(0.1, 1.1), color = "red4", linewidth = .7) +
+  geom_line(aes(x = sol_aprox$X, y = sol_aprox$Y), color = "cyan3", linewidth = .7) +
+  theme_test()
+
+ggplotly(graf)
+```
+
+# Problema 5....{.tabset}
+
+Let y(t)
+ be the solution to y˙=3te−y
+ satisfying y(0)=−2
+.
+
+## (a) Use Euler's Method with time step h=0.2to approximate y(0.2),y(0.4),...,y(1.0)
+.
+
+```{r}
+dy <- function(t,y){
+  3*t*exp(-y)
+}
+y_sol <- function(t){
+  log(3*t^2/2+exp(-2))
+}
+
+my_euler <- function(dy, a,b, N, y0){
+  h <- (b-a)/N
+  T <- a
+  W <- y0
+  for (k in 1:N) {
+    w_new <- W[k]+ h*dy(T[k], W[k])
+    T <- c(T, T[k]+h)
+    W <- c(W, w_new)
+  }
+  resultados <- list("T"=T, "W"=W)
+  return(resultados)
+}
+
+sol_aprox <- my_euler(dy, 0, 1, 5, -2)
+
+my_colors=c("y(t)"="firebrick", "w(t)"="dodgerblue")
+
+graf<-ggplot()+
+  geom_function(aes(color="y(t)"),fun=y_sol, xlim=c(1,1.4))+
+  geom_line(aes(sol_aprox$T,sol_aprox$W, color="w(t)"))+
+  scale_color_manual(values=my_colors)+
+  labs(x="t", y="y(t)", color=" ")+
+  coord_cartesian(xlim = c(0, 5))+
+  theme_bw()
+
+ggplotly(graf)
+
+```
+
+## errores
+
+```{r}
+# Calcular los errores en las aproximaciones
+error_0.2 <- abs(y_sol(0.2) - sol_aprox$W[which(sol_aprox$T == 0.2)])
+error_0.6 <- abs(y_sol(0.6) - sol_aprox$W[which(sol_aprox$T == 0.6)])
+error_0.6 <- numeric(0)
+indice_0.6 <- which.min(abs(sol_aprox$T - 0.6))
+if (length(indice_0.6) > 0) {
+  error_0.6 <- abs(y_sol(0.6) - sol_aprox$W[indice_0.6])
+}
+
+error_1 <- abs(y_sol(1) - sol_aprox$W[which(sol_aprox$T == 1)])
+
+
+
+```
+
+# Problema 6...
+
+ Fill in the missing values in the table given if you know that dy/dt=0.2y
+. Assume the rate of growth given by dy/dt
+ is approximately constant over each unit time interval and that the initial value of y
+ is 5
+
+
+```{r}
+dy <- function(t,y){
+  0.2*y
+}
+y_sol <- function(t){
+  5*exp(t/5)
+}
+
+my_euler <- function(dy, a,b, N, y0){
+  h <- (b-a)/N
+  T <- a
+  W <- y0
+  for (k in 1:N) {
+    w_new <- W[k]+ h*dy(T[k], W[k])
+    T <- c(T, T[k]+h)
+    W <- c(W, w_new)
+  }
+  resultados <- list("T"=T, "W"=W)
+  return(resultados)
+}
+
+sol_aprox <- my_euler(dy, 0, 4, 4, 5)
+
+my_colors=c("y(t)"="firebrick", "w(t)"="dodgerblue")
+
+graf<-ggplot()+
+  geom_function(aes(color="y(t)"),fun=y_sol, xlim=c(1,1.4))+
+  geom_line(aes(sol_aprox$T,sol_aprox$W, color="w(t)"))+
+  scale_color_manual(values=my_colors)+
+  labs(x="t", y="y(t)", color=" ")+
+  coord_cartesian(xlim = c(0, 4))+
+  theme_bw()
+
+ggplotly(graf)
+
+```
+
+
+
+
+
+
+
 
 
 
