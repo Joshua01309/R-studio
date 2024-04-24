@@ -181,6 +181,70 @@ ggplotly(graf)
 
 ```
 
+# Problema 3 {.tabset}
+
+Suppose that we use the Improved Euler's method to approximate the solution to the differential equation 
+$ \frac{dy}{dx}=x−2y; \quad y(0.1)=1$.
+Let 
+$f(x,y)=x−2y.$
+
+We let $x0=0.1$
+ and $y0=1$
+ and pick a step size h=0.25.
+ The improved Euler method is the the following algorithm. From (xn,yn),
+ our approximation to the solution of the differential equation at the n
+-th stage, we find the next stage by computing the x
+-step $xn+1=xn+h$,
+ and then $k1$,
+ the slope at $(x_n,y_n).$
+ The predicted new value of the solution is zn+1=yn+h⋅k1.
+ Then we find the slope at the predicted new point k2=f(xn+1,zn+1)
+ and get the corrected point by averaging slopes
+yn+1=yn+h2(k1+k2).
+
+```{r}
+f <- function(x, y) {
+  x - 2 * y
+}
+
+y_sol <- function(x) {
+  x / 2 + (6 * exp(1 / 5 - 2 * x) / 5) - 1 / 4
+}
+
+euler_modificado <- function(f, a, b, N, y0) {
+  h <- (b - a) / N
+  X <- seq(a, b, by = h)
+  Y <- y0
+  K1<-numeric()
+  K2<-numeric()
+  Z<-numeric()
+  for (k in 1:N) {
+    K1[k]<- f(X[k], Y[k])
+    Z[k]=Y[k]+h*K1[k]
+    K2[k]=f(X[k+1], Z[k])
+    Y[k + 1] <- Y[k] + h / 2 *(K1[k]+ K2[k])
+   # Y[k + 1] <- Y[k] + h / 2 * (f(X[k], Y[k])+f(X[k + 1], Y[k] + h * f(X[k], Y[k])))
+    
+
+  }
+  resultados <- list("X" = X, "Y" = Y, "K1"=K1, "Z"=Z, "K2"=K2)
+  return(resultados)
+}
+
+sol_aprox<-euler_modificado(f,0.1, 1.1,4,1)
+
+
+graf <- ggplot() +
+  geom_function(fun = y_sol, xlim = c(0.1, 1.1), color = "red4", linewidth = .7) +
+  geom_line(aes(x = sol_aprox$X, y = sol_aprox$Y), color = "cyan3", linewidth = .7) +
+  theme_test()
+
+ggplotly(graf)
+
+
+
+```
+
 
 
 
