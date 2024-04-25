@@ -323,11 +323,10 @@ sol_aprox <- my_euler(dy, 0, 1, 5, -2)
 my_colors=c("y(t)"="firebrick", "w(t)"="dodgerblue")
 
 graf<-ggplot()+
-  geom_function(aes(color="y(t)"),fun=y_sol, xlim=c(1,1.4))+
+  geom_function(aes(color="y(t)"),fun=y_sol, xlim=c(0,1))+
   geom_line(aes(sol_aprox$T,sol_aprox$W, color="w(t)"))+
   scale_color_manual(values=my_colors)+
   labs(x="t", y="y(t)", color=" ")+
-  coord_cartesian(xlim = c(0, 5))+
   theme_bw()
 
 ggplotly(graf)
@@ -386,11 +385,10 @@ sol_aprox <- my_euler(dy, 0, 4, 4, 5)
 my_colors=c("y(t)"="firebrick", "w(t)"="dodgerblue")
 
 graf<-ggplot()+
-  geom_function(aes(color="y(t)"),fun=y_sol, xlim=c(1,1.4))+
+  geom_function(aes(color="y(t)"),fun=y_sol, xlim=c(0,4))+
   geom_line(aes(sol_aprox$T,sol_aprox$W, color="w(t)"))+
   scale_color_manual(values=my_colors)+
   labs(x="t", y="y(t)", color=" ")+
-  coord_cartesian(xlim = c(0, 4))+
   theme_bw()
 
 ggplotly(graf)
@@ -398,14 +396,527 @@ ggplotly(graf)
 ```
 
 
+# Problema 7 {.tabset}
+$ \frac{dB}{dt}=0.06B; \quad B(0)=1500$
+
+## A. Δt=1 and 1 step:  B(1)≈
+
+```{r}
+dB <- function(t, B) {
+  0.06 * B
+}
+
+B_sol <- function(t) {
+  1500 * exp(0.06 * t)
+}
+
+my_euler <- function(dB, a, b, N, y0) {
+  h <- (b - a) / N
+  T <- seq(a, b, by = h)
+  W <- numeric(N + 1)
+  W[1] <- y0
+  for (k in 1:N) {
+    W[k + 1] <- W[k] + h * dB(T[k], W[k])
+  }
+  resultados <- list("T" = T, "W" = W)
+  return(resultados)
+}
+
+a <- 0     
+b <- 1     
+N <- 1     
+y0 <- 1500 
 
 
+sol_aprox <- my_euler(dB, a, b, N, y0)
+
+my_colors=c("y(t)"="firebrick", "w(t)"="dodgerblue")
+
+graf<-ggplot()+
+  geom_function(aes(color="y(t)"),fun=B_sol, xlim=c(0,1.4))+
+  geom_line(aes(sol_aprox$T,sol_aprox$W, color="w(t)"))+
+  scale_color_manual(values=my_colors)+
+  labs(x="t", y="y(t)", color=" ")+
+  theme_bw()
+
+ggplotly(graf)
+```
+
+## B. Δt=0.5 and 2 steps: B(1)≈
+ 
+```{r}
+dB <- function(t, B) {
+  0.06 * B
+}
+
+B_sol <- function(t) {
+  1500 * exp(0.06 * t)
+}
+
+my_euler <- function(dB, a, b, N, y0) {
+  h <- (b - a) / N
+  T <- seq(a, b, by = h)
+  W <- numeric(N + 1)
+  W[1] <- y0
+  for (k in 1:N) {
+    W[k + 1] <- W[k] + h * dB(T[k], W[k])
+  }
+  resultados <- list("T" = T, "W" = W)
+  return(resultados)
+}
+
+a <- 0     
+b <- 1     
+N <- 2  
+y0 <- 1500 
 
 
+sol_aprox <- my_euler(dB, a, b, N, y0)
+
+my_colors=c("y(t)"="firebrick", "w(t)"="dodgerblue")
+
+graf<-ggplot()+
+  geom_function(aes(color="y(t)"),fun=B_sol, xlim=c(0,1.4))+
+  geom_line(aes(sol_aprox$T,sol_aprox$W, color="w(t)"))+
+  scale_color_manual(values=my_colors)+
+  labs(x="t", y="y(t)", color=" ")+
+  theme_bw()
+
+ggplotly(graf)
+```
+
+## C. Δt=0.25 and 4 steps: B(1)≈
+ 
+
+```{r}
+dB <- function(t, B) {
+  0.06 * B
+}
+
+B_sol <- function(t) {
+  1500 * exp(0.06 * t)
+}
+
+my_euler <- function(dB, a, b, N, y0) {
+  h <- (b - a) / N
+  T <- seq(a, b, by = h)
+  W <- numeric(N + 1)
+  W[1] <- y0
+  for (k in 1:N) {
+    W[k + 1] <- W[k] + h * dB(T[k], W[k])
+  }
+  resultados <- list("T" = T, "W" = W)
+  return(resultados)
+}
+
+a <- 0     
+b <- 1     
+N <- 4   
+y0 <- 1500 
 
 
+sol_aprox <- my_euler(dB, a, b, N, y0)
+
+my_colors=c("y(t)"="firebrick", "w(t)"="dodgerblue")
+
+graf<-ggplot()+
+  geom_function(aes(color="y(t)"),fun=B_sol, xlim=c(0,1.4))+
+  geom_line(aes(sol_aprox$T,sol_aprox$W, color="w(t)"))+
+  scale_color_manual(values=my_colors)+
+  labs(x="t", y="y(t)", color=" ")+
+  theme_bw()
+
+ggplotly(graf)
+```
 
 
+## D. Suppose B
+ is the balance in a bank account earning interest. Be sure that you can explain why the result of your calculation in part (a) is equivalent to compounding the interest once a year instead of continuously. Then interpret the result of your calculations in parts (b) and (c) in terms of compound interest.
+ 
+ Capitalización anual vs. Continua: En el método de Euler, estamos aproximando la función 
+B(t) que representa el saldo en la cuenta bancaria en intervalos discretos de tiempo. En la parte (a), cuando 
+Δt=1, estamos calculando el saldo de la cuenta después de un año, utilizando el interés simple, donde el interés se calcula una vez al año. Esto es equivalente a capitalizar el interés una vez al año. Sin embargo, cuando 
+Δt es más pequeño, como en las partes (b) y (c), estamos dividiendo el año en intervalos más pequeños y calculando el saldo de la cuenta más frecuentemente, lo que se asemeja más al interés compuesto, donde el interés se calcula y se agrega al saldo de la cuenta en intervalos infinitesimales de tiempo.
+En términos de interés compuesto: En interés compuesto, el interés se calcula y se agrega al saldo de la cuenta en intervalos cortos de tiempo. Cuando utilizamos Δt=0.5 y 2 pasos en la parte (b), y
+Δt=0.2 y 4 pasos en la parte (c), estamos calculando el saldo de la cuenta en intervalos más cortos de tiempo y más frecuentemente. Esto resulta en un saldo final más alto en comparación con el interés simple, ya que el interés se está capitalizando más frecuentemente, lo que genera un crecimiento exponencial del saldo de la cuenta.
+
+
+# Problema 8 {.tabset}
+
+ Consider the solution of the differential equation y′=−y
+ passing through y(0)=1
+.
+## A.
+Sketch the slope field for this differential equation, and sketch the solution passing through the point (0,1).
+```{r}
+# Cargar la librería
+library(ggplot2)
+
+# Definir la ecuación diferencial
+dy <- function(t, y) {
+  -y
+}
+
+# Método de Euler para aproximar la solución
+euler <- function(dy, t_range, y0, h) {
+  t <- seq(t_range[1], t_range[2], by = h)
+  y <- numeric(length(t))
+  y[1] <- y0
+  for (i in 2:length(t)) {
+    y[i] <- y[i - 1] + h * dy(t[i - 1], y[i - 1])
+  }
+  return(data.frame(t = t, y = y))
+}
+
+# Parámetros
+t_range <- c(0, 1)  # Rango de tiempo
+y0 <- 1             # Condición inicial
+h <- 0.1            # Tamaño de paso
+
+# Aproximar la solución utilizando el método de Euler
+sol <- euler(dy, t_range, y0, h)
+
+# Graficar el campo de pendiente
+ggplot(data.frame(t = seq(t_range[1], t_range[2], by = 0.5)), aes(t, 1)) +
+  geom_segment(aes(yend = 1 + 0.5 * dy(t, 1), xend = t), arrow = arrow(length = unit(0.3, "cm"))) +
+  geom_point(data = data.frame(t = 0, y = 1), aes(t, y), color = "red", size = 3) +
+  geom_path(data = sol, aes(t, y), color = "blue") +
+  xlim(t_range) +
+  ylim(c(-1, 2)) +
+  labs(x = "t", y = "y(t)", title = "Campo de pendiente y Solución") +
+  theme_minimal()
+
+```
+
+## B
+Use Euler's method with step size Δx=0.2
+ to estimate the solution at x=0.2,0.4,…,1
+, using these to fill in the following table. (Be sure not to round your answers at each step!)
+
+```{r}
+f <- function(x, y) {
+  -y
+}
+
+euler_modificado <- function(f, a, b, N, y0) {
+  h <- (b - a) / N
+  X <- seq(a, b, by = h)
+  Y <- numeric(N + 1)
+  Y[1] <- y0
+  for (k in 1:N) {
+    Y[k + 1] <- Y[k] + h * f(X[k], Y[k])
+  }
+  resultados <- list("X" = X, "Y" = Y)
+  return(resultados)
+}
+
+sol_aprox <- euler_modificado(f, 0, 1, 5, 1)
+
+
+graf <- ggplot() +
+  geom_function(fun = y_sol, xlim = c(0, 1), color = "red4", linewidth = .7) +
+  geom_line(aes(x = sol_aprox$X, y = sol_aprox$Y), color = "cyan3", linewidth = .7) +
+  theme_test()
+
+ggplotly(graf)
+```
+
+```{r}
+dy <- function(x,y){
+  -y
+}
+y_sol <- function(x){
+  1/exp(x)
+}
+
+my_euler <- function(dy, a,b, N, y0){
+  h <- (b-a)/N
+  T <- a
+  W <- y0
+  for (k in 1:N) {
+    w_new <- W[k]+ h*dy(T[k], W[k])
+    T <- c(T, T[k]+h)
+    W <- c(W, w_new)
+  }
+  resultados <- list("T"=T, "W"=W)
+  return(resultados)
+}
+
+sol_aprox <- my_euler(dy, 0, 1, 5, 1)
+
+my_colors=c("y(x)"="firebrick", "w(x)"="dodgerblue")
+
+graf<-ggplot()+
+  geom_function(aes(color="y(x)"),fun=y_sol, xlim=c(0,1))+
+  geom_line(aes(sol_aprox$T,sol_aprox$W, color="w(x)"))+
+  scale_color_manual(values=my_colors)+
+  labs(x="x", y="y(x)", color=" ")+
+  theme_bw()
+
+ggplotly(graf)
+```
+
+## C
+Plot your estimated solution on your slope field. Compare the solution and the slope field. Is the estimated solution an over or under estimate for the actual solution?
+
+subestimados
+
+# Problema 9... {.tabset}
+
+Consider the differential equation
+$ \frac{dy}{dx}=4x; \quad y(0)=4$.
+
+## A 
+Use Euler's method with two steps to estimate y
+ when x=1
+
+```{r}
+dy <- function(x,y){
+  4*x
+}
+y_sol <- function(x){
+  2*x^2+4
+}
+
+my_euler <- function(dy, a,b, N, y0){
+  h <- (b-a)/N
+  T <- a
+  W <- y0
+  for (k in 1:N) {
+    w_new <- W[k]+ h*dy(T[k], W[k])
+    T <- c(T, T[k]+h)
+    W <- c(W, w_new)
+  }
+  resultados <- list("T"=T, "W"=W)
+  return(resultados)
+}
+
+sol_aprox <- my_euler(dy, 0, 1, 2, 4)
+
+my_colors=c("y(x)"="firebrick", "w(x)"="dodgerblue")
+
+graf<-ggplot()+
+  geom_function(aes(color="y(x)"),fun=y_sol, xlim=c(0,1))+
+  geom_line(aes(sol_aprox$T,sol_aprox$W, color="w(x)"))+
+  scale_color_manual(values=my_colors)+
+  labs(x="x", y="y(x)", color=" ")+
+  theme_bw()
+
+ggplotly(graf)
+```
+
+
+## B
+Now use four steps:
+
+```{r}
+dy <- function(x,y){
+  4*x
+}
+y_sol <- function(x){
+  2*x^2+4
+}
+
+my_euler <- function(dy, a,b, N, y0){
+  h <- (b-a)/N
+  T <- a
+  W <- y0
+  for (k in 1:N) {
+    w_new <- W[k]+ h*dy(T[k], W[k])
+    T <- c(T, T[k]+h)
+    W <- c(W, w_new)
+  }
+  resultados <- list("T"=T, "W"=W)
+  return(resultados)
+}
+
+sol_aprox <- my_euler(dy, 0, 1, 4, 4)
+Y_aprox_1 <- sol_aprox$W[length(sol_aprox$W)]
+
+# Calcular B_sol(1) (solución exacta)
+Y_exact <- y_sol(1)
+
+
+my_colors=c("y(x)"="firebrick", "w(x)"="dodgerblue")
+
+graf<-ggplot()+
+  geom_function(aes(color="y(x)"),fun=y_sol, xlim=c(0,1))+
+  geom_line(aes(sol_aprox$T,sol_aprox$W, color="w(x)"))+
+  scale_color_manual(values=my_colors)+
+  labs(x="x", y="y(x)", color=" ")+
+  theme_bw()
+
+ggplotly(graf)
+```
+
+## C
+C. What is the magnitude of the error in the two Euler approximations you found?
+Magnitude of error in Euler with 2 steps = 
+
+Magnitude of error in Euler with 4 steps =
+
+## D
+
+By what factor should the error in these approximations change (that is, the error with two steps should be what number times the error with four)?
+
+
+# Problema 10 {.tabset}
+
+$y'= -x-y$
+
+## Use Euler's method with Δx=0.1
+ to estimate y
+ when x=1.4
+ for the solution curve satisfying
+y(1)=1
+ : Euler's approximation gives y(1.4)≈
+ 
+```{r}
+dy <- function(x,y){
+  -x-y
+}
+y_sol <- function(x){
+  exp(1-x)-x+1
+}
+
+my_euler <- function(dy, a,b, N, y0){
+  h <- (b-a)/N
+  T <- a
+  W <- y0
+  for (k in 1:N) {
+    w_new <- W[k]+ h*dy(T[k], W[k])
+    T <- c(T, T[k]+h)
+    W <- c(W, w_new)
+  }
+  resultados <- list("T"=T, "W"=W)
+  return(resultados)
+}
+
+sol_aprox <- my_euler(dy, 1, 1.4, 4, 1)
+
+my_colors=c("y(x)"="firebrick", "w(x)"="dodgerblue")
+
+graf<-ggplot()+
+  geom_function(aes(color="y(x)"),fun=y_sol, xlim=c(1,1.4))+
+  geom_line(aes(sol_aprox$T,sol_aprox$W, color="w(x)"))+
+  scale_color_manual(values=my_colors)+
+  labs(x="x", y="y(x)", color=" ")+
+  theme_bw()
+
+ggplotly(graf)
+```
+ 
+
+## Use Euler's method with Δx=0.1
+ to estimate y
+ when x=2.4
+ for the solution curve satisfying y(1)=0
+ : Euler's approximation gives  y(2.4)≈
+
+```{r}
+dy <- function(x,y){
+  -x-y
+}
+y_sol <- function(x){
+  exp(1-x)-x+1
+}
+
+my_euler <- function(dy, a,b, N, y0){
+  h <- (b-a)/N
+  T <- a
+  W <- y0
+  for (k in 1:N) {
+    w_new <- W[k]+ h*dy(T[k], W[k])
+    T <- c(T, T[k]+h)
+    W <- c(W, w_new)
+  }
+  resultados <- list("T"=T, "W"=W)
+  return(resultados)
+}
+
+sol_aprox <- my_euler(dy, 1, 2.4, 14, 0)
+
+my_colors=c("y(x)"="firebrick", "w(x)"="dodgerblue")
+
+graf<-ggplot()+
+  geom_function(aes(color="y(x)"),fun=y_sol, xlim=c(1,2.4))+
+  geom_line(aes(sol_aprox$T,sol_aprox$W, color="w(x)"))+
+  scale_color_manual(values=my_colors)+
+  labs(x="x", y="y(x)", color=" ")+
+  theme_bw()
+
+ggplotly(graf)
+```
+
+# Problema 11
+Use Euler's method with step size 0.25
+ to compute the approximate y -values y1,
+ y2, y3, and y4 of the solution of the initial-value problem
+
+$y′=−2+5x+2y$   $y(0)=1.$
+
+$-(10*x+5*exp(2*x)+1)/4$
+
+
+```{r}
+f <- function(x, y) {
+  return(-2 + 5*x + 2*y)
+}
+
+h <- 0.25
+x0 <- 0
+y0 <- 1
+
+euler <- function(x, y, h) {
+  return(y + h * f(x, y))
+}
+
+x1 <- x0 + h
+y1 <- euler(x0, y0, h)
+
+x2 <- x1 + h
+y2 <- euler(x1, y1, h)
+
+x3 <- x2 + h
+y3 <- euler(x2, y2, h)
+
+x4 <- x3 + h
+y4 <- euler(x3, y3, h)
+
+print(paste("y1 ≈", y1))
+print(paste("y2 ≈", y2))
+print(paste("y3 ≈", y3))
+print(paste("y4 ≈", y4))
+```
+# Problema 12... {.tabset}
+Use Euler's method with step size 0.3
+ to estimate y(1.5)
+, where y(x)
+ is the solution of the initial-value problem
+ 
+$y′=2x+y^2$   $y(0)=0$ 
+
+
+```{r}
+f <- function(x, y) {
+  return(2*x + y^2)
+}
+
+h <- 0.3
+x_target <- 1.5
+x0 <- 0
+y0 <- 0
+
+euler <- function(x, y, h) {
+  return(y + h * f(x, y))
+}
+
+while (x0 < x_target) {
+  y0 <- euler(x0, y0, h)
+  x0 <- x0 + h
+}
+
+```
 
 
 
