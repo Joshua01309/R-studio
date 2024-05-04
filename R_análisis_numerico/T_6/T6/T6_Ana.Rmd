@@ -287,7 +287,7 @@ graf <- ggplot() +
 ggplotly(graf)
 ```
 
-# Problema 5....{.tabset}
+# Problema 5{.tabset}
 
 Let y(t)
  be the solution to y˙=3te−y
@@ -351,7 +351,7 @@ error_1 <- abs(y_sol(1) - sol_aprox$W[which(sol_aprox$T == 1)])
 
 ```
 
-# Problema 6...
+# Problema 6
 
  Fill in the missing values in the table given if you know that dy/dt=0.2y
 . Assume the rate of growth given by dy/dt
@@ -661,7 +661,7 @@ Plot your estimated solution on your slope field. Compare the solution and the s
 
 subestimados
 
-# Problema 9... {.tabset}
+# Problema 9 {.tabset}
 
 Consider the differential equation
 $ \frac{dy}{dx}=4x; \quad y(0)=4$.
@@ -692,6 +692,11 @@ my_euler <- function(dy, a,b, N, y0){
 }
 
 sol_aprox <- my_euler(dy, 0, 1, 2, 4)
+Y_aprox_1 <- sol_aprox$W[length(sol_aprox$W)]
+
+# Calcular B_sol(1) (solución exacta)
+Y_exact <- y_sol(1)
+
 
 my_colors=c("y(x)"="firebrick", "w(x)"="dodgerblue")
 
@@ -749,6 +754,7 @@ graf<-ggplot()+
 ggplotly(graf)
 ```
 
+
 ## C
 C. What is the magnitude of the error in the two Euler approximations you found?
 Magnitude of error in Euler with 2 steps = 
@@ -759,6 +765,8 @@ Magnitude of error in Euler with 4 steps =
 
 By what factor should the error in these approximations change (that is, the error with two steps should be what number times the error with four)?
 
+El factor por el cual cambia el error en estas aproximaciones se puede calcular dividiendo el error con dos pasos entre el error con cuatro pasos
+factor=(Error euler N=2)/(Error euler N=4)
 
 # Problema 10 {.tabset}
 
@@ -888,7 +896,7 @@ print(paste("y2 ≈", y2))
 print(paste("y3 ≈", y3))
 print(paste("y4 ≈", y4))
 ```
-# Problema 12... 
+# Problema 12
 Use Euler's method with step size 0.3
  to estimate y(1.5)
 , where y(x)
@@ -1005,7 +1013,7 @@ ggplot()+
 
 
 
-# problema 15... {.tabset}
+# problema 15 {.tabset}
 
 There is considerable evidence to support the theory that for some species there is a minimum population m
  such that the species will become extinct if the size of the population falls below m.
@@ -1021,7 +1029,22 @@ Suppose that the carrying capacity $K=10000$,
  and the constant $k=0.15$.
  Answer the following questions
  
-## Suponiendo P≥0
+```{r}
+f<-function(t,y){
+  0.15*y*(1-y/10000)*(1-700/y)
+}
+y0<-1000
+
+
+sol_aprox<-euler_heun(f,0,60,y0,n=300)
+ggplot()+
+  geom_line(aes(sol_aprox$t, sol_aprox$y), color="cyan")
+
+
+```
+ 
+ 
+#3 Suponiendo P≥0
  ¿Para qué valores de P
  ¿Está aumentando la población?
 Respuesta (en notación de intervalos): 
@@ -1035,13 +1058,31 @@ Respuesta (en notación de intervalos)
  
  
  
-# Problema 16...
+# Problema 16
 
 Assuming $P≥0$,
  suppose that a population develops according to the logistic equation
 $dP/dt=0.07P−0.00014P^2$
 where t
  is measured in weeks. Answer the following questions.
+
+```{r}
+f<-function(t,y){
+  0.07*y-0.00014*y^2
+}
+y0<-1
+
+
+sol_aprox<-euler_heun(f,0,200,y0,n=300)
+graf<-ggplot()+
+  geom_line(aes(sol_aprox$t, sol_aprox$y), color="cyan")
+theme_bw()
+
+ggplotly(graf)
+
+
+```
+
 
 # Problema 17
 Solve the following differential equation. $dy/dx=e^2x−3y$
@@ -1135,9 +1176,99 @@ ggplotly(graf)
 ```
 
 
+# Problema 19
+
+$ \frac{dy}{dt}=e^t+8e^3t+y; \quad y(0)=5$
+
+```{r}
+dy <- function(t,y){
+  exp(t)+8*exp(3*t)+y
+}
+y_sol <- function(t){
+  (t+4*exp(2*t)+1)*exp(t)
+}
+
+my_euler <- function(dy, a,b, N, y0){
+  h <- (b-a)/N
+  T <- a
+  W <- y0
+  for (k in 1:N) {
+    w_new <- W[k]+ h*dy(T[k], W[k])
+    T <- c(T, T[k]+h)
+    W <- c(W, w_new)
+  }
+  resultados <- list("T"=T, "W"=W)
+  return(resultados)
+}
+
+sol_aprox <- my_euler(dy, 0, 15, 100, 5)
+
+my_colors=c("y(t)"="firebrick", "w(t)"="dodgerblue")
+
+graf<-ggplot()+
+  geom_function(aes(color="y(t)"),fun=y_sol, xlim=c(0,15))+
+  geom_line(aes(sol_aprox$T,sol_aprox$W, color="w(t)"))+
+  scale_color_manual(values=my_colors)+
+  labs(x="t", y="y(t)", color=" ")+
+  theme_bw()
+
+ggplotly(graf)
+```
 
 
+# Problema 20
 
+Consider a series circuit consisting of a resistor of R
+ ohms, an inductor of L
+ henries, and variable voltage source of V(t)
+ volts (time t
+ in seconds). The current through the circuit I(t)
+ (in amperes) satisfies the differential equation:
+ $ \frac{dI}{dt}+ \frac{R}{L}I= \frac{1}{L}; 
+ 
+Find the solution to this equation with the initial condition $I(0)=0$
+, assuming that $R=100Ω$
+, $L=5$
+ H, and $V(t)$
+ is constant with $V(t)=10$
+ 
+```{r}
+dy <- function(t,y){
+  -20*y+2
+}
+y_sol <- function(t){
+  1/10-exp(-20*t)/10
+}
 
+my_euler <- function(dy, a,b, N, y0){
+  h <- (b-a)/N
+  T <- a
+  W <- y0
+  for (k in 1:N) {
+    w_new <- W[k]+ h*dy(T[k], W[k])
+    T <- c(T, T[k]+h)
+    W <- c(W, w_new)
+  }
+  resultados <- list("T"=T, "W"=W)
+  return(resultados)
+}
 
+sol_aprox <- my_euler(dy, 0, 15, 100, 0)
+
+my_colors=c("y(t)"="firebrick", "w(t)"="dodgerblue")
+
+graf<-ggplot()+
+  geom_function(aes(color="y(t)"),fun=y_sol, xlim=c(0,15))+
+  geom_line(aes(sol_aprox$T,sol_aprox$W, color="w(t)"))+
+  scale_color_manual(values=my_colors)+
+  labs(x="t", y="y(t)", color=" ")+
+  theme_bw()
+
+ggplotly(graf)
+```
+ 
+ 
+ 
+ 
+ 
 
