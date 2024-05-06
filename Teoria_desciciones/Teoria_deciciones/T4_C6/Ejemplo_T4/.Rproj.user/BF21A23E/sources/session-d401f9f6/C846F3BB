@@ -3,7 +3,7 @@
     "path": "~/Github/R-studio/Teoria_desciciones/Teoria_deciciones/T4_C6/T4.Rmd",
     "project_path": null,
     "type": "r_markdown",
-    "hash": "472582259",
+    "hash": "865602975",
     "contents": "",
     "dirty": false,
     "created": 1714923356230.0,
@@ -12,15 +12,15 @@
     "properties": {
         "source_window_id": "",
         "Source": "Source",
-        "cursorPosition": "647,24",
+        "cursorPosition": "642,11",
         "scrollLine": "640"
     },
     "folds": "",
-    "lastKnownWriteTime": 1714965320,
+    "lastKnownWriteTime": 1714965779,
     "encoding": "UTF-8",
     "collab_server": "",
     "source_window": "",
-    "last_content_update": 1714965320668,
+    "last_content_update": 1714965779408,
     "read_only": false,
     "read_only_alternatives": []
 }

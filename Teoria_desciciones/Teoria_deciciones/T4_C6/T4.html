@@ -691,9 +691,11 @@ cambio porcentual se vuelve ambiguo.</p>
 información categórica y tienen solo dos valores discretos, intentar
 calcular la elasticidad con ellas es conceptualmente incorrecto y puede
 llevar a una interpretación errónea de los resultados.</p>
-<p>#Problema 3. {.tabset} Use Model 3 in this chapter and calculate the
-marginal effects and the elasticities for operating cost at the mean of
-all variables.</p>
+</div>
+<div id="problema-3." class="section level1 tabset">
+<h1 class="tabset">Problema 3.</h1>
+<p>Use Model 3 in this chapter and calculate the marginal effects and
+the elasticities for operating cost at the mean of all variables.</p>
 <div id="efectos-marginales" class="section level2">
 <h2>Efectos Marginales</h2>
 <pre class="r"><code>data(&quot;Heating&quot;)
@@ -2100,8 +2102,12 @@ apply(P, 2, mean)</code></pre>
 apply(fitted(model3.1, outcome = FALSE), 2, mean)</code></pre>
 <pre><code>##         er         ec         gc         gr         hp 
 ## 0.09333333 0.07111111 0.63666667 0.14333333 0.05555556</code></pre>
-<p>#5. Use the likelihood ratio test to compare your new model to Model
-3. Discuss the results.</p>
+</div>
+</div>
+<div id="problema-5." class="section level1">
+<h1>Problema 5.</h1>
+<p>Use the likelihood ratio test to compare your new model to Model 3.
+Discuss the results.</p>
 <pre class="r"><code>lrtest(model3, model3.1)</code></pre>
 <pre><code>## Likelihood ratio test
 ## 
@@ -2116,7 +2122,6 @@ apply(fitted(model3.1, outcome = FALSE), 2, mean)</code></pre>
 <li>Is the ratio of the coefficient of installation (or operation) cost
 to the coefficient of age of household head meaningful? Explain.</li>
 </ol>
-</div>
 </div>
 
 

@@ -72,7 +72,7 @@ En resumen, debido a que las variables ficticias representan informaci√≥n categ√
 
 
 
-#Problema 3. {.tabset}
+# Problema 3. {.tabset}
 Use Model 3 in this chapter and calculate the marginal effects and the elasticities
 for operating cost at the mean of all variables.
 
@@ -640,7 +640,7 @@ apply(fitted(model3.1, outcome = FALSE), 2, mean)
 ```
 
 
-#5.
+# Problema 5.
 Use the likelihood ratio test to compare your new model to Model 3. Discuss the
 results.
 
