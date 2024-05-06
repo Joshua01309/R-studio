@@ -1,0 +1,7 @@
+"0","H_rebate <- Heating %>% mutate(ic.hp=0.90*ic.hp)"
+"0",""
+"0","data.frame(Policy = c(""Do nothing"", ""10% rebate""),"
+"0","           rbind(apply(predict(model3, newdata = mlogit.data(Heating, shape = ""wide"", choice = ""depvar"","
+"0","                       varying = c(3:12))), 2, mean),"
+"0","                 apply(predict(model3, newdata = mlogit.data(H_rebate, shape = ""wide"", choice = ""depvar"","
+"0","                       varying = c(3:12))), 2, mean)))"

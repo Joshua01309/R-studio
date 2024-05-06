@@ -1,0 +1,16 @@
+"2","Error in is.recursive(.$object) && !is.primitive(.$object) && n > 0 : 
+  'length = 2' in coercion to 'logical(1)'
+"
+"0","data.frame(System = c(""Electric Central"", ""Electric Room"", ""Gas Central"", ""Gas Room"", ""Heat Pump""),"
+"0","           oc_min = oc_min %>% select(oc.ec, oc.er, oc.gc, oc.gr, oc.hp) %>% t() %>% as.numeric() %>%"
+"0","                    round(1),"
+"0","           p_min = p_model3_oc_min %>% as.numeric() %>% round(3),"
+"0","           oc_mean = oc_mean %>% select(oc.ec, oc.er, oc.gc, oc.gr, oc.hp) %>% t() %>% as.numeric() %>%"
+"0","                     round(1),"
+"0","          p_mean = p_model3_oc_mean %>% as.numeric() %>% round(3),"
+"0","          oc_max = oc_max %>% select(oc.ec, oc.er, oc.gc, oc.gr, oc.hp) %>% t() %>% as.numeric() %>%"
+"0","                   round(1),"
+"0","          p_max = p_model3_oc_max %>% as.numeric() %>% round(3)) %>%"
+"0","          kable(col.names = c(""System"", ""Cost"", ""Probability"", ""Cost"", ""Probability"", ""Cost"", ""Probability""),"
+"0","          digits = 3) %>% kable_styling() %>% "
+"0","          add_header_above(c("" "" = 1, ""Minimum Cost"" = 2, ""Mean Cost"" = 2, ""Maximum Cost"" = 2))"

@@ -1,0 +1,431 @@
+---
+title: "Ejemplo Tarea 4. Behavioral Insights from Choice Models"
+author: "Teoria de desiciones"
+date: "Mayo del 2024"
+output: 
+  html_document:
+    toc: false
+    theme: cerulean
+---
+
+
+
+
+
+<style>
+body {
+text-align: justify}
+</style>
+
+```{r}
+knitr::opts_chunk$set(echo = TRUE)
+library(knitr)
+library(tidyverse)
+library(discrtr) # A companion package for the book Introduction to Discrete Choice Analysis with `R`
+library(dplyr) # A Grammar of Data Manipulation
+library(ggplot2) # Create Elegant Data Visualisations Using the Grammar of Graphics
+library(mlogit) # Multinomial Logit Models
+library(readr) # Read Rectangular Text Data
+library(gplots) # Various R Programming Tools for Plotting Data
+library(ggmosaic) # Mosaic Plots in the 'ggplot2' Framework
+library(treemapify)
+library(ggridges)
+library(ggalluvial)
+library(evd)
+library(htmlwidgets) # HTML Widgets for R
+library(kableExtra) # Construct Complex Table with kable and Pipe Syntax
+library(plotly) # Create interactive web graphics
+library(tidyr) # Tidy messy data
+library(webshot2) # Take screenshots of web pages
+
+library(evd)
+```
+
+
+```{r}
+data("Heating")
+glimpse(Heating)
+```
+```{r}
+Proportion <- Heating %>% group_by(depvar) %>% summarise(no_rows = n())
+
+df <- data.frame(System = c("Gas Central", "Gas Room", "Electric Central", "Electric Room", "Heat Pump"),
+                 Installation = c(median(Heating$ic.gc), median(Heating$ic.gr),
+                                  median(Heating$ic.ec), median(Heating$ic.er),
+                                  median(Heating$ic.hp)),
+                 Operation = c(median(Heating$oc.gc), median(Heating$oc.gr),
+                               median(Heating$oc.ec), median(Heating$oc.er),
+                               median(Heating$oc.hp)),
+                 Proportion = Proportion$no_rows/900)
+
+df %>% kable() %>% kable_styling()
+```
+
+```{r}
+Heating %>% select(13:16) %>% summary()
+```
+
+```{r}
+H <- Heating %>% mlogit.data(shape = "wide", choice="depvar", varying=c(3:12))
+```
+
+```{r}
+model1 <- mlogit(depvar~ ic, Heating, shape="wide", choice="depvar", reflevel = "ec", varying=c(3:7))
+summary(model1)
+```
+
+
+```{r}
+model1_Long <- mlogit(depvar~ic, H, reflevel = "ec")
+summary(model1_Long)
+```
+
+```{r}
+mu <- 0
+sigma <- 1
+
+df <- tibble(x=seq(from=-6+mu, to=6+mu, by=0.01 ), 
+             f=plogis(x, location=mu, scale=sigma))
+
+
+
+logit_plot <- ggplot(df)+
+  geom_hline(yintercept = 0)+
+  geom_vline(xintercept = 0)+
+  geom_line(aes(x,f), color="orange", linewidth=1.2)+
+  xlab(expression(paste(V[i]-V[j])))+
+  ylab(expression(paste(P[i])))+
+   annotate("segment", x = -3.75, xend = -2.5, y = 0.024, yend = 0.024, colour = "blue", linetype = "solid")+
+   annotate("segment", x = -2.5, xend = -2.5, y = 0.024, yend = 0.075, colour = "blue", linetype = "solid")+
+   annotate("segment", x = 0, xend = 1.25, y = 0.5, yend = 0.5, colour = "red", linetype = "dashed")+
+   annotate("segment", x = 1.25, xend = 1.25, y = 0.5, yend = 0.77, colour = "red", linetype = "dashed")
+
+logit_plot
+```
+
+```{r}
+ic_min <- Heating[1, ]
+ic_mean <- Heating[1, ]
+ic_max <- Heating[1, ]
+```
+
+```{r}
+min_cost <- Heating %>% select(starts_with("ic")) %>%
+                        summarise(across(.cols = everything(), min))
+
+mean_cost <- Heating %>% select(starts_with("ic")) %>%
+             summarise(across(.cols = everything(), mean))
+
+max_cost <- Heating %>% select(starts_with("ic")) %>%  
+                        summarise(across(.cols = everything(), max))
+```
+
+
+```{r}
+ic_min[3:7] <- min_cost
+ic_mean[3:7] <- mean_cost
+ic_max[3:7] <- max_cost
+```
+
+```{r}
+head(ic_max)
+```
+
+```{r}
+p_model1_ic_min <- predict(model1, newdata = mlogit.data(ic_min, shape = "wide", choice = "depvar", varying = 3:7))
+
+p_model1_ic_mean <- predict(model1, newdata = mlogit.data(ic_mean, shape = "wide", choice = "depvar", varying = 3:7))
+
+p_model1_ic_max <- predict(model1, newdata = mlogit.data(ic_max, shape = "wide", choice = "depvar", varying = 3:7))
+```
+
+```{r}
+min_cost
+```
+```{r}
+p_model1_ic_min
+```
+```{r}
+data.frame(System = c("Electric Central", "Electric Room", "Gas Central", "Gas Room", "Heat Pump"),
+           ic_min = ic_min %>% select(ic.ec, ic.er, ic.gc, ic.gr, ic.hp) %>% t() %>% as.numeric() %>%
+                    round(1),
+           p_min = p_model1_ic_min %>% as.numeric() %>% round(3),
+           ic_mean = ic_mean %>% select(ic.ec, ic.er, ic.gc, ic.gr, ic.hp) %>% t() %>% as.numeric() %>%
+                     round(1),
+          p_mean = p_model1_ic_mean %>% as.numeric() %>% round(3),
+          ic_max = ic_max %>% select(ic.ec, ic.er, ic.gc, ic.gr, ic.hp) %>% t() %>% as.numeric() %>%
+                   round(1),
+          p_max = p_model1_ic_max %>% as.numeric() %>% round(3)) %>%
+          kable(col.names = c("System", "Cost", "Probability", "Cost", "Probability", "Cost", "Probability"),
+          digits = 3) %>% kable_styling() %>% 
+          add_header_above(c(" " = 1, "Minimum Cost" = 2, "Mean Cost" = 2, "Maximum Cost" = 2))
+```
+
+
+```{r}
+-0.00168108 * (1 - 0.617)
+```
+```{r}
+-0.00168108 * (1 - 0.639)
+```
+
+
+```{r}
+-0.00168108 * (1 - 0.672)
+```
+
+
+```{r}
+-(-0.00168108 * 0.617)
+```
+
+
+```{r}
+-(-0.00168108 * 0.639)
+```
+
+
+```{r}
+-(-0.00168108 * 0.672)
+```
+
+```{r}
+-0.00168108 * 431.8 * (1 - 0.617)
+```
+
+```{r}
+-0.00168108 * 776.8 * (1 - 0.639)
+```
+
+
+```{r}
+-0.00168108 * 1158.9 * (1 - 0.672)
+```
+
+```{r}
+-(-0.00168108 * 431.8 * 0.617)
+```
+
+```{r}
+-(-0.00168108 * 776.8 * 0.639)
+```
+
+```{r}
+-(-0.00168108 * 1158.9 * 0.672)
+```
+
+----
+```{r}
+# Calculate the marginal effects with respect to attribute "ic"
+# Type of effects to compute: relative for probability, absolute for attribute
+effects(model1, covariate = "ic", type = "ra",
+        data = mlogit.data(ic_min, shape = "wide", choice = "depvar", varying = 3:7))
+```
+
+
+```{r}
+effects(model1, covariate = "ic", type = "ra", data = mlogit.data(ic_mean, shape = "wide",
+        choice = "depvar", varying = 3:7))
+```
+
+```{r}
+effects(model1, covariate = "ic", type = "ra", data = mlogit.data(ic_max, shape = "wide",
+        choice = "depvar", varying = 3:7))
+```
+
+----
+
+```{r}
+effects(model1, covariate = "ic", type = "rr", data = mlogit.data(ic_min, shape = "wide", choice = "depvar",
+        varying = 3:7))
+```
+
+
+```{r}
+effects(model1, covariate = "ic", type = "rr", data = mlogit.data(ic_mean, shape = "wide", choice = "depvar",
+        varying = 3:7))
+```
+
+
+```{r}
+effects(model1, covariate = "ic", type = "rr", data = mlogit.data(ic_max, shape = "wide", choice = "depvar",
+        varying = 3:7))
+```
+
+----
+
+```{r}
+summary(Heating$region)
+```
+
+
+```{r}
+model2 <- mlogit(depvar ~ ic | region, Heating, shape = "wide", choice = "depvar", reflevel = "ec",
+                 varying = c(3:7))
+
+summary(model2)
+```
+
+```{r}
+ic_mean_region <- ic_mean %>% mutate(count=4) %>% uncount(count)
+
+ic_mean_region$region <- c("valley", "scostl", "mountn", "ncostl")
+
+head(ic_mean_region)
+```
+
+```{r}
+p_region_ic_mean <- data.frame(Region = c("valley", "scostl", "mountn", "ncostl"),
+                               predict(model2, newdata = mlogit.data(ic_mean_region, shape = "wide",
+                               choice = "depvar", varying = 3:7),
+                               outcome = FALSE))
+
+p_region_ic_mean
+```
+
+
+```{r}
+data.frame (Effect = c("valley to scostl", "valley to mountn", "valley to ncostl"),
+            rbind (p_region_ic_mean[2, 2:6] - p_region_ic_mean[1, 2:6],
+                   p_region_ic_mean[3, 2:6] - p_region_ic_mean[1, 2:6],
+                   p_region_ic_mean[4, 2:6] - p_region_ic_mean[1, 2:6]))
+```
+
+----
+
+```{r}
+model3 <- mlogit(depvar ~ ic + oc, Heating, shape = "wide", choice = "depvar", reflevel = "ec", varying = c(3:12))
+
+summary(model3)
+```
+
+----
+```{r}
+H_rebate <- Heating %>% mutate(ic.hp=0.85*ic.hp)
+```
+
+```{r}
+data.frame(Policy = c("Do nothing", "15% rebate"),
+           rbind(apply(predict(model3, newdata = mlogit.data(Heating, shape = "wide", choice = "depvar",
+                       varying = c(3:12))), 2, mean),
+                 apply(predict(model3, newdata = mlogit.data(H_rebate, shape = "wide", choice = "depvar",
+                       varying = c(3:12))), 2, mean)))
+```
+
+
+```{r}
+X <- model.matrix(model3)
+head(X)
+```
+
+```{r}
+alt <- index(H)$alt
+Xn <- X[alt=="ec", ]
+head(Xn)
+```
+
+```{r}
+Xn[, "ic"] <-  Xn[, "ic"] + 200
+Xn[, "oc"] <-  Xn[, "oc"] * 0.75
+head(Xn)
+```
+
+```{r}
+chid <- index(H)$chid
+head(chid, 12)
+```
+
+```{r}
+unchid <- unique(index(H)$chid)
+head(unchid, 12)
+```
+
+
+```{r}
+rownames(Xn) <- paste(unchid, 'new', sep = ".")
+chidb <- c(chid, unchid)
+head(Xn)
+```
+
+```{r}
+X <- rbind(X, Xn)
+X <- X[order(chidb), ]
+head(X,15)
+```
+
+```{r}
+exp_Xb <- as.numeric(exp(X %*% coef(model3))) # vectors
+head(exp_Xb)
+```
+
+
+```{r}
+# tapply does the sum of th exp_Xb for each chidb
+sum_exp_Xb <- as.numeric(tapply(exp_Xb, sort(chidb), sum))
+```
+
+```{r}
+P <- exp_Xb / sum_exp_Xb[sort(chidb)]
+```
+
+
+```{r}
+P <- data.frame(matrix(P, ncol = 6, byrow = TRUE))
+P <- transmute(P, ec = P[, 1], er = P[, 2], gc = P[, 3], gr = P[, 4], hp = P[, 5], new = P[, 6])
+```
+
+
+```{r}
+summary(rowSums(P))
+```
+
+```{r}
+apply(P, 2, mean)
+```
+
+```{r}
+apply(fitted(model3, outcome = FALSE), 2, mean)
+```
+
+----
+
+```{r}
+p_model3 <- fitted(model3, outcome=FALSE) %>% data.frame()
+```
+
+
+```{r}
+apply(p_model3, 2, mean)
+```
+
+
+```{r}
+o_model3 <- p_model3 %>%
+            # Group by row
+            rowwise() %>%
+            # Find the maximum value by row
+            mutate(max_p = max(c(ec, er, gc, gr, hp))) %>% ungroup() %>%
+            # Find the column that matches the highest probability
+            transmute(outcome = case_when(max_p == ec ~ "ec",
+                                          max_p == er ~ "er",
+                                          max_p == gc ~ "gc",
+                                          max_p == gr ~ "gr",
+                                          max_p == hp ~ "hp"))
+```
+
+```{r}
+table(o_model3)
+```
+
+
+
+
+
+
+
+
+
+
+
+
+

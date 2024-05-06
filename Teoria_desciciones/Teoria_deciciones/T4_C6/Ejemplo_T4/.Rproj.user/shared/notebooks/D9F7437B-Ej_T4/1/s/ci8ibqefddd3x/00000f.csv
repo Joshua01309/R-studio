@@ -1,0 +1,1 @@
+"0","H <- Heating %>% mlogit.data(shape = ""wide"", choice=""depvar"", varying=c(3:12))"

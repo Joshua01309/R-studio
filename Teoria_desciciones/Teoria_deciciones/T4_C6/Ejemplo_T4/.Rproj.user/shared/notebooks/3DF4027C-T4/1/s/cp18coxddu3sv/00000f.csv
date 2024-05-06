@@ -1,0 +1,8 @@
+"0","min_cost <- Heating %>% select(starts_with(""ic"")) %>%"
+"0","                        summarise(across(.cols = everything(), min))"
+"0",""
+"0","mean_cost <- Heating %>% select(starts_with(""ic"")) %>%"
+"0","             summarise(across(.cols = everything(), mean))"
+"0",""
+"0","max_cost <- Heating %>% select(starts_with(""ic"")) %>%  "
+"0","                        summarise(across(.cols = everything(), max))"

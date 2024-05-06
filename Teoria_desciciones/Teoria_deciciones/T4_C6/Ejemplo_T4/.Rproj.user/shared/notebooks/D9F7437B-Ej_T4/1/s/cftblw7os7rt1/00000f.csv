@@ -1,0 +1,5 @@
+"0","p_model1_ic_min <- predict(model1, newdata = mlogit.data(ic_min, shape = ""wide"", choice = ""depvar"", varying = 3:7))"
+"0",""
+"0","p_model1_ic_mean <- predict(model1, newdata = mlogit.data(ic_mean, shape = ""wide"", choice = ""depvar"", varying = 3:7))"
+"0",""
+"0","p_model1_ic_max <- predict(model1, newdata = mlogit.data(ic_max, shape = ""wide"", choice = ""depvar"", varying = 3:7))"

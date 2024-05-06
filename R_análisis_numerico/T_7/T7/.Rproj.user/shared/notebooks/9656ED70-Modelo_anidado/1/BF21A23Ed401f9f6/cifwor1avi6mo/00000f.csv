@@ -1,3 +1,0 @@
-"0","data(""Heating"", package = ""mlogit"")"
-"0","H <- mlogit.data(Heating, shape = ""wide"", choice = ""depvar"", varying = c(3:12))"
-"0",""
