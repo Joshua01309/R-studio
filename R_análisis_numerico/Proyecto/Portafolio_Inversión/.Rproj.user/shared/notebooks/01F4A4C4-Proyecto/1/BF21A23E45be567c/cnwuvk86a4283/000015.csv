@@ -1,0 +1,8 @@
+"0","AAPL<- get.hist.quote(instrument = ""AAPL"", "
+"0","                      start=as.Date(""2022-05-01""), "
+"0","                      end=as.Date(""2024-05-01""), quote = ""AdjClose"")"
+"1","time series starts 2022-05-02
+"
+"1","time series ends   2024-04-30
+"
+"0","plot(AAPL, col=""blue"", xlab=""Fecha"", ylab=""Cierre""); title(main=""Apple Inc."")"

@@ -1,0 +1,19 @@
+"0","stocklist <- c(""^GSPC"", ""NVDA"", ""MSFT"", ""JPM"", ""JNJ"", ""BTC-USD"", ""GC=F"")"
+"0",""
+"0","FVX<- get.hist.quote(instrument = ""^FVX"", "
+"0","                      start=as.Date(""2019-01-01""), "
+"0","                      end=as.Date(""2024-01-01""), quote = ""AdjClose"")"
+"2","Warning: ^FVX contains missing values. Some functions will not work if objects contain missing values in the middle of the series. Consider using na.omit(), na.approx(), na.fill(), etc to remove or replace them."
+"1","time series starts 2019-01-02
+"
+"1","time series ends   2023-12-29
+"
+"0","EURUSD=X<- get.hist.quote(instrument = ""EURUSD=X"", "
+"0","                      start=as.Date(""2019-01-01""), "
+"0","                      end=as.Date(""2024-01-01""), quote = ""AdjClose"")"
+"2","Warning: EURUSD=X contains missing values. Some functions will not work if objects contain missing values in the middle of the series. Consider using na.omit(), na.approx(), na.fill(), etc to remove or replace them."
+"0","EURUSD_X <- getSymbols(""EURUSD=X"", from='2019-01-01', to='2024-01-01', auto.assign = FALSE)"
+"2","Error in getSymbols.yahoo(Symbols = ""EURUSD=X"", env = <environment>, verbose = FALSE,  : 
+  Unable to import “EURUSD=X”.
+Timeout was reached: [query2.finance.yahoo.com] SSL/TLS connection timeout
+"

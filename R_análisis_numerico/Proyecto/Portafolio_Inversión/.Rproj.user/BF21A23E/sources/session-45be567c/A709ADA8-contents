@@ -1,0 +1,278 @@
+---
+title: "Portafolio de inversión."
+author: "Equipo 1"
+date: "Proyecto Final"
+output: 
+  html_document:
+    toc: true
+    toc_depth: 1
+    theme: cerulean
+---
+
+
+
+
+
+<style>
+body {
+text-align: justify}
+</style>
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(knitr)
+#Proyecto
+library(plotly)
+library(tidyquant)
+library(timetk)
+library(fPortfolio)
+library(PortfolioAnalytics)
+library(quantmod)
+library(TTR)
+library(pander)
+library(tidyr)
+library(ggthemes)
+library(ggplot2)
+library(tseries)
+library(readxl)
+library(rgl)
+
+```
+
+# Evolución del Activo {.tabset}
+
+## AAPL/Apple Inc. 
+
+```{r echo=FALSE}
+AAPL<- get.hist.quote(instrument = "AAPL", 
+                      start=as.Date("2022-05-01"), 
+                      end=as.Date("2024-05-01"), quote = "AdjClose")
+
+plot(AAPL, col="blue", xlab="Fecha", ylab="Cierre"); title(main="Apple Inc.")
+```
+
+## MSFT/Microsoft Corporation
+
+```{r echo=FALSE}
+MSFT<- get.hist.quote(instrument = "MSFT", 
+                      start=as.Date("2022-05-01"), 
+                      end=as.Date("2024-05-01"), quote = "AdjClose")
+
+plot(MSFT, col="blue", xlab="Fecha", ylab="Cierre"); title(main="Microsoft Corporation.")
+```
+
+## NVDA/NVIDIA Corporation 
+
+```{r echo=FALSE}
+NVDA<- get.hist.quote(instrument = "NVDA", 
+                      start=as.Date("2022-05-01"), 
+                      end=as.Date("2024-05-01"), quote = "AdjClose")
+
+plot(NVDA, col="blue", xlab="Fecha", ylab="Cierre"); title(main="NVIDIA Corporation.")
+```
+
+## PFE/Pfizer Inc. 
+
+```{r echo=FALSE}
+PFE<- get.hist.quote(instrument = "PFE", 
+                      start=as.Date("2022-05-01"), 
+                      end=as.Date("2024-05-01"), quote = "AdjClose")
+
+plot(PFE, col="blue", xlab="Fecha", ylab="Cierre"); title(main="Pfizer Inc.")
+```
+
+## WMT/Walmart Inc. 
+
+```{r echo=FALSE}
+WMT<- get.hist.quote(instrument = "WMT", 
+                      start=as.Date("2022-05-01"), 
+                      end=as.Date("2024-05-01"), quote = "AdjClose")
+
+plot(WMT, col="blue", xlab="Fecha", ylab="Cierre"); title(main="Walmart Inc.")
+```
+
+## Cartera 
+
+```{r echo=FALSE}
+Cartera <- merge(AAPL,MSFT,NVDA,PFE,WMT, all = FALSE) 
+names(Cartera)
+
+names(Cartera)<-c("AAPL", "MSFT", "NVDA", "PFE", "WMT")
+plot(Cartera, main=" ", col="blue", xlab="Fecha")
+title(main="Cartera")
+```
+
+# Rendimientos {.tabset}
+
+## AAPL/Apple Inc.  
+
+```{r echo=FALSE}
+Rendimientos<-diff(log(AAPL))
+head(Rendimientos,10)
+
+plot(Rendimientos, main=" ", col="pink", xlab="Fecha")
+title(main="Rendimientos de la Cartera")
+```
+
+## MSFT/Microsoft Corporation
+
+```{r echo=FALSE}
+Rendimientos<-diff(log(MSFT))
+head(Rendimientos,10)
+
+plot(Rendimientos, main=" ", col="pink", xlab="Fecha")
+title(main="Rendimientos de la Cartera")
+```
+
+## PFE/Pfizer Inc. 
+
+```{r echo=FALSE}
+Rendimientos<-diff(log(PFE))
+head(Rendimientos,10)
+
+plot(Rendimientos, main=" ", col="pink", xlab="Fecha")
+title(main="Rendimientos de la Cartera")
+```
+
+## WMT/Walmart Inc. 
+
+```{r echo=FALSE}
+Rendimientos<-diff(log(WMT))
+head(Rendimientos,10)
+
+plot(Rendimientos, main=" ", col="pink", xlab="Fecha")
+title(main="Rendimientos de la Cartera")
+```
+
+## Cartera 
+
+```{r echo=FALSE}
+Rendimientos<-diff(log(Cartera))
+head(Rendimientos,10)
+
+plot(Rendimientos, main=" ", col="pink", xlab="Fecha")
+title(main="Rendimientos de la Cartera")
+```
+
+```{r}
+summary(Rendimientos)
+```
+
+```{r echo=FALSE}
+RendimientoPromedio = c(mean(Rendimientos$AAPL),mean(Rendimientos$MSFT),mean(Rendimientos$NVDA),mean(Rendimientos$PFE),mean(Rendimientos$WMT))
+
+Volatilidad = c(sd(Rendimientos$AAPL),sd(Rendimientos$MSFT),sd(Rendimientos$NVDA),sd(Rendimientos$PFE),sd(Rendimientos$WMT))
+
+#Expresado en %
+Tabla1 = data.frame (rbind(RendimientoPromedio,Volatilidad))
+colnames(Tabla1)<- c("AAPL", "MSFT", "NVDA", "PFE", "WMT")
+
+Tabla1*100
+```
+
+# Matrices {.tabset}
+
+## Covarianza 
+
+```{r echo=FALSE}
+Cov <- cov(Rendimientos)*100
+Cov
+```
+
+## Correlación 
+
+```{r echo=FALSE}
+corr <- cor(Rendimientos) * 100
+corr
+```
+
+
+Acciones
+Renta fija    60%
+Bonos 10 años Mexico 
+
+acciones de baja volatilidad   30%
+S&P 500
+Nvidia
+Microsof 
+JP MORGAN
+
+Alta bolatilidad  10%
+XAUUSD
+BTCUSDT
+EURUSD
+
+
+
+```{r}
+stocklist <- c("^GSPC", "NVDA", "MSFT", "JPM", "JNJ", "BTC-USD", "GC=F")
+
+FVX<- get.hist.quote(instrument = "^FVX", 
+                      start=as.Date("2019-01-01"), 
+                      end=as.Date("2024-01-01"), quote = "AdjClose")
+
+EURUSD=X<- get.hist.quote(instrument = "EURUSD=X", 
+                      start=as.Date("2019-01-01"), 
+                      end=as.Date("2024-01-01"), quote = "AdjClose")
+EURUSD_X <- getSymbols("EURUSD=X", from='2019-01-01', to='2024-01-01', auto.assign = FALSE)
+FVX <- getSymbols("^FVX", from='2019-01-01', to='2024-01-01', auto.assign = FALSE)
+
+# Elimina los valores faltantes
+EURUSD_X <- na.omit(EURUSD_X)
+FVX <- na.omit(FVX)
+
+
+getSymbols(stocklist, from='2019-01-01', to='2024-01-01' )
+
+
+
+```
+
+```{r}
+stocklist <- c("^GSPC", "NVDA", "MSFT", "JPM", "JNJ", "BTC-USD", "GC=F")
+
+# Use getSymbols and set na.rm to FALSE
+EURUSD_X <- getSymbols("EURUSD=X", from='2019-01-01', to='2024-01-01', auto.assign = FALSE, na.rm = FALSE)
+sapply(EURUSD_X, function(x) sum(is.na(x)))
+EURUSD <- na.omit(EURUSD_X)
+
+FVX <- getSymbols("^FVX", from='2019-01-01', to='2024-01-01', auto.assign = FALSE, na.rm = FALSE)
+sapply(FVX, function(x) sum(is.na(x)))
+FVX <- na.omit(FVX)
+
+getSymbols(stocklist)
+
+
+```
+
+
+
+
+```{r}
+# create a vector of stocks
+s1 = c("FVX.AX", "SPX.AX", "NVDA.AX", "MSFT.AX", "JPM.AX", "JNJ.AX")
+
+# download prices and create returns from Adjusted Prices
+data1 = lapply(s1, FUN = function(x) {
+    ROC(Ad(getSymbols(x, from = "2019-07-01", to = "2021-06-30", auto.assign = FALSE)),
+        type = "discrete") * 100
+})  #%returns
+
+# convert to data frame
+ret1 = as.data.frame(do.call(merge, data1))
+# change columna names
+colnames(ret1) = gsub(".AX.Adjusted", "", colnames(ret1))
+# remove the first row of missing values
+ret1 = ret1[-1, ]
+# add dates column
+ret1 = data.frame(Date = as.Date(row.names(ret1)), ret1)
+row.names(ret1) = NULL
+# save the dataframe (not necessarily required, only for
+# reproducibility)
+saveRDS(ret1, file = "data/port_ret.Rds")
+```
+
+
+
+

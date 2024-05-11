@@ -1,0 +1,12 @@
+"0","# create a vector of stocks"
+"0","s1 = c(""FVX.AX"", ""SPX.AX"", ""NVDA.AX"", ""MSFT.AX"", ""JPM.AX"", ""JNJ.AX"")"
+"0",""
+"0","# download prices and create returns from Adjusted Prices"
+"0","data1 = lapply(s1, FUN = function(x) {"
+"0","    ROC(Ad(getSymbols(x, from = ""2019-07-01"", to = ""2021-06-30"", auto.assign = FALSE)),"
+"0","        type = ""discrete"") * 100"
+"0","})  #%returns"
+"2","Error in getSymbols.yahoo(Symbols = ""FVX.AX"", env = <environment>, verbose = FALSE,  : 
+  Unable to import “FVX.AX”.
+HTTP error 404.
+"
