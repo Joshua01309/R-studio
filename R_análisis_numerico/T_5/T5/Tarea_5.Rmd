@@ -5,7 +5,7 @@ date: "Abril del 2024"
 output: 
   html_document:
     toc: false
-    theme: cerulean
+    theme: sandstone
 ---
 
 
@@ -166,6 +166,20 @@ ggplotly(grafica)
 
 ## Conclusiones
 
+1. La serie temporal de precios al consumidor presenta una tendencia al alza a largo plazo. Esto significa que, en general, los precios de los bienes y servicios han ido aumentando con el tiempo.
+
+2. La serie temporal también exhibe patrones estacionales. Los precios tienden a ser más altos en ciertos períodos del año, como en el verano o durante las fiestas decembrinas.
+
+3. Existe una correlación significativa entre el valor actual de la serie temporal y su valor en el período anterior (lag 1). Esto indica que los cambios en los precios al consumidor tienden a persistir en el tiempo.
+
+4. Un modelo ARIMA(1,0,0) captura razonablemente la estructura autorregresiva de la serie temporal. Este modelo sugiere que el valor actual de los precios al consumidor está relacionado linealmente con su valor en el período anterior, y que existe una tendencia a la baja a largo plazo después de considerar este efecto autorregresivo.
+
+5. En el histograma tiene una forma de distribución normal ligeramente sesgado hacia la izquierda la imajen muestra que el conteo de los productos para las fechas recientes (2020-2024) ha disminuyendo pero que los precios al consumidor ha aumentado en comparación con fechas anteriores
+
+
+
+
+
 
 # Actividad Economica {.tabset}
 
@@ -263,6 +277,32 @@ ggplotly(grafica)
 
 
 ## Conclusiones
+
+Histograma: Muestra una distribución variada de la actividad económica a lo largo de los años. Hay una concentración de actividad alrededor de ciertos valores.
+Resumen estadístico:
+La actividad económica tiene un rango de 53.94 a 107.69.
+El valor medio es de 81.72.
+Hay 2 valores faltantes en los datos.
+Serie temporal:
+La actividad económica ha aumentado constantemente desde 1995 hasta 2020, con algunas fluctuaciones menores.
+Descomposición aditiva:
+La serie temporal tiene una tendencia general al alza, con patrones estacionales y ruido aleatorio.
+La tendencia indica un crecimiento constante a largo plazo.
+La estacionalidad muestra patrones repetitivos a lo largo del año.
+El ruido representa las variaciones impredecibles en la actividad económica.
+Autocorrelación:
+Existe una autocorrelación significativa en los retrasos 1, 2 y 3.
+Esto significa que los valores de la actividad económica están correlacionados con los valores de los períodos anteriores.
+Coeficientes ARIMA:
+El modelo ARIMA(3,0,0) es adecuado para describir la serie temporal de la actividad económica.
+Los coeficientes indican la fuerza de la relación entre los valores actuales y pasados de la actividad económica.
+Residuos:
+Los residuos son principalmente aleatorios, con algunos valores atípicos alrededor del año 2020.
+Esto sugiere que el modelo ARIMA(3,0,0) captura bien la estructura de la serie temporal.
+
+La actividad económica ha mostrado un crecimiento constante a largo plazo desde 1995 hasta 2020, con patrones estacionales y fluctuaciones aleatorias. La serie temporal puede modelarse adecuadamente mediante un modelo ARIMA(3,0,0), que indica una fuerte autocorrelación en los retrasos 1, 2 y 3. Los residuos del modelo son principalmente aleatorios, lo que sugiere que el modelo captura bien la estructura de la serie temporal.
+
+
 
 
 # Actividad Industrial {.tabset}
@@ -362,7 +402,15 @@ ggplotly(grafica)
 
 ## Conclusiones
 
+La actividad industrial ha presentado una tendencia decreciente desde el primer trimestre de 2019 hasta el cuarto trimestre de 2023, con algunas fluctuaciones trimestrales.
+Se observa una estacionalidad en la actividad industrial, con niveles de actividad más altos en algunos trimestres del año y más bajos en otros.
+La actividad industrial exhibe autocorrelación significativa, lo que significa que los valores actuales están correlacionados con los valores de períodos anteriores.
+El modelo ARIMA(3,0,0) proporciona un buen ajuste para la serie temporal de la actividad industrial y los residuos no muestran patrones significativos.
 
+La disminución general en la actividad industrial puede deberse a una variedad de factores, como la desaceleración económica, la disminución de la inversión o cambios en las políticas públicas.
+La estacionalidad de la actividad industrial puede estar relacionada con factores como las vacaciones, las condiciones climáticas o los patrones de consumo.
+La autocorrelación en la actividad industrial sugiere que la inercia puede ser un factor importante que determina su evolución futura.
+El modelo ARIMA(3,0,0) puede ser utilizado para pronosticar la actividad industrial en el corto plazo, considerando que captura los patrones principales en la serie temporal.
 
 # Exportaciones totales {.tabset}
 
@@ -460,7 +508,38 @@ ggplotly(grafica)
 
 
 ## Conclusiones
+Puntos importantes y conclusión:
 
+1. Histograma de las exportaciones totales:
+   - La distribución es unimodal, con la mayoría de los valores concentrados alrededor de un valor específico.
+   - Hay una ligera asimetría hacia la isquierda, indicando una mayor probabilidad de valores más altos.
+   - La cola isquierda es más larga, sugiriendo una mayor probabilidad de observar valores muy altos de exportaciones totales.
+
+2. Resumen descriptivo del indicador de exportaciones totales:
+   - Los valores varían significativamente, desde un mínimo de 3491 hasta un máximo de 53584.
+   - La mediana es inferior a la media, lo que sugiere un ligero sesgo positivo en la distribución.
+   - El rango intercuartílico es amplio, indicando variabilidad en los datos.
+
+3. Interpretación de la serie temporal de exportaciones totales:
+   - La tendencia general es de aumento a lo largo del tiempo, con fluctuaciones a corto y largo plazo.
+   - Se observan posibles patrones estacionales, pero se requiere más información para confirmarlos.
+   
+4. Descomposición de la serie temporal:
+   - Se identifican tres componentes: tendencia, estacionalidad y ruido aleatorio.
+   - La tendencia muestra un crecimiento a lo largo del tiempo, mientras que la estacionalidad indica fluctuaciones cíclicas.
+   
+5. Función de autocorrelación (ACF):
+   - Existe una autocorrelación significativa en los rezagos 1, 2 y 3, lo que sugiere dependencia a corto plazo en la serie temporal.
+
+6. Modelo ARIMA:
+   - El modelo ARIMA(3,0,0) muestra autocorrelaciones significativas en los tres períodos anteriores.
+   - La serie de tiempo puede predecirse en función de sus valores anteriores.
+
+7. Gráfico residual:
+   - Los residuos se dispersan aleatoriamente alrededor de la línea cero, lo que sugiere homocedasticidad y validez del modelo ARIMA.
+
+Conclusión:
+En general, las exportaciones totales muestran una tendencia de aumento a lo largo del tiempo, con fluctuaciones estacionales y patrones de autocorrelación significativos en períodos anteriores. Estos hallazgos proporcionan una visión detallada del comportamiento de las exportaciones totales y pueden ser útiles para la planificación y la toma de decisiones relacionadas con el comercio internacional.
 
 
 
@@ -563,6 +642,31 @@ ggplotly(grafica)
 
 ## Conclusiones
 
+Rango de datos: Desde 2.670 hasta 74.750, mostrando una variación considerable.
+Sesgo positivo: La mediana (7.390) es menor que la media (10.827), sugiriendo una posible cola hacia valores más altos.
+Valor atípico: El máximo (74.750) es significativamente más alto que el resto, indicando un posible valor atípico.
+Serie temporal de Cetes 28 días:
+
+Tendencias ascendentes y descendentes: Muestra fluctuaciones significativas en las tasas de interés.
+Cambios bruscos: Indica momentos de cambios rápidos en las tasas de interés.
+Descomposición de la serie temporal:
+
+Tendencia al alza: Sugiere un aumento general en los valores de Cetes 28 días a lo largo del tiempo.
+Componente estacional plano: Indica la ausencia de un patrón estacional fuerte en los datos.
+Componente aleatorio: Muestra fluctuaciones impredecibles alrededor de la tendencia.
+Gráfico de autocorrelación:
+
+Ausencia de autocorrelación significativa: Indica que los residuos del modelo son probablemente ruido blanco.
+Modelo ARIMA(3,0,0):
+
+Coeficientes de AR: Indican influencia positiva y negativa de valores pasados en el valor actual.
+Sigma al cuadrado: Estima la varianza del componente de ruido blanco.
+Gráfico de residuos:
+
+Distribución aleatoria: Los residuos están dispersos alrededor de cero, sugiriendo un buen ajuste del modelo.
+Homocedasticidad: La variación de los residuos parece constante a lo largo de la serie.
+
+
 
 # Tasa de bonos de tesoro EUA {.tabset}
 
@@ -662,10 +766,19 @@ ggplotly(grafica)
 ## Conclusiones
 
 
+Resumen estadístico: Según el resumen estadístico, la tasa media de bonos del tesoro de Estados Unidos es aproximadamente 3.908, con una mediana de 3.890. Esto sugiere que la distribución de las tasas podría estar sesgada positivamente, ya que la media es ligeramente mayor que la mediana.
 
+Interpretación de la serie temporal: La serie temporal muestra una tendencia general decreciente desde 1995 hasta alrededor de 2015, seguida de un aumento significativo hasta el año 2020. Esto indica cambios a largo plazo en las tasas de bonos del tesoro de Estados Unidos.
 
+Descomposición de la serie temporal: La descomposición de la serie temporal en tendencia, estacional y aleatoria muestra una tendencia al alza a largo plazo, así como variaciones estacionales consistentes. Esto proporciona información sobre los patrones subyacentes y las fluctuaciones a corto plazo en las tasas de bonos.
 
+Autocorrelación: El análisis de autocorrelación indica la presencia de correlación entre las tasas de bonos en diferentes períodos de tiempo, lo que sugiere cierta dependencia temporal en los datos.
 
+Modelo de autorregresión (ARIMA): El modelo de autorregresión ajustado sugiere que los valores futuros de las tasas de bonos del tesoro de Estados Unidos están influenciados por sus valores anteriores, con un orden seleccionado de 3.
+
+Residuos del modelo: La gráfica de residuos muestra que los residuos están distribuidos aleatoriamente alrededor de cero, lo que indica que el modelo ha capturado la mayoría de la estructura en los datos y que lo que queda son solo variaciones aleatorias.
+
+En conclusión, el análisis de la tasa de bonos del tesoro de Estados Unidos revela patrones de tendencia a largo plazo, variaciones estacionales y fluctuaciones a corto plazo en las tasas a lo largo de los años
 
 
 

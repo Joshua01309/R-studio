@@ -1,0 +1,1062 @@
+---
+title: "Portafolio de inversión."
+author: "Equipo 1"
+date: "Proyecto Final"
+output: 
+  html_document:
+    toc: true
+    toc_depth: 1
+    theme: cerulean
+    css: styles.css
+---
+
+
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(knitr)
+library(plotly)
+library(tidyquant)
+library(timetk)
+library(fPortfolio)
+library(PortfolioAnalytics)
+library(TTR)
+library(pander)
+library(tidyr)
+library(ggthemes)
+library(ggplot2)
+library(tseries)
+library(quantmod)
+library(readxl)
+library(zoo)
+library(forecast)
+library(PerformanceAnalytics)
+library(ROI)
+library(ROI.plugin.quadprog)
+
+
+```
+
+# Evolución del Activo {.tabset}
+
+## AAPL/Apple Inc. 
+
+```{r echo=FALSE}
+AAPL<- get.hist.quote(instrument = "AAPL", 
+                      start=as.Date("2022-05-01"), 
+                      end=as.Date("2024-05-01"), quote = "AdjClose")
+
+plot(AAPL, col="blue", xlab="Fecha", ylab="Cierre"); title(main="Apple Inc.")
+```
+
+## MSFT/Microsoft Corporation
+
+```{r echo=FALSE}
+MSFT<- get.hist.quote(instrument = "MSFT", 
+                      start=as.Date("2022-05-01"), 
+                      end=as.Date("2024-05-01"), quote = "AdjClose")
+
+plot(MSFT, col="blue", xlab="Fecha", ylab="Cierre"); title(main="Microsoft Corporation.")
+```
+
+## NVDA/NVIDIA Corporation 
+
+```{r echo=FALSE}
+NVDA<- get.hist.quote(instrument = "NVDA", 
+                      start=as.Date("2022-05-01"), 
+                      end=as.Date("2024-05-01"), quote = "AdjClose")
+
+plot(NVDA, col="blue", xlab="Fecha", ylab="Cierre"); title(main="NVIDIA Corporation.")
+```
+
+## PFE/Pfizer Inc. 
+
+```{r echo=FALSE}
+PFE<- get.hist.quote(instrument = "PFE", 
+                      start=as.Date("2022-05-01"), 
+                      end=as.Date("2024-05-01"), quote = "AdjClose")
+
+plot(PFE, col="blue", xlab="Fecha", ylab="Cierre"); title(main="Pfizer Inc.")
+```
+
+## WMT/Walmart Inc. 
+
+```{r echo=FALSE}
+WMT<- get.hist.quote(instrument = "WMT", 
+                      start=as.Date("2022-05-01"), 
+                      end=as.Date("2024-05-01"), quote = "AdjClose")
+
+plot(WMT, col="blue", xlab="Fecha", ylab="Cierre"); title(main="Walmart Inc.")
+```
+
+## Cartera 
+
+```{r echo=FALSE}
+Cartera <- merge(AAPL,MSFT,NVDA,PFE,WMT, all = FALSE) 
+names(Cartera)
+
+names(Cartera)<-c("AAPL", "MSFT", "NVDA", "PFE", "WMT")
+plot(Cartera, main=" ", col="blue", xlab="Fecha")
+title(main="Cartera")
+```
+
+# Rendimientos {.tabset}
+
+## AAPL/Apple Inc.  
+
+```{r echo=FALSE}
+Rendimientos<-diff(log(AAPL))
+head(Rendimientos,10)
+
+plot(Rendimientos, main=" ", col="pink", xlab="Fecha")
+title(main="Rendimientos de la Cartera")
+```
+
+## MSFT/Microsoft Corporation
+
+```{r echo=FALSE}
+Rendimientos<-diff(log(MSFT))
+head(Rendimientos,10)
+
+plot(Rendimientos, main=" ", col="pink", xlab="Fecha")
+title(main="Rendimientos de la Cartera")
+```
+
+## PFE/Pfizer Inc. 
+
+```{r echo=FALSE}
+Rendimientos<-diff(log(PFE))
+head(Rendimientos,10)
+
+plot(Rendimientos, main=" ", col="pink", xlab="Fecha")
+title(main="Rendimientos de la Cartera")
+```
+
+## WMT/Walmart Inc. 
+
+```{r echo=FALSE}
+Rendimientos<-diff(log(WMT))
+head(Rendimientos,10)
+
+plot(Rendimientos, main=" ", col="pink", xlab="Fecha")
+title(main="Rendimientos de la Cartera")
+```
+
+## Cartera 
+
+```{r echo=FALSE}
+Rendimientos<-diff(log(Cartera))
+head(Rendimientos,10)
+
+plot(Rendimientos, main=" ", col="pink", xlab="Fecha")
+title(main="Rendimientos de la Cartera")
+```
+
+```{r}
+summary(Rendimientos)
+```
+
+```{r echo=FALSE}
+RendimientoPromedio = c(mean(Rendimientos$AAPL),mean(Rendimientos$MSFT),mean(Rendimientos$NVDA),mean(Rendimientos$PFE),mean(Rendimientos$WMT))
+
+Volatilidad = c(sd(Rendimientos$AAPL),sd(Rendimientos$MSFT),sd(Rendimientos$NVDA),sd(Rendimientos$PFE),sd(Rendimientos$WMT))
+
+#Expresado en %
+Tabla1 = data.frame (rbind(RendimientoPromedio,Volatilidad))
+colnames(Tabla1)<- c("AAPL", "MSFT", "NVDA", "PFE", "WMT")
+
+Tabla1*100
+```
+
+# Matrices {.tabset}
+
+## Covarianza 
+
+```{r echo=FALSE}
+Cov <- cov(Rendimientos)*100
+Cov
+```
+
+## Correlación 
+
+```{r echo=FALSE}
+corr <- cor(Rendimientos) * 100
+corr
+```
+
+
+# STOCKS {.tabset}
+
+## Bonos del Tesoro de EE. UU a 5 años (^FVX).
+### Datos
+
+```{r message=FALSE}
+FVX=getSymbols("^FVX", from = '2019-01-01', to = '2024-01-01', src = "yahoo", auto.assign = F)
+print(FVX)
+```
+```{r}
+  chartSeries(FVX, name = "Gráfico de FVX", 
+            subset = '2019-01::2024-01', 
+            theme = chartTheme(), TA=NULL)
+```
+
+### TAsa de Crecimiento y Tasa de rendimeinto
+```{r message=FALSE}
+# TAsa de Crecimiento
+FVXroc=ROC(FVX, type='discret')
+print(FVXroc)
+
+```
+```{r}
+# Tasa de rendimiento
+FVXrend <- periodReturn(FVX, period = 'monthly', type = 'log', subset = '2019-01::2024-01')
+FVXrend
+```
+## S&P 500 (^GSPC)
+### Datos
+
+```{r message=FALSE}
+GSPC=getSymbols("^GSPC", from = '2019-01-01', to = '2024-01-01', src = "yahoo", auto.assign = F)
+print(GSPC)
+```
+
+
+```{r}
+  chartSeries(GSPC, name = "Gráfico GSPC", 
+            subset = '2019-01::2024-01', 
+            theme = chartTheme())
+```
+
+### TAsa de Crecimiento y Tasa de rendimeinto
+```{r message=FALSE}
+# TAsa de Crecimiento
+GSPCroc=ROC(GSPC, type='discret')
+print(GSPCroc)
+
+```
+```{r}
+# Tasa de rendimiento
+GSPCrend <- periodReturn(GSPC, period = 'monthly', type = 'log', subset = '2019-01::2024-01')
+GSPCrend
+```
+
+## NVIDIA Corporation (NVDA)
+
+### Datos
+
+```{r message=FALSE}
+NVDA=getSymbols("NVDA", from = '2019-01-01', to = '2024-01-01', src = "yahoo", auto.assign = F)
+print(NVDA)
+```
+
+
+```{r}
+  chartSeries(NVDA, name = "Gráfico NVDA", 
+            subset = '2019-01::2024-01', 
+            theme = chartTheme())
+```
+
+### TAsa de Crecimiento y Tasa de rendimeinto
+```{r message=FALSE}
+# TAsa de Crecimiento
+NVDAroc=ROC(NVDA, type='discret')
+print(NVDAroc)
+
+```
+```{r}
+# Tasa de rendimiento
+NVDArend <- periodReturn(NVDA, period = 'monthly', type = 'log', subset = '2019-01::2024-01')
+NVDArend
+```
+
+## Microsoft Corporation (MSFT)
+
+### Datos
+
+```{r message=FALSE}
+MSFT=getSymbols("MSFT", from = '2019-01-01', to = '2024-01-01', src = "yahoo", auto.assign = F)
+print(MSFT)
+```
+
+
+```{r}
+  chartSeries(MSFT, name = "Gráfico MSFT", 
+            subset = '2019-01::2024-01', 
+            theme = chartTheme())
+```
+
+### TAsa de Crecimiento y Tasa de rendimeinto
+```{r message=FALSE}
+# TAsa de Crecimiento
+MSFTroc=ROC(MSFT, type='discret')
+print(MSFTroc)
+
+```
+```{r}
+# Tasa de rendimiento
+MSFTrend <- periodReturn(MSFT, period = 'monthly', type = 'log', subset = '2019-01::2024-01')
+GSPCrend
+```
+
+
+## JPMorgan Chase & Co. (JPM)
+
+### Datos
+
+```{r message=FALSE}
+JPM=getSymbols("JPM", from = '2019-01-01', to = '2024-01-01', src = "yahoo", auto.assign = F)
+print(JPM)
+```
+
+
+```{r}
+  chartSeries(JPM, name = "Gráfico JPM", 
+            subset = '2019-01::2024-01', 
+            theme = chartTheme())
+```
+
+### TAsa de Crecimiento y Tasa de rendimeinto
+```{r message=FALSE}
+# TAsa de Crecimiento
+JPMroc=ROC(JPM, type='discret')
+print(JPMroc)
+
+```
+```{r}
+# Tasa de rendimiento
+JPMrend <- periodReturn(JPM, period = 'monthly', type = 'log', subset = '2019-01::2024-01')
+JPMrend
+```
+
+
+## Johnson & Johnson (JNJ)
+
+### Datos
+
+```{r message=FALSE}
+JNJ=getSymbols("JNJ", from = '2019-01-01', to = '2024-01-01', src = "yahoo", auto.assign = F)
+print(JNJ)
+```
+
+
+```{r}
+  chartSeries(JNJ, name = "Gráfico JNJ", 
+            subset = '2019-01::2024-01', 
+            theme = chartTheme())
+```
+
+### TAsa de Crecimiento y Tasa de rendimeinto
+```{r message=FALSE}
+# TAsa de Crecimiento
+JNJroc=ROC(JNJ, type='discret')
+print(JNJroc)
+
+```
+```{r}
+# Tasa de rendimiento
+JNJrend <- periodReturn(JNJ, period = 'monthly', type = 'log', subset = '2019-01::2024-01')
+JNJrend
+```
+
+
+## EUR/USD (EURUSD=X)
+
+### Datos
+
+```{r message=FALSE}
+EURUSD=getSymbols("EURUSD=X", from = '2019-01-01', to = '2024-01-01', src = "yahoo", auto.assign = F)
+print(EURUSD)
+```
+
+
+```{r}
+  chartSeries(EURUSD, name = "Gráfico EUR/USD=X", 
+            subset = '2019-01::2024-01', 
+            theme = chartTheme())
+```
+
+### TAsa de Crecimiento y Tasa de rendimeinto
+```{r message=FALSE}
+# TAsa de Crecimiento
+EURUSDroc=ROC(EURUSD, type='discret')
+print(EURUSDroc)
+
+```
+```{r}
+# Tasa de rendimiento
+EURUSDrend <- periodReturn(EURUSD, period = 'monthly', type = 'log', subset = '2019-01::2024-01')
+EURUSDrend
+```
+
+
+
+## Gold Jun 24 (GC=F)
+
+### Datos
+
+```{r message=FALSE}
+GC=getSymbols("GC=F", from = '2019-01-01', to = '2024-01-01', src = "yahoo", auto.assign = F)
+print(GC)
+```
+
+
+```{r}
+  chartSeries(GC, name = "Gráfico GC=F", 
+            subset = '2019-01::2024-01', 
+            theme = chartTheme())
+```
+
+### TAsa de Crecimiento y Tasa de rendimeinto
+```{r message=FALSE}
+# TAsa de Crecimiento
+GCroc=ROC(GC, type='discret')
+print(GCroc)
+
+```
+```{r}
+# Tasa de rendimiento
+GCrend <- periodReturn(GC, period = 'monthly', type = 'log', subset = '2019-01::2024-01')
+GCrend
+```
+
+
+## GBitcoin USD (BTC-USD)
+
+### Datos
+
+```{r message=FALSE}
+BTC=getSymbols("BTC-USD", from = '2019-01-01', to = '2024-01-01', src = "yahoo", auto.assign = F)
+print(BTC)
+```
+
+
+```{r}
+  chartSeries(BTC, name = "Gráfico BTC-USD", 
+            subset = '2019-01::2024-01', 
+            theme = chartTheme())
+```
+
+### TAsa de Crecimiento y Tasa de rendimeinto
+```{r message=FALSE}
+# TAsa de Crecimiento
+BTCroc=ROC(BTC, type='discret')
+print(BTCroc)
+
+```
+```{r}
+# Tasa de rendimiento
+BTCrend <- periodReturn(BTC, period = 'monthly', type = 'log', subset = '2019-01::2024-01')
+BTCrend
+```
+
+
+
+# Datos del Portafolio {.tabset}
+
+
+```{r}
+
+# create a vector of stocks
+s1 = c("^FVX", "^GSPC", "NVDA", "MSFT", "JPM", "JNJ","EURUSD=X", "BTC-USD", "GC=F")
+
+# download prices and create returns from Adjusted Prices
+data1 = lapply(s1, FUN = function(x) {
+    ROC(Ad(getSymbols(x, from = "2019-01-01", to = "2024-01-01", auto.assign = FALSE)),
+        type = "discrete") * 100
+})  #%returns
+
+# convert to data frame
+ret1 = as.data.frame(do.call(merge, data1))
+# change columna names
+colnames(ret1) = gsub(".Adjusted", "", colnames(ret1))
+# remove the first row of missing values
+ret1 = ret1[-1, ]
+# add dates column
+ret1 = data.frame(Date = as.Date(row.names(ret1)), ret1)
+row.names(ret1) = NULL
+# save the dataframe (not necessarily required, only for
+# reproducibility)
+
+
+```
+
+
+
+
+```{r}
+pander(head(ret1), split.table = Inf)
+```
+
+## Graficos
+
+```{r}
+# convert to long
+ret_long <- pivot_longer(ret1, cols = -c(Date), values_to = "Return", names_to = "Stock")
+
+# plot
+port_p1 <- ggplot(ret_long, aes(Date, Return, color = Stock)) +
+  geom_path(stat = "identity") +
+  facet_grid(Stock ~ .) +
+  theme_minimal() +
+  labs(x = "Date", y = "Returns")
+
+# Convert to plotly object
+port_p1 <- ggplotly(port_p1)
+
+# Show interactive plot
+port_p1 #covid crisis period is evident in the plot
+```
+
+
+```{r echo=FALSE}
+FVX <- get.hist.quote(instrument = "^FVX", 
+                      start = as.Date("2019-01-01"), 
+                      end = as.Date("2024-01-01"), 
+                      quote = "AdjClose")
+
+GSPC <- get.hist.quote(instrument = "^GSPC", 
+                      start = as.Date("2019-01-01"), 
+                      end = as.Date("2024-01-01"), 
+                      quote = "AdjClose")
+
+NVDA <- get.hist.quote(instrument = "NVDA", 
+                      start = as.Date("2019-01-01"), 
+                      end = as.Date("2024-01-01"), 
+                      quote = "AdjClose")
+
+MSFT <- get.hist.quote(instrument = "MSFT", 
+                      start = as.Date("2019-01-01"), 
+                      end = as.Date("2024-01-01"), 
+                      quote = "AdjClose")
+
+JPM <- get.hist.quote(instrument = "JPM", 
+                      start = as.Date("2019-01-01"), 
+                      end = as.Date("2024-01-01"), 
+                      quote = "AdjClose")
+
+JNJ <- get.hist.quote(instrument = "JNJ", 
+                      start = as.Date("2019-01-01"), 
+                      end = as.Date("2024-01-01"), 
+                      quote = "AdjClose")
+
+EURUSD <- get.hist.quote(instrument = "EURUSD=X", 
+                      start = as.Date("2019-01-01"), 
+                      end = as.Date("2024-01-01"), 
+                      quote = "AdjClose")
+
+BTC <- get.hist.quote(instrument = "BTC-USD", 
+                      start = as.Date("2019-01-01"), 
+                      end = as.Date("2024-01-01"), 
+                      quote = "AdjClose")
+
+GC <- get.hist.quote(instrument = "GC=F", 
+                      start = as.Date("2019-01-01"), 
+                      end = as.Date("2024-01-01"), 
+                      quote = "AdjClose")
+
+Cartera <- merge(FVX, GSPC, NVDA, MSFT, JPM, JNJ, EURUSD, BTC, GC, all = FALSE) 
+names(Cartera)
+
+names(Cartera)<-c("^FVX", "^GSPC", "NVDA", "MSFT", "JPM", "JNJ","EURUSD=X", "BTC-USD", "GC=F")
+plot(Cartera, main=" ", col="#449A8B", xlab="Fecha")
+title(main="Cartera") 
+```
+
+## Portfolios with random weights
+
+```{r}
+s1 = c("^FVX", "^GSPC", "NVDA", "MSFT", "JPM", "JNJ","EURUSD=X", "BTC-USD", "GC=F")
+
+# download prices and create returns from Adjusted Prices
+data1 = lapply(s1, FUN = function(x) {
+    ROC(Ad(getSymbols(x, from = "2019-01-01", to = "2024-01-01", auto.assign = FALSE)),
+        type = "discrete") * 100
+})  #%returns
+
+# convert to data frame
+ret1 = as.data.frame(do.call(merge, data1))
+
+np1 = 200  #number of portfolios
+ret2 = ret1  #excluding dates
+mu1 = colMeans(ret2, na.rm = TRUE)  #mean returns
+na1 = ncol(ret2)  #number of assets
+varc1 = cov(ret2, use = "complete.obs")  # covariance matrix
+
+riskp1 = NULL  #vector to store risk
+retp1 = NULL  #vector to store returns
+
+for (i in 1:np1) {
+    w = diff(c(0, sort(runif(na1 - 1)), 1))  # random weights
+    r1 = t(w) %*% mu1  #matrix multiplication
+    sd1 = sqrt(t(w) %*% varc1 %*% w)  # portfolio standard deviation
+    retp1 = rbind(retp1, r1)
+    riskp1 = rbind(riskp1, sd1)
+}
+
+# Crear un marco de datos con riesgo y retorno
+d_p1 <- data.frame(Ret = retp1, Risk = riskp1)
+
+# Verificar y manejar valores faltantes e infinitos
+if (any(is.infinite(d_p1$Risk) | is.infinite(d_p1$Ret))) {
+    warning("Se detectaron valores infinitos en los datos. Considere manejarlos.")
+}
+
+# Asegurarse de que los datos sean numéricos
+d_p1$Risk <- as.numeric(d_p1$Risk)
+d_p1$Ret <- as.numeric(d_p1$Ret)
+
+# Obtener el punto con el mínimo riesgo
+min_risk_point <- d_p1[which.min(d_p1$Risk), ]
+
+# Crear el gráfico con ggplot2
+p1 <- ggplot(d_p1, aes(x = Risk, y = Ret, colour = Ret)) +
+  geom_point() +
+  geom_hline(yintercept = c(max(d_p1$Ret), median(d_p1$Ret), min(d_p1$Ret)), 
+             colour = c("darkgreen", "darkgray", "darkred"), size = 1) +
+  geom_vline(xintercept = min_risk_point$Risk, linetype = "dashed", color = "blue", size = 1) +
+  labs(colour = "Portfolio Return", x = "Portfolio Risk", y = "Portfolio Return",
+       title = "Random Feasible Portfolios") +
+  theme_bw()
+
+print(p1)
+
+
+
+
+```
+
+```{r}
+# Suponiendo que d_p1 es tu dataframe con los datos de riesgo y retorno
+# Graficar puntos de riesgo y retorno
+plot(d_p1$Risk, d_p1$Ret, 
+     xlab = "Risk", ylab = "Return", 
+     main = "Risk-Return Plot for Mean Variance Portfolio", 
+     col = "blue", pch = 19)
+
+# Añadir línea para el punto con el mínimo riesgo
+points(min_risk_point$Risk, min_risk_point$Ret, col = "red", pch = 19)
+
+# Añadir líneas de referencia para máximo, mediana y mínimo retorno
+abline(h = c(max(d_p1$Ret), median(d_p1$Ret), min(d_p1$Ret)), 
+       col = c("darkgreen", "darkgray", "darkred"), lty = 2)
+
+# Agregar leyenda
+legend("bottomright", legend = c("Risk-Return Points", "Minimum Risk Point", "Maximum Return", "Median Return", "Minimum Return"),
+       col = c("blue", "red", "darkgreen", "darkgray", "darkred"), pch = c(19, 19, NA, NA, NA), lty = c(NA, NA, 2, 2, 2))
+
+```
+
+
+
+
+
+
+
+## Cartera eficiente (varianza mínima) con paquetes de R
+
+
+```{r}
+s1 = c("^FVX", "^GSPC", "NVDA", "MSFT", "JPM", "JNJ","EURUSD=X", "BTC-USD", "GC=F")
+
+# download prices and create returns from Adjusted Prices
+data1 = lapply(s1, FUN = function(x) {
+    ROC(Ad(getSymbols(x, from = "2019-01-01", to = "2024-01-01", auto.assign = FALSE)),
+        type = "discrete") * 100
+})  #%returns
+
+# convert to data frame
+ret1 = as.data.frame(do.call(merge, data1))
+
+# initialise with asset names uses time series data
+data_p2 = zoo(ret1, order.by = as.Date(index(ret1)))
+
+# clean the data
+data_p2 = na.omit(data_p2)
+data_p2 = data_p2[!is.infinite(rowSums(data_p2)), ]
+
+# create specification
+port = portfolio.spec(assets = colnames(data_p2))
+
+# add long only constraint
+port = add.constraint(portfolio = port, type = "long_only")
+
+# add full investment contraint
+port = add.constraint(portfolio = port, type = "full_investment")
+
+# objective: manimise risk
+port_rnd = add.objective(portfolio = port, type = "risk", name = "StdDev")
+
+# objective: maximise return
+port_rnd = add.objective(portfolio = port_rnd, type = "return", name = "mean")
+
+# 1. optimise random portfolios
+rand_p = optimize.portfolio(R = data_p2, portfolio = port_rnd, optimize_method = "random",
+    trace = TRUE, search_size = 1000)
+
+# plot
+chart.RiskReward(rand_p, risk.col = "StdDev", return.col = "mean", chart.assets = TRUE)
+
+```
+
+
+
+Optimice para minimizar el riesgo
+Minimizar el nivel de desviación estándar de la cartera
+
+
+```{r}
+
+# Instalar y cargar el paquete ROI si no está instalado
+if (!requireNamespace("ROI", quietly = TRUE)) {
+  install.packages("ROI")
+}
+
+
+# Cargar paquetes relacionados con la optimización de carteras
+if (!requireNamespace("ROI.plugin.quadprog", quietly = TRUE)) {
+  install.packages("ROI.plugin.quadprog")
+}
+
+
+if (!requireNamespace("ROI.plugin.glpk", quietly = TRUE)) {
+  install.packages("ROI.plugin.glpk")
+}
+
+
+
+port_msd = add.objective(portfolio = port, type = "risk", name = "StdDev")
+minvar1 = optimize.portfolio(R = data_p2, portfolio = port_msd, optimize_method = "ROI",
+    trace = TRUE)
+minvar1
+
+```
+
+
+```{r}
+# Obtener los nombres de los activos
+assets_names <- colnames(data_p2)
+
+# Calcular la desviación estándar de cada activo en la cartera
+std_dev <- sqrt(diag(cov(data_p2)))
+
+# Obtener los pesos de la cartera óptima
+weights <- extractWeights(minvar1)
+
+# Calcular el peso igualitario para comparación
+equal_weights <- rep(1 / length(assets_names), length.out = length(assets_names))
+
+# Configurar colores y estilos
+main_color <- "#0072B2" # Azul
+equal_weight_color <- "#D55E00" # Naranja
+point_size <- 3
+
+# Graficar los pesos en función de la desviación estándar
+plot(std_dev, weights, xlab = "StdDev", ylab = "Pesos", main = "Pesos vs. StdDev",
+     xlim = range(std_dev), ylim = c(0, 1), col = main_color, pch = 16, cex = point_size)
+
+# Agregar etiquetas para los activos
+text(std_dev, weights, labels = assets_names, pos = 4, col = main_color, cex = 0.8)
+
+# Agregar línea para peso igualitario
+lines(std_dev, equal_weights, col = equal_weight_color, lty = 2)
+
+# Agregar leyenda
+legend("topright", legend = c("Peso Óptimo", "Peso Igualitario"),
+       col = c(main_color, equal_weight_color), pch = c(16, NA), lty = c(NA, 2))
+
+```
+
+```{r}
+# Definir los nombres de los activos
+assets_names <- c("FVX", "^GSPC", "NVDA", "MSFT", "JPM", "JNJ", "EURUSD=X", "BTC-USD", "GC=F")
+
+# Definir los pesos personalizados para cada activo
+custom_weights <- c("^FVX"= 0.50, "^GSPC" = 0.35, "NVDA" = 0.35, "MSFT" = 0.35, "JPM" = 0.35, 
+                    "JNJ" = 0.35, "EURUSD=X" = 0.15, "BTC-USD" = 0.15, "GC=F" = 0.15)
+
+# Crear un vector de pesos con los pesos personalizados
+weights <- rep(0, length(assets_names))
+names(weights) <- assets_names
+
+for (i in 1:length(assets_names)) {
+  if (assets_names[i] %in% names(custom_weights)) {
+    weights[i] <- custom_weights[[assets_names[i]]]
+  }
+}
+
+# Normalizar los pesos para que sumen 1
+weights <- weights / sum(weights)
+
+# Imprimir los pesos
+print(weights)
+
+```
+
+
+## Rentabilidad Logaritmica
+
+### FVX
+
+```{r}
+Rendimientos<-diff(log(FVX))
+head(Rendimientos,10)
+
+plot(Rendimientos, main=" ", col="#F6BB22", xlab="Fecha")
+title(main="Rendimientos de la Cartera")
+```
+
+### GSPC
+
+```{r}
+Rendimientos<-diff(log(GSPC))
+head(Rendimientos,10)
+
+plot(Rendimientos, main=" ", col="#F6BB22", xlab="Fecha")
+title(main="Rendimientos de la Cartera")
+```
+
+### NVDA
+
+```{r}
+Rendimientos<-diff(log(NVDA))
+head(Rendimientos,10)
+
+plot(Rendimientos, main=" ", col="#F6BB22", xlab="Fecha")
+title(main="Rendimientos de la Cartera")
+```
+
+### MSFT
+
+```{r}
+Rendimientos<-diff(log(MSFT))
+head(Rendimientos,10)
+
+plot(Rendimientos, main=" ", col="#F6BB22", xlab="Fecha")
+title(main="Rendimientos de la Cartera")
+```
+
+
+### JPM
+
+```{r}
+Rendimientos<-diff(log(JPM))
+head(Rendimientos,10)
+
+plot(Rendimientos, main=" ", col="#F6BB22", xlab="Fecha")
+title(main="Rendimientos de la Cartera")
+```
+
+
+### JNJ
+
+```{r}
+Rendimientos<-diff(log(JNJ))
+head(Rendimientos,10)
+
+plot(Rendimientos, main=" ", col="#F6BB22", xlab="Fecha")
+title(main="Rendimientos de la Cartera")
+```
+
+
+### EURUSD
+
+```{r}
+Rendimientos<-diff(log(EURUSD))
+head(Rendimientos,10)
+
+plot(Rendimientos, main=" ", col="#F6BB22", xlab="Fecha")
+title(main="Rendimientos de la Cartera")
+```
+
+### BTC
+
+```{r}
+Rendimientos<-diff(log(BTC))
+head(Rendimientos,10)
+
+plot(Rendimientos, main=" ", col="#F6BB22", xlab="Fecha")
+title(main="Rendimientos de la Cartera")
+```
+
+### GC
+
+```{r}
+Rendimientos<-diff(log(GC))
+head(Rendimientos,10)
+
+plot(Rendimientos, main=" ", col="#F6BB22", xlab="Fecha")
+title(main="Rendimientos de la Cartera")
+```
+
+
+### Rendimiento de Cartera
+
+```{r}
+Rendimientos<-diff(log(Cartera))
+head(Rendimientos,10)
+
+plot(Rendimientos, main=" ", col="#F6BB22", xlab="Fecha")
+title(main="Rendimientos de la Cartera")
+```
+
+
+```{r}
+summary(Rendimientos)
+```
+
+```{r}
+RendimientoPromedio = c(mean(Rendimientos$FVX),mean(Rendimientos$GSPC),mean(Rendimientos$NVDA),mean(Rendimientos$MSFT),mean(Rendimientos$JPM), mean(Rendimientos$JNJ), mean(Rendimientos$EURUSD), mean(Rendimientos$BTC), mean(Rendimientos$GC))
+
+Volatilidad = c(sd(Rendimientos$FVX),sd(Rendimientos$GSPC), sd(Rendimientos$NVDA),  sd(Rendimientos$MSFT),sd(Rendimientos$JPM),sd(Rendimientos$JNJ),sd(Rendimientos$EURUSD), sd(Rendimientos$BTC), sd(Rendimientos$GC))
+
+#Expresado en %
+Tabla1 = data.frame (rbind(RendimientoPromedio,Volatilidad))
+colnames(Tabla1)<- c("^FVX", "^GSPC", "NVDA", "MSFT", "JPM", "JNJ","EURUSD=X", "BTC-USD", "GC=F")
+
+Tabla1*100
+```
+
+
+# Matrices {.tabset}
+
+## Covarianza 
+
+```{r echo=FALSE}
+Cov <- cov(Rendimientos)*100
+Cov
+```
+
+## Correlación 
+
+```{r echo=FALSE}
+corr <- cor(Rendimientos) * 100
+corr
+```
+
+
+
+## Coeficiente de Correlación
+
+```{r}
+# Instalar el paquete gplots si no está instalado
+if (!requireNamespace("gplots", quietly = TRUE)) {
+  install.packages("gplots")
+}
+
+# Cargar el paquete gplots
+library(gplots)
+
+# Definir la función para generar el mapa de calor
+generate_heat_map <- function(correlationMatrix, title) {
+  heatmap.2(x = correlationMatrix,    
+            cellnote = correlationMatrix,   
+            main = title,           
+            symm = TRUE,            
+            dendrogram = "none",      
+            Rowv = FALSE,           
+            trace = "none",           
+            density.info = "none",        
+            notecol = "black")          
+}
+
+# Calcular la matriz de correlación y redondear los valores
+corr1 <- round(cor(Rendimientos) * 100, 2)
+
+# Generar el mapa de calor
+generate_heat_map(corr1, "Mapa de calor: Correlaciones")
+
+```
+
+# Posicion en Largo
+
+```{r}
+# Verificar si hay valores no finitos en los rendimientos
+if (any(!is.finite(Rendimientos))) {
+  # Eliminar las observaciones con valores no finitos
+  Rendimientos <- na.omit(Rendimientos)
+}
+
+# Crear la especificación de la cartera
+markov <- portfolioSpec()
+
+# Establecer la tasa libre de riesgo
+setRiskFreeRate(markov) <- -0.001 
+
+# Establecer la cantidad de carteras en la frontera
+setNFrontierPoints(markov) <- 20 
+
+# Establecer las restricciones
+constraints <- "LongOnly"
+
+# Construir la cartera de la frontera eficiente
+Frontera <- portfolioFrontier(as.timeSeries(Rendimientos), spec = markov, constraints = constraints)
+
+# Visualizar la frontera eficiente
+print(Frontera)
+frontierPlot(Frontera)
+grid()
+tangencyPoints(Frontera, pch = 19, col = "red", cex = 2)
+tangencyLines(Frontera, col = "grey", pch = 19, cex = 2)
+minvariancePoints(Frontera, col = "blue", pch = 19, cex = 2)
+monteCarloPoints(Frontera, mCsteps = 2000, col = "#0098D5", cex = 0.001)
+
+
+
+```
+
+```{r}
+library(fPortfolio)
+data_p2 = as.timeSeries(data_p2)
+pspec = portfolioSpec()  #initial specification
+
+setNFrontierPoints(pspec) = 500  #random portfolios for the efficient frontier
+
+eff_front2 = portfolioFrontier(data_p2, constraints = "LongOnly")  #strategy
+plot(eff_front2, c(1, 2, 4, 5, 6))
+```
+
+```{r}
+tailoredFrontierPlot(eff_front2, sharpeRatio = FALSE, risk = "Sigma")
+```
+
+
+
+# Pesos del portafolio
+
+```{r}
+col <- qualiPalette(ncol(Rendimientos), "Pastel1")
+weightsPlot(Frontera, col=col)
+
+efPortfolio <- efficientPortfolio(as.timeSeries(Rendimientos),markov,constraints)
+efPortfolio
+```
+
+# Portafolio Tangente
+
+```{r}
+tgPortfolio <- tangencyPortfolio(as.timeSeries(Rendimientos),markov,constraints)
+tgPortfolio
+```
+
+# Participación por portafolio
+
+```{r}
+weightsPie(efPortfolio, col=col )
+mtext(text = "Portafolio eficiente", side = 3, line = 1.5,
+        font = 2, cex = 0.7, adj = 0)
+```
+
+
+```{r}
+weightsPie(tgPortfolio, col=col)
+mtext(text = "Portafolio tangente", side = 3, line = 1.5,
+        font = 2, cex = 0.7, adj = 0)
+```
+
+
+
+
+
+
