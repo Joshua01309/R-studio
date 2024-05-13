@@ -4,10 +4,9 @@ author: "Equipo 1"
 date: "Proyecto Final"
 output: 
   html_document:
-    toc: true
-    toc_depth: 1
-    theme: cerulean
-    css: styles.css
+    toc: false
+    theme: sandstone
+  
 ---
 
 
@@ -39,153 +38,6 @@ library(ROI.plugin.quadprog)
 
 ```
 
-# Evolución del Activo {.tabset}
-
-## AAPL/Apple Inc. 
-
-```{r echo=FALSE}
-AAPL<- get.hist.quote(instrument = "AAPL", 
-                      start=as.Date("2022-05-01"), 
-                      end=as.Date("2024-05-01"), quote = "AdjClose")
-
-plot(AAPL, col="blue", xlab="Fecha", ylab="Cierre"); title(main="Apple Inc.")
-```
-
-## MSFT/Microsoft Corporation
-
-```{r echo=FALSE}
-MSFT<- get.hist.quote(instrument = "MSFT", 
-                      start=as.Date("2022-05-01"), 
-                      end=as.Date("2024-05-01"), quote = "AdjClose")
-
-plot(MSFT, col="blue", xlab="Fecha", ylab="Cierre"); title(main="Microsoft Corporation.")
-```
-
-## NVDA/NVIDIA Corporation 
-
-```{r echo=FALSE}
-NVDA<- get.hist.quote(instrument = "NVDA", 
-                      start=as.Date("2022-05-01"), 
-                      end=as.Date("2024-05-01"), quote = "AdjClose")
-
-plot(NVDA, col="blue", xlab="Fecha", ylab="Cierre"); title(main="NVIDIA Corporation.")
-```
-
-## PFE/Pfizer Inc. 
-
-```{r echo=FALSE}
-PFE<- get.hist.quote(instrument = "PFE", 
-                      start=as.Date("2022-05-01"), 
-                      end=as.Date("2024-05-01"), quote = "AdjClose")
-
-plot(PFE, col="blue", xlab="Fecha", ylab="Cierre"); title(main="Pfizer Inc.")
-```
-
-## WMT/Walmart Inc. 
-
-```{r echo=FALSE}
-WMT<- get.hist.quote(instrument = "WMT", 
-                      start=as.Date("2022-05-01"), 
-                      end=as.Date("2024-05-01"), quote = "AdjClose")
-
-plot(WMT, col="blue", xlab="Fecha", ylab="Cierre"); title(main="Walmart Inc.")
-```
-
-## Cartera 
-
-```{r echo=FALSE}
-Cartera <- merge(AAPL,MSFT,NVDA,PFE,WMT, all = FALSE) 
-names(Cartera)
-
-names(Cartera)<-c("AAPL", "MSFT", "NVDA", "PFE", "WMT")
-plot(Cartera, main=" ", col="blue", xlab="Fecha")
-title(main="Cartera")
-```
-
-# Rendimientos {.tabset}
-
-## AAPL/Apple Inc.  
-
-```{r echo=FALSE}
-Rendimientos<-diff(log(AAPL))
-head(Rendimientos,10)
-
-plot(Rendimientos, main=" ", col="pink", xlab="Fecha")
-title(main="Rendimientos de la Cartera")
-```
-
-## MSFT/Microsoft Corporation
-
-```{r echo=FALSE}
-Rendimientos<-diff(log(MSFT))
-head(Rendimientos,10)
-
-plot(Rendimientos, main=" ", col="pink", xlab="Fecha")
-title(main="Rendimientos de la Cartera")
-```
-
-## PFE/Pfizer Inc. 
-
-```{r echo=FALSE}
-Rendimientos<-diff(log(PFE))
-head(Rendimientos,10)
-
-plot(Rendimientos, main=" ", col="pink", xlab="Fecha")
-title(main="Rendimientos de la Cartera")
-```
-
-## WMT/Walmart Inc. 
-
-```{r echo=FALSE}
-Rendimientos<-diff(log(WMT))
-head(Rendimientos,10)
-
-plot(Rendimientos, main=" ", col="pink", xlab="Fecha")
-title(main="Rendimientos de la Cartera")
-```
-
-## Cartera 
-
-```{r echo=FALSE}
-Rendimientos<-diff(log(Cartera))
-head(Rendimientos,10)
-
-plot(Rendimientos, main=" ", col="pink", xlab="Fecha")
-title(main="Rendimientos de la Cartera")
-```
-
-```{r}
-summary(Rendimientos)
-```
-
-```{r echo=FALSE}
-RendimientoPromedio = c(mean(Rendimientos$AAPL),mean(Rendimientos$MSFT),mean(Rendimientos$NVDA),mean(Rendimientos$PFE),mean(Rendimientos$WMT))
-
-Volatilidad = c(sd(Rendimientos$AAPL),sd(Rendimientos$MSFT),sd(Rendimientos$NVDA),sd(Rendimientos$PFE),sd(Rendimientos$WMT))
-
-#Expresado en %
-Tabla1 = data.frame (rbind(RendimientoPromedio,Volatilidad))
-colnames(Tabla1)<- c("AAPL", "MSFT", "NVDA", "PFE", "WMT")
-
-Tabla1*100
-```
-
-# Matrices {.tabset}
-
-## Covarianza 
-
-```{r echo=FALSE}
-Cov <- cov(Rendimientos)*100
-Cov
-```
-
-## Correlación 
-
-```{r echo=FALSE}
-corr <- cor(Rendimientos) * 100
-corr
-```
-
 
 # STOCKS {.tabset}
 
@@ -193,12 +45,12 @@ corr
 ### Datos
 
 ```{r message=FALSE}
-FVX=getSymbols("^FVX", from = '2019-01-01', to = '2024-01-01', src = "yahoo", auto.assign = F)
+FVX=getSymbols("^FVX", from = '2022-05-13', to = '2024-05-13', src = "yahoo", auto.assign = F)
 print(FVX)
 ```
 ```{r}
   chartSeries(FVX, name = "Gráfico de FVX", 
-            subset = '2019-01::2024-01', 
+            subset = '2022-05::2024-05', 
             theme = chartTheme(), TA=NULL)
 ```
 
@@ -211,21 +63,21 @@ print(FVXroc)
 ```
 ```{r}
 # Tasa de rendimiento
-FVXrend <- periodReturn(FVX, period = 'monthly', type = 'log', subset = '2019-01::2024-01')
+FVXrend <- periodReturn(FVX, period = 'monthly', type = 'log', subset = '2022-05::2024-05')
 FVXrend
 ```
 ## S&P 500 (^GSPC)
 ### Datos
 
 ```{r message=FALSE}
-GSPC=getSymbols("^GSPC", from = '2019-01-01', to = '2024-01-01', src = "yahoo", auto.assign = F)
+GSPC=getSymbols("^GSPC", from = '2022-05-13', to = '2024-05-13', src = "yahoo", auto.assign = F)
 print(GSPC)
 ```
 
 
 ```{r}
   chartSeries(GSPC, name = "Gráfico GSPC", 
-            subset = '2019-01::2024-01', 
+            subset = '2022-05::2024-05', 
             theme = chartTheme())
 ```
 
@@ -238,7 +90,7 @@ print(GSPCroc)
 ```
 ```{r}
 # Tasa de rendimiento
-GSPCrend <- periodReturn(GSPC, period = 'monthly', type = 'log', subset = '2019-01::2024-01')
+GSPCrend <- periodReturn(GSPC, period = 'monthly', type = 'log', subset = '2022-05::2024-05')
 GSPCrend
 ```
 
@@ -247,14 +99,14 @@ GSPCrend
 ### Datos
 
 ```{r message=FALSE}
-NVDA=getSymbols("NVDA", from = '2019-01-01', to = '2024-01-01', src = "yahoo", auto.assign = F)
+NVDA=getSymbols("NVDA", from = '2022-05-13', to = '2024-05-13', src = "yahoo", auto.assign = F)
 print(NVDA)
 ```
 
 
 ```{r}
   chartSeries(NVDA, name = "Gráfico NVDA", 
-            subset = '2019-01::2024-01', 
+            subset = '2022-05::2024-05', 
             theme = chartTheme())
 ```
 
@@ -267,7 +119,7 @@ print(NVDAroc)
 ```
 ```{r}
 # Tasa de rendimiento
-NVDArend <- periodReturn(NVDA, period = 'monthly', type = 'log', subset = '2019-01::2024-01')
+NVDArend <- periodReturn(NVDA, period = 'monthly', type = 'log', subset = '2022-05::2024-05')
 NVDArend
 ```
 
@@ -276,14 +128,14 @@ NVDArend
 ### Datos
 
 ```{r message=FALSE}
-MSFT=getSymbols("MSFT", from = '2019-01-01', to = '2024-01-01', src = "yahoo", auto.assign = F)
+MSFT=getSymbols("MSFT", from = '2022-05-13', to = '2024-05-13', src = "yahoo", auto.assign = F)
 print(MSFT)
 ```
 
 
 ```{r}
   chartSeries(MSFT, name = "Gráfico MSFT", 
-            subset = '2019-01::2024-01', 
+            subset = '2022-05::2024-05', 
             theme = chartTheme())
 ```
 
@@ -296,7 +148,7 @@ print(MSFTroc)
 ```
 ```{r}
 # Tasa de rendimiento
-MSFTrend <- periodReturn(MSFT, period = 'monthly', type = 'log', subset = '2019-01::2024-01')
+MSFTrend <- periodReturn(MSFT, period = 'monthly', type = 'log', subset = '2022-05::2024-05')
 GSPCrend
 ```
 
@@ -306,14 +158,14 @@ GSPCrend
 ### Datos
 
 ```{r message=FALSE}
-JPM=getSymbols("JPM", from = '2019-01-01', to = '2024-01-01', src = "yahoo", auto.assign = F)
+JPM=getSymbols("JPM", from = '2022-05-13', to = '2024-05-13', src = "yahoo", auto.assign = F)
 print(JPM)
 ```
 
 
 ```{r}
   chartSeries(JPM, name = "Gráfico JPM", 
-            subset = '2019-01::2024-01', 
+            subset = '2022-05::2024-05', 
             theme = chartTheme())
 ```
 
@@ -326,68 +178,97 @@ print(JPMroc)
 ```
 ```{r}
 # Tasa de rendimiento
-JPMrend <- periodReturn(JPM, period = 'monthly', type = 'log', subset = '2019-01::2024-01')
+JPMrend <- periodReturn(JPM, period = 'monthly', type = 'log', subset = '2022-05::2024-05')
 JPMrend
 ```
 
 
-## Johnson & Johnson (JNJ)
+## Apple Inc. (AAPL)
 
 ### Datos
 
 ```{r message=FALSE}
-JNJ=getSymbols("JNJ", from = '2019-01-01', to = '2024-01-01', src = "yahoo", auto.assign = F)
-print(JNJ)
+AAPL=getSymbols("AAPL", from = '2022-05-13', to = '2024-05-13', src = "yahoo", auto.assign = F)
+print(AAPL)
 ```
 
 
 ```{r}
-  chartSeries(JNJ, name = "Gráfico JNJ", 
-            subset = '2019-01::2024-01', 
+  chartSeries(AAPL, name = "Gráfico AAPL", 
+            subset = '2022-05::2024-05', 
             theme = chartTheme())
 ```
 
 ### TAsa de Crecimiento y Tasa de rendimeinto
 ```{r message=FALSE}
 # TAsa de Crecimiento
-JNJroc=ROC(JNJ, type='discret')
-print(JNJroc)
+AAPLroc=ROC(AAPL, type='discret')
+print(AAPLroc)
 
 ```
 ```{r}
 # Tasa de rendimiento
-JNJrend <- periodReturn(JNJ, period = 'monthly', type = 'log', subset = '2019-01::2024-01')
-JNJrend
+AAPLrend <- periodReturn(AAPL, period = 'monthly', type = 'log', subset = '2022-05::2024-05')
+AAPLrend
 ```
 
 
-## EUR/USD (EURUSD=X)
+## Pfizer Inc. (PFE)
 
 ### Datos
 
 ```{r message=FALSE}
-EURUSD=getSymbols("EURUSD=X", from = '2019-01-01', to = '2024-01-01', src = "yahoo", auto.assign = F)
-print(EURUSD)
+PFE=getSymbols("PFE", from = '2022-05-13', to = '2024-05-13', src = "yahoo", auto.assign = F)
+print(PFE)
 ```
 
 
 ```{r}
-  chartSeries(EURUSD, name = "Gráfico EUR/USD=X", 
-            subset = '2019-01::2024-01', 
+  chartSeries(PFE, name = "Gráfico PFE", 
+            subset = '2022-05::2024-05', 
             theme = chartTheme())
 ```
 
 ### TAsa de Crecimiento y Tasa de rendimeinto
 ```{r message=FALSE}
 # TAsa de Crecimiento
-EURUSDroc=ROC(EURUSD, type='discret')
-print(EURUSDroc)
+PFEroc=ROC(PFE, type='discret')
+print(PFEroc)
 
 ```
 ```{r}
 # Tasa de rendimiento
-EURUSDrend <- periodReturn(EURUSD, period = 'monthly', type = 'log', subset = '2019-01::2024-01')
-EURUSDrend
+PFErend <- periodReturn(PFE, period = 'monthly', type = 'log', subset = '2022-05::2024-05')
+PFErend
+```
+
+## Walmart Inc. (WMT)
+
+### Datos
+
+```{r message=FALSE}
+WMT=getSymbols("WMT", from = '2022-05-13', to = '2024-05-13', src = "yahoo", auto.assign = F)
+print(WMT)
+```
+
+
+```{r}
+  chartSeries(WMT, name = "Gráfico WMT", 
+            subset = '2022-05::2024-05', 
+            theme = chartTheme())
+```
+
+### TAsa de Crecimiento y Tasa de rendimeinto
+```{r message=FALSE}
+# TAsa de Crecimiento
+WMTroc=ROC(WMT, type='discret')
+print(WMTroc)
+
+```
+```{r}
+# Tasa de rendimiento
+WMTrend <- periodReturn(WMT, period = 'monthly', type = 'log', subset = '2022-05::2024-05')
+WMTrend
 ```
 
 
@@ -397,14 +278,14 @@ EURUSDrend
 ### Datos
 
 ```{r message=FALSE}
-GC=getSymbols("GC=F", from = '2019-01-01', to = '2024-01-01', src = "yahoo", auto.assign = F)
+GC=getSymbols("GC=F", from = '2022-05-13', to = '2024-05-13', src = "yahoo", auto.assign = F)
 print(GC)
 ```
 
 
 ```{r}
   chartSeries(GC, name = "Gráfico GC=F", 
-            subset = '2019-01::2024-01', 
+            subset = '2022-05::2024-05', 
             theme = chartTheme())
 ```
 
@@ -417,7 +298,7 @@ print(GCroc)
 ```
 ```{r}
 # Tasa de rendimiento
-GCrend <- periodReturn(GC, period = 'monthly', type = 'log', subset = '2019-01::2024-01')
+GCrend <- periodReturn(GC, period = 'monthly', type = 'log', subset = '2022-05::2024-05')
 GCrend
 ```
 
@@ -427,14 +308,14 @@ GCrend
 ### Datos
 
 ```{r message=FALSE}
-BTC=getSymbols("BTC-USD", from = '2019-01-01', to = '2024-01-01', src = "yahoo", auto.assign = F)
+BTC=getSymbols("BTC-USD", from = '2022-05-13', to = '2024-05-13', src = "yahoo", auto.assign = F)
 print(BTC)
 ```
 
 
 ```{r}
   chartSeries(BTC, name = "Gráfico BTC-USD", 
-            subset = '2019-01::2024-01', 
+            subset = '2022-05::2024-05', 
             theme = chartTheme())
 ```
 
@@ -447,7 +328,7 @@ print(BTCroc)
 ```
 ```{r}
 # Tasa de rendimiento
-BTCrend <- periodReturn(BTC, period = 'monthly', type = 'log', subset = '2019-01::2024-01')
+BTCrend <- periodReturn(BTC, period = 'monthly', type = 'log', subset = '2022-05::2024-05')
 BTCrend
 ```
 
@@ -459,7 +340,7 @@ BTCrend
 ```{r}
 
 # create a vector of stocks
-s1 = c("^FVX", "^GSPC", "NVDA", "MSFT", "JPM", "JNJ","EURUSD=X", "BTC-USD", "GC=F")
+s1 = c("^FVX", "^GSPC", "NVDA", "MSFT", "JPM", "AAPL","PFE","WMT", "BTC-USD", "GC=F")
 
 # download prices and create returns from Adjusted Prices
 data1 = lapply(s1, FUN = function(x) {
@@ -512,54 +393,59 @@ port_p1 #covid crisis period is evident in the plot
 
 ```{r echo=FALSE}
 FVX <- get.hist.quote(instrument = "^FVX", 
-                      start = as.Date("2019-01-01"), 
-                      end = as.Date("2024-01-01"), 
+                      start = as.Date("2022-05-13"), 
+                      end = as.Date("2024-05-13"), 
                       quote = "AdjClose")
 
 GSPC <- get.hist.quote(instrument = "^GSPC", 
-                      start = as.Date("2019-01-01"), 
-                      end = as.Date("2024-01-01"), 
+                      start = as.Date("2022-05-13"), 
+                      end = as.Date("2024-05-13"), 
                       quote = "AdjClose")
 
 NVDA <- get.hist.quote(instrument = "NVDA", 
-                      start = as.Date("2019-01-01"), 
-                      end = as.Date("2024-01-01"), 
+                       start = as.Date("2022-05-13"), 
+                      end = as.Date("2024-05-13"), 
                       quote = "AdjClose")
 
 MSFT <- get.hist.quote(instrument = "MSFT", 
-                      start = as.Date("2019-01-01"), 
-                      end = as.Date("2024-01-01"), 
+                      start = as.Date("2022-05-13"), 
+                      end = as.Date("2024-05-13"), 
                       quote = "AdjClose")
 
 JPM <- get.hist.quote(instrument = "JPM", 
-                      start = as.Date("2019-01-01"), 
-                      end = as.Date("2024-01-01"), 
+                       start = as.Date("2022-05-13"), 
+                      end = as.Date("2024-05-13"), 
                       quote = "AdjClose")
 
-JNJ <- get.hist.quote(instrument = "JNJ", 
-                      start = as.Date("2019-01-01"), 
-                      end = as.Date("2024-01-01"), 
+AAPL <- get.hist.quote(instrument = "AAPL", 
+                       start = as.Date("2022-05-13"), 
+                      end = as.Date("2024-05-13"), 
                       quote = "AdjClose")
 
-EURUSD <- get.hist.quote(instrument = "EURUSD=X", 
-                      start = as.Date("2019-01-01"), 
-                      end = as.Date("2024-01-01"), 
+PFE <- get.hist.quote(instrument = "PFE", 
+                      start = as.Date("2022-05-13"), 
+                      end = as.Date("2024-05-13"), 
                       quote = "AdjClose")
+WMT <- get.hist.quote(instrument = "WMT", 
+                      start = as.Date("2022-05-13"), 
+                      end = as.Date("2024-05-13"), 
+                      quote = "AdjClose")
+
 
 BTC <- get.hist.quote(instrument = "BTC-USD", 
-                      start = as.Date("2019-01-01"), 
-                      end = as.Date("2024-01-01"), 
+                      start = as.Date("2022-05-13"), 
+                      end = as.Date("2024-05-13"), 
                       quote = "AdjClose")
 
 GC <- get.hist.quote(instrument = "GC=F", 
-                      start = as.Date("2019-01-01"), 
-                      end = as.Date("2024-01-01"), 
+                     start = as.Date("2022-05-13"), 
+                      end = as.Date("2024-05-13"), 
                       quote = "AdjClose")
 
-Cartera <- merge(FVX, GSPC, NVDA, MSFT, JPM, JNJ, EURUSD, BTC, GC, all = FALSE) 
+Cartera <- merge(FVX, GSPC, NVDA, MSFT, JPM, AAPL, PFE, WMT, BTC, GC, all = FALSE) 
 names(Cartera)
 
-names(Cartera)<-c("^FVX", "^GSPC", "NVDA", "MSFT", "JPM", "JNJ","EURUSD=X", "BTC-USD", "GC=F")
+names(Cartera)<-c("^FVX", "^GSPC", "NVDA", "MSFT", "JPM", "AAPL","PFE","WMT", "BTC-USD", "GC=F")
 plot(Cartera, main=" ", col="#449A8B", xlab="Fecha")
 title(main="Cartera") 
 ```
@@ -567,11 +453,11 @@ title(main="Cartera")
 ## Portfolios with random weights
 
 ```{r}
-s1 = c("^FVX", "^GSPC", "NVDA", "MSFT", "JPM", "JNJ","EURUSD=X", "BTC-USD", "GC=F")
+s1 = c("^FVX", "^GSPC", "NVDA", "MSFT", "JPM", "AAPL","PFE","WMT", "BTC-USD", "GC=F")
 
 # download prices and create returns from Adjusted Prices
 data1 = lapply(s1, FUN = function(x) {
-    ROC(Ad(getSymbols(x, from = "2019-01-01", to = "2024-01-01", auto.assign = FALSE)),
+    ROC(Ad(getSymbols(x, from = "2022-05-13", to = "2024-05-13", auto.assign = FALSE)),
         type = "discrete") * 100
 })  #%returns
 
@@ -658,11 +544,11 @@ legend("bottomright", legend = c("Risk-Return Points", "Minimum Risk Point", "Ma
 
 
 ```{r}
-s1 = c("^FVX", "^GSPC", "NVDA", "MSFT", "JPM", "JNJ","EURUSD=X", "BTC-USD", "GC=F")
+s1 = c("^FVX", "^GSPC", "NVDA", "MSFT", "JPM", "AAPL","PFE","WMT", "BTC-USD", "GC=F")
 
 # download prices and create returns from Adjusted Prices
 data1 = lapply(s1, FUN = function(x) {
-    ROC(Ad(getSymbols(x, from = "2019-01-01", to = "2024-01-01", auto.assign = FALSE)),
+    ROC(Ad(getSymbols(x, from = "2019-05-13", to = "2024-05-13", auto.assign = FALSE)),
         type = "discrete") * 100
 })  #%returns
 
@@ -770,7 +656,7 @@ legend("topright", legend = c("Peso Óptimo", "Peso Igualitario"),
 
 ```{r}
 # Definir los nombres de los activos
-assets_names <- c("FVX", "^GSPC", "NVDA", "MSFT", "JPM", "JNJ", "EURUSD=X", "BTC-USD", "GC=F")
+assets_names <- c("^FVX", "^GSPC", "NVDA", "MSFT", "JPM", "AAPL","PFE","WMT", "BTC-USD", "GC=F")
 
 # Definir los pesos personalizados para cada activo
 custom_weights <- c("^FVX"= 0.50, "^GSPC" = 0.35, "NVDA" = 0.35, "MSFT" = 0.35, "JPM" = 0.35, 
@@ -849,10 +735,10 @@ title(main="Rendimientos de la Cartera")
 ```
 
 
-### JNJ
+### AAPL
 
 ```{r}
-Rendimientos<-diff(log(JNJ))
+Rendimientos<-diff(log(AAPL))
 head(Rendimientos,10)
 
 plot(Rendimientos, main=" ", col="#F6BB22", xlab="Fecha")
@@ -860,10 +746,20 @@ title(main="Rendimientos de la Cartera")
 ```
 
 
-### EURUSD
+### PFE
 
 ```{r}
-Rendimientos<-diff(log(EURUSD))
+Rendimientos<-diff(log(PFE))
+head(Rendimientos,10)
+
+plot(Rendimientos, main=" ", col="#F6BB22", xlab="Fecha")
+title(main="Rendimientos de la Cartera")
+```
+
+### WMT
+
+```{r}
+Rendimientos<-diff(log(WMT))
 head(Rendimientos,10)
 
 plot(Rendimientos, main=" ", col="#F6BB22", xlab="Fecha")
@@ -907,16 +803,19 @@ summary(Rendimientos)
 ```
 
 ```{r}
-RendimientoPromedio = c(mean(Rendimientos$FVX),mean(Rendimientos$GSPC),mean(Rendimientos$NVDA),mean(Rendimientos$MSFT),mean(Rendimientos$JPM), mean(Rendimientos$JNJ), mean(Rendimientos$EURUSD), mean(Rendimientos$BTC), mean(Rendimientos$GC))
+RendimientoPromedio = c(mean(Rendimientos$FVX),mean(Rendimientos$GSPC),mean(Rendimientos$NVDA),mean(Rendimientos$MSFT),mean(Rendimientos$JPM), mean(Rendimientos$AAPL), mean(Rendimientos$PFE),mean(Rendimientos$WMT),  mean(Rendimientos$BTC), mean(Rendimientos$GC))
 
-Volatilidad = c(sd(Rendimientos$FVX),sd(Rendimientos$GSPC), sd(Rendimientos$NVDA),  sd(Rendimientos$MSFT),sd(Rendimientos$JPM),sd(Rendimientos$JNJ),sd(Rendimientos$EURUSD), sd(Rendimientos$BTC), sd(Rendimientos$GC))
+Volatilidad = c(sd(Rendimientos$FVX),sd(Rendimientos$GSPC), sd(Rendimientos$NVDA),  sd(Rendimientos$MSFT),sd(Rendimientos$JPM),sd(Rendimientos$AAPL),sd(Rendimientos$PFE),sd(Rendimientos$WMT), sd(Rendimientos$BTC), sd(Rendimientos$GC))
 
 #Expresado en %
 Tabla1 = data.frame (rbind(RendimientoPromedio,Volatilidad))
-colnames(Tabla1)<- c("^FVX", "^GSPC", "NVDA", "MSFT", "JPM", "JNJ","EURUSD=X", "BTC-USD", "GC=F")
+colnames(Tabla1)<- c("^FVX", "^GSPC", "NVDA", "MSFT", "JPM", "AAPL","PFE","WMT", "BTC-USD", "GC=F")
 
 Tabla1*100
 ```
+
+
+
 
 
 # Matrices {.tabset}
