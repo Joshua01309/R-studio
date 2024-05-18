@@ -14,7 +14,7 @@ output:
 
 
 <style>
-body {
+body { 
 text-align: justify}
 </style>
 
@@ -67,6 +67,8 @@ sols_1 <- ggplot()+
   geom_function(aes(color="y(x)"), fun=sol_y)+
   labs(x="x", y="y", color="Aproximaciones")+
   theme_bw()
+
+ggplotly(sols_1)
 
 ggplotly(sols_1)
 
