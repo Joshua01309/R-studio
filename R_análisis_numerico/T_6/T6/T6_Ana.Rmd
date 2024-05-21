@@ -122,7 +122,6 @@ sol_aprox <- my_euler(dy, 1, 1.4, 100, 0)
 indice <- which(sol_aprox$T == 1.4)
 print(sol_aprox$W[indice])
 
-
 my_colors=c("y(x)"="firebrick", "w(x)"="dodgerblue")
 
 graf<-ggplot()+
@@ -135,8 +134,8 @@ graf<-ggplot()+
 
 ggplotly(graf)
 
-
 ```
+
 
 ## . Estimate y(1.4) h=0.1
 
@@ -180,6 +179,90 @@ graf<-ggplot()+
 ggplotly(graf)
 
 ```
+
+## Comparaciones
+
+
+```{r}
+library(ggplot2)
+library(plotly)
+
+dy <- function(x, y){
+ x - x * y
+}
+
+# Solución exacta
+y_sol <- function(x){
+  1 - exp(1/2 - x^2/2)
+}
+
+# Método de Euler-Heun
+euler_heun <- function(f, x0, xn, y0, n) {
+  h <- (xn - x0)/n
+  x <- numeric(n+1)
+  y <- numeric(n+1)
+  x[1] <- x0
+  y[1] <- y0
+  for (i in 1:n) {
+    k1 <- f(x[i], y[i])
+    k2 <- f(x[i] + h, y[i] + h * k1)
+    y[i+1] <- y[i] + h * (k1 + k2) / 2
+    x[i+1] <- x[i] + h
+  }
+  data.frame(x = x, y = y)
+}
+
+# Método de Runge-Kutta de cuarto orden
+rk4 <- function(f, x0, xn, y0, n) {
+  h <- (xn - x0)/n
+  x <- numeric(n+1)
+  y <- numeric(n+1)
+  x[1] <- x0
+  y[1] <- y0
+  for (i in 1:n) {
+    k1 <- f(x[i], y[i])
+    k2 <- f(x[i] + h/2, y[i] + h/2 * k1)
+    k3 <- f(x[i] + h/2, y[i] + h/2 * k2)
+    k4 <- f(x[i] + h, y[i] + h * k3)
+    y[i+1] <- y[i] + h * (k1 + 2*k2 + 2*k3 + k4) / 6
+    x[i+1] <- x[i] + h
+  }
+  data.frame(x = x, y = y)
+}
+
+# Método de Runge-Kutta-Fehlberg de quinto orden
+rkf54 <- function(f, x0, xn, y0, tol) {
+  # Código para RK-Fehlberg
+}
+
+# Parámetros de la simulación
+x0 <- 0
+xn <- 10
+y0 <- 1
+n <- 100
+
+# Obtener aproximaciones numéricas
+aprox_euler <- euler_heun(dy, x0, xn, y0, n)
+aprox_rk4 <- rk4(dy, x0, xn, y0, n)
+#aprox_rk54 <- rkf54(dy, x0, xn, y0, tol)
+
+# Gráfico comparativo
+sols_1 <- ggplot() +
+  geom_line(data = aprox_euler, aes(x = x, y = y, color = "Euler-Heun")) +
+  geom_line(data = aprox_rk4, aes(x = x, y = y, color = "Runge-Kutta 4")) +
+  #geom_line(data = aprox_rk54, aes(x = x, y = y, color = "Runge-Kutta Fehlberg 5/4")) +
+  stat_function(fun = y_sol, aes(color = "Solución Exacta")) +
+  labs(x = "x", y = "y", color = "Método") +
+  theme_bw()
+
+ggplotly(sols_1)
+
+
+
+```
+
+
+
 
 # Problema 3 
 
@@ -245,6 +328,84 @@ ggplotly(graf)
 
 ```
 
+```{r}
+library(ggplot2)
+library(plotly)
+
+dy <- function(x, y){
+ x - 2 * y
+}
+
+# Solución exacta
+y_sol <- function(x){
+  x / 2 + (6 * exp(1 / 5 - 2 * x) / 5) - 1 / 4
+}
+
+# Método de Euler-Heun
+euler_heun <- function(f, x0, xn, y0, n) {
+  h <- (xn - x0)/n
+  x <- numeric(n+1)
+  y <- numeric(n+1)
+  x[1] <- x0
+  y[1] <- y0
+  for (i in 1:n) {
+    k1 <- f(x[i], y[i])
+    k2 <- f(x[i] + h, y[i] + h * k1)
+    y[i+1] <- y[i] + h * (k1 + k2) / 2
+    x[i+1] <- x[i] + h
+  }
+  data.frame(x = x, y = y)
+}
+
+# Método de Runge-Kutta de cuarto orden
+rk4 <- function(f, x0, xn, y0, n) {
+  h <- (xn - x0)/n
+  x <- numeric(n+1)
+  y <- numeric(n+1)
+  x[1] <- x0
+  y[1] <- y0
+  for (i in 1:n) {
+    k1 <- f(x[i], y[i])
+    k2 <- f(x[i] + h/2, y[i] + h/2 * k1)
+    k3 <- f(x[i] + h/2, y[i] + h/2 * k2)
+    k4 <- f(x[i] + h, y[i] + h * k3)
+    y[i+1] <- y[i] + h * (k1 + 2*k2 + 2*k3 + k4) / 6
+    x[i+1] <- x[i] + h
+  }
+  data.frame(x = x, y = y)
+}
+
+# Método de Runge-Kutta-Fehlberg de quinto orden
+rkf54 <- function(f, x0, xn, y0, tol) {
+  # Código para RK-Fehlberg
+}
+
+# Parámetros de la simulación
+x0 <- 0
+xn <- 10
+y0 <- 1
+n <- 100
+
+# Obtener aproximaciones numéricas
+aprox_euler <- euler_heun(dy, x0, xn, y0, n)
+aprox_rk4 <- rk4(dy, x0, xn, y0, n)
+#aprox_rk54 <- rkf54(dy, x0, xn, y0, tol)
+
+# Gráfico comparativo
+sols_1 <- ggplot() +
+  geom_line(data = aprox_euler, aes(x = x, y = y, color = "Euler-Heun")) +
+  geom_line(data = aprox_rk4, aes(x = x, y = y, color = "Runge-Kutta 4")) +
+  #geom_line(data = aprox_rk54, aes(x = x, y = y, color = "Runge-Kutta Fehlberg 5/4")) +
+  stat_function(fun = y_sol, aes(color = "Solución Exacta")) +
+  labs(x = "x", y = "y", color = "Método") +
+  theme_bw()
+
+ggplotly(sols_1)
+```
+
+
+
+
 # Problema 4 
 Suppose that we use Euler's method to approximate the solution to the differential equation
 $ \frac{dy}{dx}=x^2/y; \quad y(0.1)=8$
@@ -286,6 +447,83 @@ graf <- ggplot() +
 
 ggplotly(graf)
 ```
+
+```{r}
+library(ggplot2)
+library(plotly)
+
+dy <- function(x, y){
+ x^2/y
+}
+
+# Solución exacta
+y_sol <- function(x){
+  ((15000*x^3+1439985)^(1/2))/150
+}
+
+# Método de Euler-Heun
+euler_heun <- function(f, x0, xn, y0, n) {
+  h <- (xn - x0)/n
+  x <- numeric(n+1)
+  y <- numeric(n+1)
+  x[1] <- x0
+  y[1] <- y0
+  for (i in 1:n) {
+    k1 <- f(x[i], y[i])
+    k2 <- f(x[i] + h, y[i] + h * k1)
+    y[i+1] <- y[i] + h * (k1 + k2) / 2
+    x[i+1] <- x[i] + h
+  }
+  data.frame(x = x, y = y)
+}
+
+# Método de Runge-Kutta de cuarto orden
+rk4 <- function(f, x0, xn, y0, n) {
+  h <- (xn - x0)/n
+  x <- numeric(n+1)
+  y <- numeric(n+1)
+  x[1] <- x0
+  y[1] <- y0
+  for (i in 1:n) {
+    k1 <- f(x[i], y[i])
+    k2 <- f(x[i] + h/2, y[i] + h/2 * k1)
+    k3 <- f(x[i] + h/2, y[i] + h/2 * k2)
+    k4 <- f(x[i] + h, y[i] + h * k3)
+    y[i+1] <- y[i] + h * (k1 + 2*k2 + 2*k3 + k4) / 6
+    x[i+1] <- x[i] + h
+  }
+  data.frame(x = x, y = y)
+}
+
+# Método de Runge-Kutta-Fehlberg de quinto orden
+rkf54 <- function(f, x0, xn, y0, tol) {
+  # Código para RK-Fehlberg
+}
+
+# Parámetros de la simulación
+x0 <- 0
+xn <- 10
+y0 <- 1
+n <- 100
+
+# Obtener aproximaciones numéricas
+aprox_euler <- euler_heun(dy, x0, xn, y0, n)
+aprox_rk4 <- rk4(dy, x0, xn, y0, n)
+#aprox_rk54 <- rkf54(dy, x0, xn, y0, tol)
+
+# Gráfico comparativo
+sols_1 <- ggplot() +
+  geom_line(data = aprox_euler, aes(x = x, y = y, color = "Euler-Heun")) +
+  geom_line(data = aprox_rk4, aes(x = x, y = y, color = "Runge-Kutta 4")) +
+  #geom_line(data = aprox_rk54, aes(x = x, y = y, color = "Runge-Kutta Fehlberg 5/4")) +
+  stat_function(fun = y_sol, aes(color = "Solución Exacta")) +
+  labs(x = "x", y = "y", color = "Método") +
+  theme_bw()
+
+ggplotly(sols_1)
+```
+
+
 
 # Problema 5{.tabset}
 
@@ -351,6 +589,85 @@ error_1 <- abs(y_sol(1) - sol_aprox$W[which(sol_aprox$T == 1)])
 
 ```
 
+## Comparaciones
+```{r}
+library(ggplot2)
+library(plotly)
+
+dy <- function(x, y){
+ 3*x*exp(-y)
+}
+
+# Solución exacta
+y_sol <- function(x){
+  log(3*x^2/2+exp(-2))
+}
+
+# Método de Euler-Heun
+euler_heun <- function(f, x0, xn, y0, n) {
+  h <- (xn - x0)/n
+  x <- numeric(n+1)
+  y <- numeric(n+1)
+  x[1] <- x0
+  y[1] <- y0
+  for (i in 1:n) {
+    k1 <- f(x[i], y[i])
+    k2 <- f(x[i] + h, y[i] + h * k1)
+    y[i+1] <- y[i] + h * (k1 + k2) / 2
+    x[i+1] <- x[i] + h
+  }
+  data.frame(x = x, y = y)
+}
+
+# Método de Runge-Kutta de cuarto orden
+rk4 <- function(f, x0, xn, y0, n) {
+  h <- (xn - x0)/n
+  x <- numeric(n+1)
+  y <- numeric(n+1)
+  x[1] <- x0
+  y[1] <- y0
+  for (i in 1:n) {
+    k1 <- f(x[i], y[i])
+    k2 <- f(x[i] + h/2, y[i] + h/2 * k1)
+    k3 <- f(x[i] + h/2, y[i] + h/2 * k2)
+    k4 <- f(x[i] + h, y[i] + h * k3)
+    y[i+1] <- y[i] + h * (k1 + 2*k2 + 2*k3 + k4) / 6
+    x[i+1] <- x[i] + h
+  }
+  data.frame(x = x, y = y)
+}
+
+# Método de Runge-Kutta-Fehlberg de quinto orden
+rkf54 <- function(f, x0, xn, y0, tol) {
+  # Código para RK-Fehlberg
+}
+
+# Parámetros de la simulación
+x0 <- 0
+xn <- 10
+y0 <- 1
+n <- 100
+
+# Obtener aproximaciones numéricas
+aprox_euler <- euler_heun(dy, x0, xn, y0, n)
+aprox_rk4 <- rk4(dy, x0, xn, y0, n)
+#aprox_rk54 <- rkf54(dy, x0, xn, y0, tol)
+
+# Gráfico comparativo
+sols_1 <- ggplot() +
+  geom_line(data = aprox_euler, aes(x = x, y = y, color = "Euler-Heun")) +
+  geom_line(data = aprox_rk4, aes(x = x, y = y, color = "Runge-Kutta 4")) +
+  #geom_line(data = aprox_rk54, aes(x = x, y = y, color = "Runge-Kutta Fehlberg 5/4")) +
+  stat_function(fun = y_sol, aes(color = "Solución Exacta")) +
+  labs(x = "x", y = "y", color = "Método") +
+  theme_bw()
+
+ggplotly(sols_1)
+```
+
+
+
+
 # Problema 6
 
  Fill in the missing values in the table given if you know that dy/dt=0.2y
@@ -394,6 +711,83 @@ graf<-ggplot()+
 ggplotly(graf)
 
 ```
+
+
+```{r}
+library(ggplot2)
+library(plotly)
+
+dy <- function(x, y){
+  0.2*y
+}
+
+# Solución exacta
+y_sol <- function(x){
+  5*exp(x/5)
+}
+
+# Método de Euler-Heun
+euler_heun <- function(f, x0, xn, y0, n) {
+  h <- (xn - x0)/n
+  x <- numeric(n+1)
+  y <- numeric(n+1)
+  x[1] <- x0
+  y[1] <- y0
+  for (i in 1:n) {
+    k1 <- f(x[i], y[i])
+    k2 <- f(x[i] + h, y[i] + h * k1)
+    y[i+1] <- y[i] + h * (k1 + k2) / 2
+    x[i+1] <- x[i] + h
+  }
+  data.frame(x = x, y = y)
+}
+
+# Método de Runge-Kutta de cuarto orden
+rk4 <- function(f, x0, xn, y0, n) {
+  h <- (xn - x0)/n
+  x <- numeric(n+1)
+  y <- numeric(n+1)
+  x[1] <- x0
+  y[1] <- y0
+  for (i in 1:n) {
+    k1 <- f(x[i], y[i])
+    k2 <- f(x[i] + h/2, y[i] + h/2 * k1)
+    k3 <- f(x[i] + h/2, y[i] + h/2 * k2)
+    k4 <- f(x[i] + h, y[i] + h * k3)
+    y[i+1] <- y[i] + h * (k1 + 2*k2 + 2*k3 + k4) / 6
+    x[i+1] <- x[i] + h
+  }
+  data.frame(x = x, y = y)
+}
+
+# Método de Runge-Kutta-Fehlberg de quinto orden
+rkf54 <- function(f, x0, xn, y0, tol) {
+  # Código para RK-Fehlberg
+}
+
+# Parámetros de la simulación
+x0 <- 0
+xn <- 10
+y0 <- 1
+n <- 100
+
+# Obtener aproximaciones numéricas
+aprox_euler <- euler_heun(dy, x0, xn, y0, n)
+aprox_rk4 <- rk4(dy, x0, xn, y0, n)
+#aprox_rk54 <- rkf54(dy, x0, xn, y0, tol)
+
+# Gráfico comparativo
+sols_1 <- ggplot() +
+  geom_line(data = aprox_euler, aes(x = x, y = y, color = "Euler-Heun")) +
+  geom_line(data = aprox_rk4, aes(x = x, y = y, color = "Runge-Kutta 4")) +
+  #geom_line(data = aprox_rk54, aes(x = x, y = y, color = "Runge-Kutta Fehlberg 5/4")) +
+  stat_function(fun = y_sol, aes(color = "Solución Exacta")) +
+  labs(x = "x", y = "y", color = "Método") +
+  theme_bw()
+
+ggplotly(sols_1)
+```
+
 
 
 # Problema 7 {.tabset}
@@ -661,6 +1055,87 @@ Plot your estimated solution on your slope field. Compare the solution and the s
 
 subestimados
 
+## Comparación
+
+```{r}
+library(ggplot2)
+library(plotly)
+
+dy <- function(x, y){
+ -y
+}
+
+# Solución exacta
+y_sol <- function(x){
+   1/exp(x)
+}
+
+# Método de Euler-Heun
+euler_heun <- function(f, x0, xn, y0, n) {
+  h <- (xn - x0)/n
+  x <- numeric(n+1)
+  y <- numeric(n+1)
+  x[1] <- x0
+  y[1] <- y0
+  for (i in 1:n) {
+    k1 <- f(x[i], y[i])
+    k2 <- f(x[i] + h, y[i] + h * k1)
+    y[i+1] <- y[i] + h * (k1 + k2) / 2
+    x[i+1] <- x[i] + h
+  }
+  data.frame(x = x, y = y)
+}
+
+# Método de Runge-Kutta de cuarto orden
+rk4 <- function(f, x0, xn, y0, n) {
+  h <- (xn - x0)/n
+  x <- numeric(n+1)
+  y <- numeric(n+1)
+  x[1] <- x0
+  y[1] <- y0
+  for (i in 1:n) {
+    k1 <- f(x[i], y[i])
+    k2 <- f(x[i] + h/2, y[i] + h/2 * k1)
+    k3 <- f(x[i] + h/2, y[i] + h/2 * k2)
+    k4 <- f(x[i] + h, y[i] + h * k3)
+    y[i+1] <- y[i] + h * (k1 + 2*k2 + 2*k3 + k4) / 6
+    x[i+1] <- x[i] + h
+  }
+  data.frame(x = x, y = y)
+}
+
+# Método de Runge-Kutta-Fehlberg de quinto orden
+rkf54 <- function(f, x0, xn, y0, tol) {
+  # Código para RK-Fehlberg
+}
+
+# Parámetros de la simulación
+x0 <- 0
+xn <- 10
+y0 <- 1
+n <- 100
+
+# Obtener aproximaciones numéricas
+aprox_euler <- euler_heun(dy, x0, xn, y0, n)
+aprox_rk4 <- rk4(dy, x0, xn, y0, n)
+#aprox_rk54 <- rkf54(dy, x0, xn, y0, tol)
+
+# Gráfico comparativo
+sols_1 <- ggplot() +
+  geom_line(data = aprox_euler, aes(x = x, y = y, color = "Euler-Heun")) +
+  geom_line(data = aprox_rk4, aes(x = x, y = y, color = "Runge-Kutta 4")) +
+  #geom_line(data = aprox_rk54, aes(x = x, y = y, color = "Runge-Kutta Fehlberg 5/4")) +
+  stat_function(fun = y_sol, aes(color = "Solución Exacta")) +
+  labs(x = "x", y = "y", color = "Método") +
+  theme_bw()
+
+ggplotly(sols_1)
+
+
+```
+
+
+
 # Problema 9 {.tabset}
 
 Consider the differential equation
@@ -768,6 +1243,88 @@ By what factor should the error in these approximations change (that is, the err
 El factor por el cual cambia el error en estas aproximaciones se puede calcular dividiendo el error con dos pasos entre el error con cuatro pasos
 factor=(Error euler N=2)/(Error euler N=4)
 
+## Comparación
+
+```{r}
+library(ggplot2)
+library(plotly)
+
+dy <- function(x, y){
+  4*x
+}
+
+# Solución exacta
+y_sol <- function(x){
+  2*x^2+4
+}
+
+# Método de Euler-Heun
+euler_heun <- function(f, x0, xn, y0, n) {
+  h <- (xn - x0)/n
+  x <- numeric(n+1)
+  y <- numeric(n+1)
+  x[1] <- x0
+  y[1] <- y0
+  for (i in 1:n) {
+    k1 <- f(x[i], y[i])
+    k2 <- f(x[i] + h, y[i] + h * k1)
+    y[i+1] <- y[i] + h * (k1 + k2) / 2
+    x[i+1] <- x[i] + h
+  }
+  data.frame(x = x, y = y)
+}
+
+# Método de Runge-Kutta de cuarto orden
+rk4 <- function(f, x0, xn, y0, n) {
+  h <- (xn - x0)/n
+  x <- numeric(n+1)
+  y <- numeric(n+1)
+  x[1] <- x0
+  y[1] <- y0
+  for (i in 1:n) {
+    k1 <- f(x[i], y[i])
+    k2 <- f(x[i] + h/2, y[i] + h/2 * k1)
+    k3 <- f(x[i] + h/2, y[i] + h/2 * k2)
+    k4 <- f(x[i] + h, y[i] + h * k3)
+    y[i+1] <- y[i] + h * (k1 + 2*k2 + 2*k3 + k4) / 6
+    x[i+1] <- x[i] + h
+  }
+  data.frame(x = x, y = y)
+}
+
+# Método de Runge-Kutta-Fehlberg de quinto orden
+rkf54 <- function(f, x0, xn, y0, tol) {
+  # Código para RK-Fehlberg
+}
+
+# Parámetros de la simulación
+x0 <- 0
+xn <- 10
+y0 <- 1
+n <- 100
+
+# Obtener aproximaciones numéricas
+aprox_euler <- euler_heun(dy, x0, xn, y0, n)
+aprox_rk4 <- rk4(dy, x0, xn, y0, n)
+#aprox_rk54 <- rkf54(dy, x0, xn, y0, tol)
+
+# Gráfico comparativo
+sols_1 <- ggplot() +
+  geom_line(data = aprox_euler, aes(x = x, y = y, color = "Euler-Heun")) +
+  geom_line(data = aprox_rk4, aes(x = x, y = y, color = "Runge-Kutta 4")) +
+  #geom_line(data = aprox_rk54, aes(x = x, y = y, color = "Runge-Kutta Fehlberg 5/4")) +
+  stat_function(fun = y_sol, aes(color = "Solución Exacta")) +
+  labs(x = "x", y = "y", color = "Método") +
+  theme_bw()
+
+ggplotly(sols_1)
+
+
+
+```
+
+
+
 # Problema 10 {.tabset}
 
 $y'= -x-y$
@@ -856,6 +1413,90 @@ graf<-ggplot()+
 ggplotly(graf)
 ```
 
+## Comparación
+
+```{r}
+library(ggplot2)
+library(plotly)
+
+dy <- function(x, y){
+ -x-y
+}
+
+# Solución exacta
+y_sol <- function(x){
+  exp(1-x)-x+1
+}
+
+# Método de Euler-Heun
+euler_heun <- function(f, x0, xn, y0, n) {
+  h <- (xn - x0)/n
+  x <- numeric(n+1)
+  y <- numeric(n+1)
+  x[1] <- x0
+  y[1] <- y0
+  for (i in 1:n) {
+    k1 <- f(x[i], y[i])
+    k2 <- f(x[i] + h, y[i] + h * k1)
+    y[i+1] <- y[i] + h * (k1 + k2) / 2
+    x[i+1] <- x[i] + h
+  }
+  data.frame(x = x, y = y)
+}
+
+# Método de Runge-Kutta de cuarto orden
+rk4 <- function(f, x0, xn, y0, n) {
+  h <- (xn - x0)/n
+  x <- numeric(n+1)
+  y <- numeric(n+1)
+  x[1] <- x0
+  y[1] <- y0
+  for (i in 1:n) {
+    k1 <- f(x[i], y[i])
+    k2 <- f(x[i] + h/2, y[i] + h/2 * k1)
+    k3 <- f(x[i] + h/2, y[i] + h/2 * k2)
+    k4 <- f(x[i] + h, y[i] + h * k3)
+    y[i+1] <- y[i] + h * (k1 + 2*k2 + 2*k3 + k4) / 6
+    x[i+1] <- x[i] + h
+  }
+  data.frame(x = x, y = y)
+}
+
+# Método de Runge-Kutta-Fehlberg de quinto orden
+rkf54 <- function(f, x0, xn, y0, tol) {
+  # Código para RK-Fehlberg
+}
+
+# Parámetros de la simulación
+x0 <- 0
+xn <- 10
+y0 <- 1
+n <- 100
+
+# Obtener aproximaciones numéricas
+aprox_euler <- euler_heun(dy, x0, xn, y0, n)
+aprox_rk4 <- rk4(dy, x0, xn, y0, n)
+#aprox_rk54 <- rkf54(dy, x0, xn, y0, tol)
+
+# Gráfico comparativo
+sols_1 <- ggplot() +
+  geom_line(data = aprox_euler, aes(x = x, y = y, color = "Euler-Heun")) +
+  geom_line(data = aprox_rk4, aes(x = x, y = y, color = "Runge-Kutta 4")) +
+  #geom_line(data = aprox_rk54, aes(x = x, y = y, color = "Runge-Kutta Fehlberg 5/4")) +
+  stat_function(fun = y_sol, aes(color = "Solución Exacta")) +
+  labs(x = "x", y = "y", color = "Método") +
+  theme_bw()
+
+ggplotly(sols_1)
+
+
+```
+
+
+
+
+
+
 # Problema 11
 Use Euler's method with step size 0.25
  to compute the approximate y -values y1,
@@ -896,6 +1537,85 @@ print(paste("y2 ≈", y2))
 print(paste("y3 ≈", y3))
 print(paste("y4 ≈", y4))
 ```
+
+```{r}
+library(ggplot2)
+library(plotly)
+
+dy <- function(x, y){
+ return(-2 + 5*x + 2*y)
+}
+
+# Solución exacta
+y_sol <- function(x){
+  -(10*x+5*exp(2*x)+1)/4
+}
+
+# Método de Euler-Heun
+euler_heun <- function(f, x0, xn, y0, n) {
+  h <- (xn - x0)/n
+  x <- numeric(n+1)
+  y <- numeric(n+1)
+  x[1] <- x0
+  y[1] <- y0
+  for (i in 1:n) {
+    k1 <- f(x[i], y[i])
+    k2 <- f(x[i] + h, y[i] + h * k1)
+    y[i+1] <- y[i] + h * (k1 + k2) / 2
+    x[i+1] <- x[i] + h
+  }
+  data.frame(x = x, y = y)
+}
+
+# Método de Runge-Kutta de cuarto orden
+rk4 <- function(f, x0, xn, y0, n) {
+  h <- (xn - x0)/n
+  x <- numeric(n+1)
+  y <- numeric(n+1)
+  x[1] <- x0
+  y[1] <- y0
+  for (i in 1:n) {
+    k1 <- f(x[i], y[i])
+    k2 <- f(x[i] + h/2, y[i] + h/2 * k1)
+    k3 <- f(x[i] + h/2, y[i] + h/2 * k2)
+    k4 <- f(x[i] + h, y[i] + h * k3)
+    y[i+1] <- y[i] + h * (k1 + 2*k2 + 2*k3 + k4) / 6
+    x[i+1] <- x[i] + h
+  }
+  data.frame(x = x, y = y)
+}
+
+# Método de Runge-Kutta-Fehlberg de quinto orden
+rkf54 <- function(f, x0, xn, y0, tol) {
+  # Código para RK-Fehlberg
+}
+
+# Parámetros de la simulación
+x0 <- 0
+xn <- 10
+y0 <- 1
+n <- 100
+
+# Obtener aproximaciones numéricas
+aprox_euler <- euler_heun(dy, x0, xn, y0, n)
+aprox_rk4 <- rk4(dy, x0, xn, y0, n)
+#aprox_rk54 <- rkf54(dy, x0, xn, y0, tol)
+
+# Gráfico comparativo
+sols_1 <- ggplot() +
+  geom_line(data = aprox_euler, aes(x = x, y = y, color = "Euler-Heun")) +
+  geom_line(data = aprox_rk4, aes(x = x, y = y, color = "Runge-Kutta 4")) +
+  #geom_line(data = aprox_rk54, aes(x = x, y = y, color = "Runge-Kutta Fehlberg 5/4")) +
+  stat_function(fun = y_sol, aes(color = "Solución Exacta")) +
+  labs(x = "x", y = "y", color = "Método") +
+  theme_bw()
+
+ggplotly(sols_1)
+```
+
+
+
+
 # Problema 12
 Use Euler's method with step size 0.3
  to estimate y(1.5)
@@ -925,6 +1645,80 @@ while (x0 < x_target) {
 }
 
 ```
+
+```{r}
+library(ggplot2)
+library(plotly)
+
+dy <- function(x, y){
+  return(2*x + y^2)
+}
+
+# Método de Euler-Heun
+euler_heun <- function(f, x0, xn, y0, n) {
+  h <- (xn - x0)/n
+  x <- numeric(n+1)
+  y <- numeric(n+1)
+  x[1] <- x0
+  y[1] <- y0
+  for (i in 1:n) {
+    k1 <- f(x[i], y[i])
+    k2 <- f(x[i] + h, y[i] + h * k1)
+    y[i+1] <- y[i] + h * (k1 + k2) / 2
+    x[i+1] <- x[i] + h
+  }
+  data.frame(x = x, y = y)
+}
+
+# Método de Runge-Kutta de cuarto orden
+rk4 <- function(f, x0, xn, y0, n) {
+  h <- (xn - x0)/n
+  x <- numeric(n+1)
+  y <- numeric(n+1)
+  x[1] <- x0
+  y[1] <- y0
+  for (i in 1:n) {
+    k1 <- f(x[i], y[i])
+    k2 <- f(x[i] + h/2, y[i] + h/2 * k1)
+    k3 <- f(x[i] + h/2, y[i] + h/2 * k2)
+    k4 <- f(x[i] + h, y[i] + h * k3)
+    y[i+1] <- y[i] + h * (k1 + 2*k2 + 2*k3 + k4) / 6
+    x[i+1] <- x[i] + h
+  }
+  data.frame(x = x, y = y)
+}
+
+# Método de Runge-Kutta-Fehlberg de quinto orden
+rkf54 <- function(f, x0, xn, y0, tol) {
+  # Código para RK-Fehlberg
+}
+
+# Parámetros de la simulación
+x0 <- 0
+xn <- 10
+y0 <- 1
+n <- 100
+
+# Obtener aproximaciones numéricas
+aprox_euler <- euler_heun(dy, x0, xn, y0, n)
+aprox_rk4 <- rk4(dy, x0, xn, y0, n)
+#aprox_rk54 <- rkf54(dy, x0, xn, y0, tol)
+
+# Gráfico comparativo
+sols_1 <- ggplot() +
+  geom_line(data = aprox_euler, aes(x = x, y = y, color = "Euler-Heun")) +
+  geom_line(data = aprox_rk4, aes(x = x, y = y, color = "Runge-Kutta 4")) +
+  #geom_line(data = aprox_rk54, aes(x = x, y = y, color = "Runge-Kutta Fehlberg 5/4")) +
+  labs(x = "x", y = "y", color = "Método") +
+  theme_bw()
+
+ggplotly(sols_1)
+
+```
+
+
+
+
 
 # Problema 13
 
@@ -989,27 +1783,125 @@ print(paste("Valor límite de la tasa de enfriamiento:", limiting_rate_of_coolin
 Solve the initial-value problem $y′+7y=4$, $y(0)=0.$
 
 ```{r}
-y_sol<- function(t){
-  4/7-(4*exp(-7*x))/7
+library(ggplot2)
+
+# Definición de la función exacta
+y_sol <- function(t){
+  return(4/7 - (4 * exp(-7 * t)) / 7)
 }
-f<-function(t,y){
-  -7*y+4
-  
+
+# Definición de la ecuación diferencial
+f <- function(t, y){
+  return(-7 * y + 4)
 }
 
-sol_aprox<-euler_heun(f, 0, 2,0,  n=10, improved=FALSE)
+# Definición de la función para resolver la EDO usando el método de Euler-Heun
+euler_heun <- function(f, t0, tf, y0, n) {
+  h <- (tf - t0) / n
+  t <- seq(t0, tf, by = h)
+  y <- numeric(n + 1)
+  y[1] <- y0
+  for (i in 1:n) {
+    k1 <- f(t[i], y[i])
+    k2 <- f(t[i] + h, y[i] + h * k1)
+    y[i + 1] <- y[i] + (h / 2) * (k1 + k2)
+  }
+  return(data.frame(t = t, y = y))
+}
 
+# Obtener la aproximación numérica
+sol_aprox <- euler_heun(f, 0, 2, 0, n = 10)
 
-my_colors=c("y(x)"="firebrick", "w(x)"="dodgerblue")
-
-ggplot()+
-  geom_function(aes(color="y(x)"),fun=y_sol, xlim=c(0,2))+
-  geom_line(aes(sol_aprox$t,sol_aprox$y, color="w(x)"))+
-  #geom_point(aes(sol_aprox$t,sol_aprox$y), color="green", size=3)+
-  scale_color_manual(values=my_colors)+
-  labs(x="t", y="y(t)", color=" ")+
+# Crear el gráfico
+ggplot() +
+  geom_function(aes(color = "y(x)"), fun = y_sol, xlim = c(0, 2)) +
+  geom_line(data = sol_aprox, aes(t, y, color = "w(x)")) +
+  labs(x = "t", y = "y(t)", color = "") +
+  scale_color_manual(values = c("firebrick", "dodgerblue")) +
   theme_bw()
+
 ```
+
+```{r}
+library(ggplot2)
+library(plotly)
+
+dy <- function(x, y){
+ -7 * y + 4
+}
+
+# Solución exacta
+y_sol <- function(x){
+  4/7 - (4 * exp(-7 * x)) / 7
+}
+
+# Método de Euler-Heun
+euler_heun <- function(f, x0, xn, y0, n) {
+  h <- (xn - x0)/n
+  x <- numeric(n+1)
+  y <- numeric(n+1)
+  x[1] <- x0
+  y[1] <- y0
+  for (i in 1:n) {
+    k1 <- f(x[i], y[i])
+    k2 <- f(x[i] + h, y[i] + h * k1)
+    y[i+1] <- y[i] + h * (k1 + k2) / 2
+    x[i+1] <- x[i] + h
+  }
+  data.frame(x = x, y = y)
+}
+
+# Método de Runge-Kutta de cuarto orden
+rk4 <- function(f, x0, xn, y0, n) {
+  h <- (xn - x0)/n
+  x <- numeric(n+1)
+  y <- numeric(n+1)
+  x[1] <- x0
+  y[1] <- y0
+  for (i in 1:n) {
+    k1 <- f(x[i], y[i])
+    k2 <- f(x[i] + h/2, y[i] + h/2 * k1)
+    k3 <- f(x[i] + h/2, y[i] + h/2 * k2)
+    k4 <- f(x[i] + h, y[i] + h * k3)
+    y[i+1] <- y[i] + h * (k1 + 2*k2 + 2*k3 + k4) / 6
+    x[i+1] <- x[i] + h
+  }
+  data.frame(x = x, y = y)
+}
+
+# Método de Runge-Kutta-Fehlberg de quinto orden
+rkf54 <- function(f, x0, xn, y0, tol) {
+  # Código para RK-Fehlberg
+}
+
+# Parámetros de la simulación
+x0 <- 0
+xn <- 10
+y0 <- 1
+n <- 100
+
+# Obtener aproximaciones numéricas
+aprox_euler <- euler_heun(dy, x0, xn, y0, n)
+aprox_rk4 <- rk4(dy, x0, xn, y0, n)
+#aprox_rk54 <- rkf54(dy, x0, xn, y0, tol)
+
+# Gráfico comparativo
+sols_1 <- ggplot() +
+  geom_line(data = aprox_euler, aes(x = x, y = y, color = "Euler-Heun")) +
+  geom_line(data = aprox_rk4, aes(x = x, y = y, color = "Runge-Kutta 4")) +
+  #geom_line(data = aprox_rk54, aes(x = x, y = y, color = "Runge-Kutta Fehlberg 5/4")) +
+  stat_function(fun = y_sol, aes(color = "Solución Exacta")) +
+  labs(x = "x", y = "y", color = "Método") +
+  theme_bw()
+
+ggplotly(sols_1)
+```
+
+
+
+
+
+
 
 
 
@@ -1030,15 +1922,39 @@ Suppose that the carrying capacity $K=10000$,
  Answer the following questions
  
 ```{r}
-f<-function(t,y){
-  0.15*y*(1-y/10000)*(1-700/y)
+# Método de Euler-Heun
+euler_heun <- function(f, t0, tf, y0, n) {
+  h <- (tf - t0) / n
+  t <- seq(t0, tf, by = h)
+  y <- numeric(n + 1)
+  y[1] <- y0
+  for (i in 1:n) {
+    k1 <- f(t[i], y[i])
+    k2 <- f(t[i] + h, y[i] + h * k1)
+    y[i + 1] <- y[i] + (h / 2) * (k1 + k2)
+  }
+  return(data.frame(t = t, y = y))
 }
-y0<-1000
 
 
-sol_aprox<-euler_heun(f,0,60,y0,n=300)
-ggplot()+
-  geom_line(aes(sol_aprox$t, sol_aprox$y), color="cyan")
+# Definición de la ecuación diferencial
+f <- function(t, y) {
+  return(0.15 * y * (1 - y / 10000) * (1 - 700 / y))
+}
+
+# Valor inicial
+y0 <- 1000
+
+# Obtener la aproximación numérica utilizando el método de Euler-Heun
+sol_aprox <- euler_heun(f, 0, 60, y0, n = 300)
+
+# Gráfico
+library(ggplot2)
+ggplot() +
+  geom_line(data = sol_aprox, aes(t, y), color = "cyan") +
+  labs(x = "t", y = "y(t)") +
+  theme_bw()
+
 
 
 ```
@@ -1084,6 +2000,84 @@ ggplotly(graf)
 ```
 
 
+```{r}
+library(ggplot2)
+library(plotly)
+
+dy <- function(x, y){
+  return(0.07*y-0.00014*y^2)
+}
+
+# Método de Euler-Heun
+euler_heun <- function(f, x0, xn, y0, n) {
+  h <- (xn - x0)/n
+  x <- numeric(n+1)
+  y <- numeric(n+1)
+  x[1] <- x0
+  y[1] <- y0
+  for (i in 1:n) {
+    k1 <- f(x[i], y[i])
+    k2 <- f(x[i] + h, y[i] + h * k1)
+    y[i+1] <- y[i] + h * (k1 + k2) / 2
+    x[i+1] <- x[i] + h
+  }
+  data.frame(x = x, y = y)
+}
+
+# Método de Runge-Kutta de cuarto orden
+rk4 <- function(f, x0, xn, y0, n) {
+  h <- (xn - x0)/n
+  x <- numeric(n+1)
+  y <- numeric(n+1)
+  x[1] <- x0
+  y[1] <- y0
+  for (i in 1:n) {
+    k1 <- f(x[i], y[i])
+    k2 <- f(x[i] + h/2, y[i] + h/2 * k1)
+    k3 <- f(x[i] + h/2, y[i] + h/2 * k2)
+    k4 <- f(x[i] + h, y[i] + h * k3)
+    y[i+1] <- y[i] + h * (k1 + 2*k2 + 2*k3 + k4) / 6
+    x[i+1] <- x[i] + h
+  }
+  data.frame(x = x, y = y)
+}
+
+# Método de Runge-Kutta-Fehlberg de quinto orden
+rkf54 <- function(f, x0, xn, y0, tol) {
+  # Código para RK-Fehlberg
+}
+
+# Parámetros de la simulación
+x0 <- 0
+xn <- 10
+y0 <- 1
+n <- 100
+
+# Obtener aproximaciones numéricas
+aprox_euler <- euler_heun(dy, x0, xn, y0, n)
+aprox_rk4 <- rk4(dy, x0, xn, y0, n)
+#aprox_rk54 <- rkf54(dy, x0, xn, y0, tol)
+
+# Gráfico comparativo
+sols_1 <- ggplot() +
+  geom_line(data = aprox_euler, aes(x = x, y = y, color = "Euler-Heun")) +
+  geom_line(data = aprox_rk4, aes(x = x, y = y, color = "Runge-Kutta 4")) +
+  #geom_line(data = aprox_rk54, aes(x = x, y = y, color = "Runge-Kutta Fehlberg 5/4")) +
+  labs(x = "x", y = "y", color = "Método") +
+  theme_bw()
+
+ggplotly(sols_1)
+
+```
+
+
+
+
+
+
+
+
+
 # Problema 17
 Solve the following differential equation. $dy/dx=e^2x−3y$
  and $y=1$
@@ -1127,6 +2121,86 @@ graf<-ggplot()+
 
 ggplotly(graf)
 ```
+
+
+```{r}
+library(ggplot2)
+library(plotly)
+
+dy <- function(x, y){
+ exp(2*x)-3*y
+}
+
+# Solución exacta
+y_sol <- function(x){
+  4/5*exp(-3*x)+exp(2*x)/5
+}
+
+# Método de Euler-Heun
+euler_heun <- function(f, x0, xn, y0, n) {
+  h <- (xn - x0)/n
+  x <- numeric(n+1)
+  y <- numeric(n+1)
+  x[1] <- x0
+  y[1] <- y0
+  for (i in 1:n) {
+    k1 <- f(x[i], y[i])
+    k2 <- f(x[i] + h, y[i] + h * k1)
+    y[i+1] <- y[i] + h * (k1 + k2) / 2
+    x[i+1] <- x[i] + h
+  }
+  data.frame(x = x, y = y)
+}
+
+# Método de Runge-Kutta de cuarto orden
+rk4 <- function(f, x0, xn, y0, n) {
+  h <- (xn - x0)/n
+  x <- numeric(n+1)
+  y <- numeric(n+1)
+  x[1] <- x0
+  y[1] <- y0
+  for (i in 1:n) {
+    k1 <- f(x[i], y[i])
+    k2 <- f(x[i] + h/2, y[i] + h/2 * k1)
+    k3 <- f(x[i] + h/2, y[i] + h/2 * k2)
+    k4 <- f(x[i] + h, y[i] + h * k3)
+    y[i+1] <- y[i] + h * (k1 + 2*k2 + 2*k3 + k4) / 6
+    x[i+1] <- x[i] + h
+  }
+  data.frame(x = x, y = y)
+}
+
+# Método de Runge-Kutta-Fehlberg de quinto orden
+rkf54 <- function(f, x0, xn, y0, tol) {
+  # Código para RK-Fehlberg
+}
+
+# Parámetros de la simulación
+x0 <- 0
+xn <- 10
+y0 <- 1
+n <- 100
+
+# Obtener aproximaciones numéricas
+aprox_euler <- euler_heun(dy, x0, xn, y0, n)
+aprox_rk4 <- rk4(dy, x0, xn, y0, n)
+#aprox_rk54 <- rkf54(dy, x0, xn, y0, tol)
+
+# Gráfico comparativo
+sols_1 <- ggplot() +
+  geom_line(data = aprox_euler, aes(x = x, y = y, color = "Euler-Heun")) +
+  geom_line(data = aprox_rk4, aes(x = x, y = y, color = "Runge-Kutta 4")) +
+  #geom_line(data = aprox_rk54, aes(x = x, y = y, color = "Runge-Kutta Fehlberg 5/4")) +
+  stat_function(fun = y_sol, aes(color = "Solución Exacta")) +
+  labs(x = "x", y = "y", color = "Método") +
+  theme_bw()
+
+ggplotly(sols_1)
+```
+
+
+
+
 
 # Problema 18
 Solve the initial value problem $y′+1/(x+1)*y$ ,$y(1)=2$
@@ -1176,6 +2250,85 @@ ggplotly(graf)
 ```
 
 
+```{r}
+dy <- function(x, y){
+ x^(-2)-1/(x+1)*y
+}
+
+# Solución exacta
+y_sol <- function(x){
+  (log(x)+5)/(x+1) - 1/(x*(x+1))
+}
+
+# Método de Euler-Heun
+euler_heun <- function(f, x0, xn, y0, n) {
+  h <- (xn - x0)/n
+  x <- numeric(n+1)
+  y <- numeric(n+1)
+  x[1] <- x0
+  y[1] <- y0
+  for (i in 1:n) {
+    k1 <- f(x[i], y[i])
+    k2 <- f(x[i] + h, y[i] + h * k1)
+    y[i+1] <- y[i] + h * (k1 + k2) / 2
+    x[i+1] <- x[i] + h
+  }
+  data.frame(x = x, y = y)
+}
+
+# Método de Runge-Kutta de cuarto orden
+rk4 <- function(f, x0, xn, y0, n) {
+  h <- (xn - x0)/n
+  x <- numeric(n+1)
+  y <- numeric(n+1)
+  x[1] <- x0
+  y[1] <- y0
+  for (i in 1:n) {
+    k1 <- f(x[i], y[i])
+    k2 <- f(x[i] + h/2, y[i] + h/2 * k1)
+    k3 <- f(x[i] + h/2, y[i] + h/2 * k2)
+    k4 <- f(x[i] + h, y[i] + h * k3)
+    y[i+1] <- y[i] + h * (k1 + 2*k2 + 2*k3 + k4) / 6
+    x[i+1] <- x[i] + h
+  }
+  data.frame(x = x, y = y)
+}
+
+# Método de Runge-Kutta-Fehlberg de quinto orden
+rkf54 <- function(f, x0, xn, y0, tol) {
+  # Código para RK-Fehlberg
+}
+
+# Parámetros de la simulación
+x0 <- 0
+xn <- 10
+y0 <- 1
+n <- 100
+
+# Obtener aproximaciones numéricas
+aprox_euler <- euler_heun(dy, x0, xn, y0, n)
+aprox_rk4 <- rk4(dy, x0, xn, y0, n)
+#aprox_rk54 <- rkf54(dy, x0, xn, y0, tol)
+
+# Gráfico comparativo
+sols_1 <- ggplot() +
+  geom_line(data = aprox_euler, aes(x = x, y = y, color = "Euler-Heun")) +
+  geom_line(data = aprox_rk4, aes(x = x, y = y, color = "Runge-Kutta 4")) +
+  #geom_line(data = aprox_rk54, aes(x = x, y = y, color = "Runge-Kutta Fehlberg 5/4")) +
+  stat_function(fun = y_sol, aes(color = "Solución Exacta")) +
+  labs(x = "x", y = "y", color = "Método") +
+  theme_bw()
+
+ggplotly(sols_1)
+```
+
+
+
+
+
+
+
+
 # Problema 19
 
 $ \frac{dy}{dt}=e^t+8e^3t+y; \quad y(0)=5$
@@ -1214,6 +2367,80 @@ graf<-ggplot()+
 
 ggplotly(graf)
 ```
+
+
+```{r}
+dy <- function(x, y){
+ exp(x)+8*exp(3*x)+y
+}
+
+# Solución exacta
+y_sol <- function(x){
+  (x+4*exp(2*x)+1)*exp(x)
+}
+
+# Método de Euler-Heun
+euler_heun <- function(f, x0, xn, y0, n) {
+  h <- (xn - x0)/n
+  x <- numeric(n+1)
+  y <- numeric(n+1)
+  x[1] <- x0
+  y[1] <- y0
+  for (i in 1:n) {
+    k1 <- f(x[i], y[i])
+    k2 <- f(x[i] + h, y[i] + h * k1)
+    y[i+1] <- y[i] + h * (k1 + k2) / 2
+    x[i+1] <- x[i] + h
+  }
+  data.frame(x = x, y = y)
+}
+
+# Método de Runge-Kutta de cuarto orden
+rk4 <- function(f, x0, xn, y0, n) {
+  h <- (xn - x0)/n
+  x <- numeric(n+1)
+  y <- numeric(n+1)
+  x[1] <- x0
+  y[1] <- y0
+  for (i in 1:n) {
+    k1 <- f(x[i], y[i])
+    k2 <- f(x[i] + h/2, y[i] + h/2 * k1)
+    k3 <- f(x[i] + h/2, y[i] + h/2 * k2)
+    k4 <- f(x[i] + h, y[i] + h * k3)
+    y[i+1] <- y[i] + h * (k1 + 2*k2 + 2*k3 + k4) / 6
+    x[i+1] <- x[i] + h
+  }
+  data.frame(x = x, y = y)
+}
+
+# Método de Runge-Kutta-Fehlberg de quinto orden
+rkf54 <- function(f, x0, xn, y0, tol) {
+  # Código para RK-Fehlberg
+}
+
+# Parámetros de la simulación
+x0 <- 0
+xn <- 10
+y0 <- 1
+n <- 100
+
+# Obtener aproximaciones numéricas
+aprox_euler <- euler_heun(dy, x0, xn, y0, n)
+aprox_rk4 <- rk4(dy, x0, xn, y0, n)
+#aprox_rk54 <- rkf54(dy, x0, xn, y0, tol)
+
+# Gráfico comparativo
+sols_1 <- ggplot() +
+  geom_line(data = aprox_euler, aes(x = x, y = y, color = "Euler-Heun")) +
+  geom_line(data = aprox_rk4, aes(x = x, y = y, color = "Runge-Kutta 4")) +
+  #geom_line(data = aprox_rk54, aes(x = x, y = y, color = "Runge-Kutta Fehlberg 5/4")) +
+  stat_function(fun = y_sol, aes(color = "Solución Exacta")) +
+  labs(x = "x", y = "y", color = "Método") +
+  theme_bw()
+
+ggplotly(sols_1)
+```
+
 
 
 # Problema 20
@@ -1268,6 +2495,77 @@ ggplotly(graf)
 ```
  
  
+```{r}
+dy <- function(x, y){
+ -20*y+2
+}
+
+# Solución exacta
+y_sol <- function(x){
+  1/10-exp(-20*x)/10
+}
+
+# Método de Euler-Heun
+euler_heun <- function(f, x0, xn, y0, n) {
+  h <- (xn - x0)/n
+  x <- numeric(n+1)
+  y <- numeric(n+1)
+  x[1] <- x0
+  y[1] <- y0
+  for (i in 1:n) {
+    k1 <- f(x[i], y[i])
+    k2 <- f(x[i] + h, y[i] + h * k1)
+    y[i+1] <- y[i] + h * (k1 + k2) / 2
+    x[i+1] <- x[i] + h
+  }
+  data.frame(x = x, y = y)
+}
+
+# Método de Runge-Kutta de cuarto orden
+rk4 <- function(f, x0, xn, y0, n) {
+  h <- (xn - x0)/n
+  x <- numeric(n+1)
+  y <- numeric(n+1)
+  x[1] <- x0
+  y[1] <- y0
+  for (i in 1:n) {
+    k1 <- f(x[i], y[i])
+    k2 <- f(x[i] + h/2, y[i] + h/2 * k1)
+    k3 <- f(x[i] + h/2, y[i] + h/2 * k2)
+    k4 <- f(x[i] + h, y[i] + h * k3)
+    y[i+1] <- y[i] + h * (k1 + 2*k2 + 2*k3 + k4) / 6
+    x[i+1] <- x[i] + h
+  }
+  data.frame(x = x, y = y)
+}
+
+# Método de Runge-Kutta-Fehlberg de quinto orden
+rkf54 <- function(f, x0, xn, y0, tol) {
+  # Código para RK-Fehlberg
+}
+
+# Parámetros de la simulación
+x0 <- 0
+xn <- 10
+y0 <- 1
+n <- 100
+
+# Obtener aproximaciones numéricas
+aprox_euler <- euler_heun(dy, x0, xn, y0, n)
+aprox_rk4 <- rk4(dy, x0, xn, y0, n)
+#aprox_rk54 <- rkf54(dy, x0, xn, y0, tol)
+
+# Gráfico comparativo
+sols_1 <- ggplot() +
+  geom_line(data = aprox_euler, aes(x = x, y = y, color = "Euler-Heun")) +
+  geom_line(data = aprox_rk4, aes(x = x, y = y, color = "Runge-Kutta 4")) +
+  #geom_line(data = aprox_rk54, aes(x = x, y = y, color = "Runge-Kutta Fehlberg 5/4")) +
+  stat_function(fun = y_sol, aes(color = "Solución Exacta")) +
+  labs(x = "x", y = "y", color = "Método") +
+  theme_bw()
+
+ggplotly(sols_1)
+```
  
  
  
