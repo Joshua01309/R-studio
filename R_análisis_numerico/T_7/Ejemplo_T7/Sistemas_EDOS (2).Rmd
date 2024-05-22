@@ -70,7 +70,6 @@ sols_1 <- ggplot()+
 
 ggplotly(sols_1)
 
-ggplotly(sols_1)
 
 ```
  
