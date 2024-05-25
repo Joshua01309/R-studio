@@ -37,6 +37,113 @@ knitr::knit_hooks$set(webgl = hook_webgl)
 
 ```
 
+# Preliminar
+
+A continuación se aproxima la solución de las ecuaciones de Lorenz.  Escribe el sistema correspondiente y realiza una breve descripción.
+
+
+```{r}
+f <- function(t, u){
+  p <- par_prob
+  as.matrix(c(p[1]*(u[2]-u[1]), 
+              u[1]*(p[2]-u[3])-u[2], 
+              u[1]*u[2]-p[3]*u[3]))
+}
+
+u0 <- as.matrix(c(1, 0, 0))
+par_prob <- c(10.0,28.0,8/3)
+
+aprox_sist <- ode45(f, 0, 100,u0)
+
+aprox_sist_tab <- as.data.frame(aprox_sist$y)
+
+plot_ly(aprox_sist_tab, x = ~V1, y = ~V2, z = ~V3, type = 'scatter3d', mode = 'lines')
+
+```
+
+
+
+
+Las ecuaciones de la transformación de Lorentz
+
+Sin embargo, la transformación galileana viola los postulados de Einstein, porque las ecuaciones de velocidad establecen que un pulso de luz que se mueve con velocidad c a lo largo del eje de la x viajaría a la velocidad  c−v
+  en el otro marco inercial. En concreto, el pulso esférico tiene radio  r=ct
+  en el tiempo t en el marco no primo, y también tiene radio  r'=ct'
+  en el tiempo  t'
+  en el marco primo. Expresando estas relaciones en coordenadas cartesianas se obtiene
+  
+ $ x2+y2+z2−c2t2=0$
+  $x′2+y′2+z′2−c2t′2=00.$
+  
+Los lados izquierdos de las dos expresiones se pueden igualar porque ambos son cero. Dado que  y=y'
+  y  z=z',
+  obtenemos
+
+$x2−c2t2=x′2−c2t′2.$
+
+Las ecuaciones de transformación galileana son fundamentales para describir cómo las coordenadas y las velocidades se relacionan entre dos marcos de referencia inerciales. Permíteme explicarte más detalladamente.
+
+Transformación de Coordenadas Galileana:
+Supongamos que tenemos dos marcos de referencia: uno en reposo (denotado como (S)) y otro en movimiento a lo largo del eje (x) con velocidad constante (v) respecto al primero (denotado como (S’)).
+Si las coordenadas de un punto en el espacio en el marco (S) son ((x, y, z, t)), entonces las coordenadas correspondientes en el marco (S’) se relacionan de la siguiente manera: [ x = x’ + vt, \quad y = y’, \quad z = z’, \quad t = t’ ]
+Estas ecuaciones implican que las mediciones de tiempo realizadas por los observadores en ambos marcos son las mismas.
+En conjunto, estas ecuaciones forman la transformación galileana.
+Velocidad y Aceleración:
+Para evitar confusiones, denotamos la velocidad de una partícula en el marco (S) como (u) en lugar de (v).
+La velocidad de la partícula en el marco (S’) se relaciona con la velocidad relativa (v) mediante: [ u_x = u’_x + v, \quad u_y = u’_y, \quad u_z = u’_z ]
+Las aceleraciones también se transforman de manera similar: [ a_x = a’_x, \quad a_y = a’_y, \quad a_z = a’_z ]
+Las leyes de Newton (segunda y tercera) se mantienen consistentes en ambos marcos inerciales.
+Limitaciones de la Transformación Galileana:
+Aunque la transformación galileana es válida para velocidades mucho menores que la velocidad de la luz ((c)), no es adecuada para describir fenómenos relativistas.
+La transformación galileana predice que un pulso de luz que se mueve con velocidad (c) en el eje (x) tendría una velocidad (c - v) en el otro marco inercial.
+Sin embargo, esto contradice los postulados de Einstein.
+Ecuaciones de Transformación de Lorentz:
+Para resolver esta contradicción, necesitamos las ecuaciones de transformación de Lorentz, que son válidas para todos los valores de velocidad, incluida la velocidad de la luz.
+Estas ecuaciones relacionan las coordenadas y los tiempos entre los dos marcos inerciales de acuerdo con la teoría de la relatividad especial.
+Por ejemplo, la relación entre los radios de un pulso esférico de luz en ambos marcos se expresa como: [ x^2 + y^2 + z^2 - c2t2 = x’^2 + y’^2 + z’^2 - c2t’2 ]
+
+Supongamos que en el instante en que los orígenes de los sistemas de coordenadas en \(S\) y \(S'\) coinciden, una bombilla de flash emite un pulso de luz que se extiende esféricamente partiendo del origen. En el tiempo \(t\), un observador en \(S\) encuentra que el origen de \(S'\) está en \(x = vt\). Con la ayuda de un amigo en \(S'\), el observador \(S\) también mide la distancia desde el evento hasta el origen de \(S'\) y encuentra que es:
+
+\[ x' = x - \frac{v}{\sqrt{1 - \frac{v^2}{c^2}}} \]
+
+Esto se deduce porque ya hemos demostrado que los postulados de la relatividad implican la contracción de la longitud. Por lo tanto, la posición del evento en \(S\) es:
+
+\[ x = vt + x' \sqrt{1 - \frac{v^2}{c^2}} \]
+
+Los postulados de la relatividad implican que la ecuación que relaciona la distancia y el tiempo del frente de onda esférico:
+
+\[ x^2 + y^2 + z^2 - c^2 t^2 = 0 \]
+
+debe aplicarse tanto en términos de coordenadas primadas como no primadas, lo que se demostró anteriormente que conduce a la Ecuación 5.5:
+
+\[ x^2 - c^2 t^2 = x'^2 - c^2 t'^2 \]
+
+Combinamos esto con la ecuación que relaciona la \(x\) y la \(x'\) para obtener la relación entre \(t\) y \(t'\):
+
+\[ t' = t - \frac{vx'}{c^2 \sqrt{1 - \frac{v^2}{c^2}}} \]
+
+Las ecuaciones que relacionan el tiempo y la posición de los eventos vistos en \(S\) son entonces:
+
+\[ txyz = t' + \frac{vx'}{c^2 \sqrt{1 - \frac{v^2}{c^2}}} x' + \frac{vt'}{\sqrt{1 - \frac{v^2}{c^2}}} y' z' \]
+
+Este conjunto de ecuaciones, que relaciona la posición y el tiempo en los dos marcos inerciales, se conoce como transformación de Lorentz. Reciben su nombre en honor a H.A. Lorentz (1853 a 1928), quien las propuso por primera vez. Curiosamente, justificó la transformación en lo que finalmente se descubrió que era una hipótesis falaz. La base teórica correcta es la teoría especial de la relatividad de Einstein.
+
+La transformación inversa expresa las variables de \(S\) en términos de las de \(S'\). Simplemente intercambiando las variables primadas y no primadas y sustituyendo, da:
+
+\[ t'x'y'z' = t - \frac{vx}{c^2 \sqrt{1 - \frac{v^2}{c^2}}} x - \frac{vt}{\sqrt{1 - \frac{v^2}{c^2}}} yz \]
+
+**EJEMPLO 5.6: Uso de la transformación de Lorentz para el tiempo**
+
+La nave espacial \(S'\) está en reposo, dirigiéndose eventualmente hacia Alfa Centauri, cuando la nave espacial \(S\) pasa a su lado a velocidad relativa \(c/2\). El capitán de \(S'\) envía una señal de radio que dura 1.2 s según el reloj de esa nave. Utiliza la transformación de Lorentz para encontrar el intervalo de tiempo de la señal medida por el oficial de comunicaciones de la nave espacial \(S\).
+
+**Solución:**
+
+Identifique el aspecto conocido: \(\Delta t' = t_2' - t_1' = 1.2 \, \text{s}\); \(\Delta x' = x_2' - x_1' = 0\).
+
+Identifique la incógnita: \(\Delta t = t_2 - t_1\).
+
+Exprese la respuesta en forma de una ecuación. La señal de tiempo comienza como \((x', t_1')\) y se detiene en \((x', t_2')\). Tenga en cuenta que la coordenada \(x'\) de ambos eventos es la misma
+
 
 
 # Problema 1
@@ -350,47 +457,220 @@ sol_sis <- ggplot()+
 ggplotly(sol_sis)
 ```
 
-# Problema 9
+# Problema 9...
 
-\begin{equation}
-\begin{aligned}
-y'_1&=-7y_1+3y_2-y_3-1-3t-2\, sen\,t, &\qquad y_1(0)&=5;\\
-y'_2&=y_1-2y_2+3y_3+6-t+2\,sen\,t+cos\, t, &\qquad y_2(0)&=-9;\\
-y'_3&=2y_1+4y_3+8-2t, &\qquad y_3(0)&=-5;
-\end{aligned}
-\end{equation}
+[ \frac{dx_1}{dt} = -7x_1 + 3x_2 ]
 
-para $0\leq t \leq 2$. Donde las soluciones exactas son:
+[ \frac{dx_2}{dt} = -2x_1 - 2x_2 ]
+
+Con las condiciones iniciales:
+
+[ x_1(0) = -1 \quad \text{y} \quad x_2(0) = 0 ]
+
+```{r}
+dy <- function(t,y){as.matrix(-7*y[1]+3*y[2], -2*y[1]-2*y[2])}
+y0 <- as.matrix(c(-1, 0))
+
+sol_rg <- ode45(dy, 0, 10, y0, hmax=0.01)
+
+sol_sis <- ggplot()+
+  geom_line(aes(sol_rg$t, sol_rg$y[ ,1]), color="#4BBAC3")+
+  geom_line(aes(sol_rg$t, sol_rg$y[ ,2]), color="#CC243C")+
+  theme_bw()
+ggplotly(sol_sis)
+```
 
 
-\begin{equation}
-\begin{aligned}
-y_1(t)&=2e^{3t}+3e^{-2t}+t\\
-y_2(t)&=-8e^{-2t}+e^{4t}-2e^{3t}+\,sen\,t\\
-y_3(t)&=2e^{4t}-4e^{3t}-e^{-2t}-2
-\end{aligned}
-\end{equation}
+# Problema 10 ...
+
+[ \frac{dx_1}{dt} = -x_1 - x_2 ]
+
+[ \frac{dx_2}{dt} = 2x_1 + x_2 ]
+
+Con las condiciones iniciales:
+
+[ x_1(0) = 3 \quad \text{y} \quad x_2(0) = -2 ]
+
+```{r}
+dy <- function(t,y){as.matrix(-y[1]-y[2], 2*y[1]+y[2])}
+y0 <- as.matrix(c(3, -2))
+
+sol_rg <- ode45(dy, 0, 100, y0, hmax=0.01)
+
+sol_sis <- ggplot()+
+  geom_line(aes(sol_rg$t, sol_rg$y[ ,1]), color="#4BBAC3")+
+  geom_line(aes(sol_rg$t, sol_rg$y[ ,2]), color="#CC243C")+
+  theme_bw()
+ggplotly(sol_sis)
+```
+
+
+espiral hacia afuera en el sentido de las agujas del reloj.
+
+Para determinar la dirección de la espiral, observamos la pendiente de la recta en diferentes puntos. La pendiente de una recta representa su inclinación, Y se puede calcular dividiendo el cambio en el valor de Y por el cambio en el valor de X.
+
+En la imagen, los valores de y aumentan a medida que aumentan los valores de x. Esto significa que la pendiente de la recta es positiva. Una pendiente positiva indica que la línea está inclinada hacia arriba, lo que es coherente con una espiral hacia afuera.
+
+Si la espiral estuviera girando en espiral hacia adentro en sentido contrario a las agujas del reloj, los valores de y disminuirían a medida que aumentan los valores de x. Esto daría como resultado una pendiente negativa, lo que indica que la línea es inclinado hacia abajo.
+
+# Problema 11...
+
+\frac{{dx_1}}{{dt}} = 3x_1 + 9x_2
+
+\frac{{dx_2}}{{dt}} = -x_1 - 3x_2
+ Condiciones iniciales
+ 
+x_1(0) = 2
+x_2(0) = 4
 
 
 ```{r}
-func <- function(t, y, parms) {
-  with(as.list(c(y, parms)), {
-    dy1 = -7*y[1] + 3*y[2]
-    dy2 = -2*y[1] - 2*y[2]
-    return(list(c(dy1, dy2)))
-  })
+dy <- function(t, y) {
+  return(c(3*y[1] + 9*y[2], -1*y[1] - 3*y[2]))
 }
 
-parms <- c()
-y0 <- c(y1 = -1, y2 = 0)
-times <- seq(0, 10, by = 0.1)
+sol_rg <- ode45(dy, 0, 100, y0, hmax = 0.01)
+
+sol_sis <- ggplot()+
+  geom_line(aes(sol_rg$t, sol_rg$y[ ,1]), color="#4BBAC3")+
+  geom_line(aes(sol_rg$t, sol_rg$y[ ,2]), color="#CC243C")+
+  theme_bw()
+ggplotly(sol_sis)
+
+```
 
 
-out <- lsoda(y = y0, times = times, func = func, parms = parms)
 
-plot(out[, "time"], out[, "y1"], type = "l", xlab = "Tiempo", ylab = "Valor", main = "Solución del sistema de ecuaciones diferenciales", col = "blue")
-lines(out[, "time"], out[, "y2"], col = "red")
-legend("topright", legend = c("y1", "y2"), col = c("blue", "red"), lty = 1)
+
+
+# Problema 12..
+
+Consider the interaction of two species of animals in a habitat. We are told that the change of the populations x(t)
+ and y(t)
+ can be modeled by the equations
+
+
+\frac{dx}{dt} = 1.2x - y
+\frac{dy}{dt} = -1.25x + 3.2y
+
+
+```{r}
+f<-function(t,u){
+  as.matrix(c(1.2*u[1]-u[2], -1.25*u[1]+3.2*u[2]))
+}
+
+u0<-as.matrix(c(7,6))
+
+aprox_sol<-ode45(f, 0, 1, u0)
+
+graf<-ggplot()+
+  geom_line(aes(aprox_sol$t, aprox_sol$y[ , 1]), color="firebrick")+
+  geom_line(aes(aprox_sol$t, aprox_sol$y[ , 2]), color="blue")+
+  labs(x="t", y="y(t)")+
+  theme_bw()
+
+ggplotly(graf)
+```
+
+```{r}
+f<-function(t,u){
+  as.matrix(c(1.2*u[1]-u[1]*u[2], -1.25*u[2]+3.2*u[2]*u[1]))
+}
+
+u0<-as.matrix(c(7,6))
+
+aprox_sol<-ode45(f, 0, 50, u0)
+
+graf<-ggplot()+
+  geom_line(aes(aprox_sol$t, aprox_sol$y[ , 1]), color="firebrick")+
+  geom_line(aes(aprox_sol$t, aprox_sol$y[ , 2]), color="blue")+
+  labs(x="t", y="y(t)")+
+  theme_bw()
+
+ggplotly(graf)
+```
+
+
+```{r}
+ggplot()+
+  geom_path(aes(aprox_sol$y[ , 1], aprox_sol$y[ , 2]), color="#49A4B9")+ 
+  theme_classic()
+```
+
+
+```{r}
+library(deSolve)  # Cargar la librería deSolve para resolver ecuaciones diferenciales
+
+# Definir la función que contiene el sistema de ecuaciones diferenciales
+system <- function(t, y, parms) {
+  x <- y[1]
+  y <- y[2]
+  dxdt <- 1.2 * x - 1 * y
+  dydt <- -1.25 * x + 3.2 * y
+  return(list(c(dxdt, dydt)))
+}
+
+# Definir la matriz jacobiana
+jacfunc <- function(t, y, parms) {
+  x <- y[1]
+  y <- y[2]
+  J <- matrix(0, nrow = 2, ncol = 2)
+  J[1, 1] <- 1.2
+  J[1, 2] <- -1
+  J[2, 1] <- -1.25
+  J[2, 2] <- 3.2
+  return(J)
+}
+
+# Definir los valores iniciales y el vector de tiempo
+y0 <- c(1, 1)  # Valores iniciales de x y y
+times <- seq(0, 10, by = 0.1)  # Vector de tiempo
+
+# Resolver el sistema de ecuaciones diferenciales
+out <- ode(y = y0, times = times, func = system, jacfunc = jacfunc)
+
+# Calcular los valores propios (eigenvalues) de la matriz jacobiana en el punto estable
+eigenvalues <- eigen(jacfunc(0, y0, NULL))$values
+smaller_eigenvalue <- min(Re(eigenvalues))
+larger_eigenvalue <- max(Re(eigenvalues))
+
+# Imprimir los resultados
+print(paste("El valor propio más pequeño es:", smaller_eigenvalue))
+print(paste("El valor propio más grande es:", larger_eigenvalue))
+
+```
+
+Basado en los valores propios proporcionados, podemos inferir la naturaleza del sistema y la interacción entre las dos especies de animales en el hábitat. Los valores propios son esenciales para determinar la estabilidad del sistema y la dirección en la que evolucionarán las poblaciones a lo largo del tiempo.
+
+El hecho de que el valor propio más pequeño sea 0.7 y el valor propio más grande sea 3.7 indica que el sistema tiene un nodo inestable y un nodo estable, respectivamente. Esto sugiere que las poblaciones de las dos especies de animales están interactuando de manera competitiva en el hábitat.
+
+En este caso, dado que tenemos un nodo inestable, todas las curvas de solución tenderían a alejarse de 0 con el tiempo. Esto significa que, independientemente de las condiciones iniciales, las poblaciones de ambas especies de animales eventualmente aumentarán con el tiempo y no tenderán a converger hacia un punto de equilibrio estable. Por lo tanto, la interpretación correcta sería:
+
+D. Todas las curvas de solución se alejarían de 0. (Nodo inestable)
+
+
+# Problema 13
+
+[ \frac{dx_1}{dt} = -6.2 + 1.1x_1 - 0.8x_2 ]
+
+[ \frac{dx_2}{dt} = -13.8 + 2.1x_1 - 1.2x_2 ]
+
+Con las condiciones iniciales:
+
+[ x_1(0) = 11 \quad \text{y} \quad x_2(0) = 4 ]
+
+
+```{r}
+dy <- function(t,y){as.matrix(-6.2+1.1*y[1], -13.8+2.1*y[1]-1.2*y[2])}
+y0 <- as.matrix(c(11, 4))
+
+sol_rg <- ode45(dy, 0, 3, y0, hmax=0.01)
+
+sol_sis <- ggplot()+
+  geom_line(aes(sol_rg$t, sol_rg$y[ ,1]), color="#4BBAC3")+
+  geom_line(aes(sol_rg$t, sol_rg$y[ ,2]), color="#CC243C")+
+  theme_bw()
+ggplotly(sol_sis)
 ```
 
 
