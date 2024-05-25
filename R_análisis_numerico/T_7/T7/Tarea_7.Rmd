@@ -62,24 +62,15 @@ plot_ly(aprox_sist_tab, x = ~V1, y = ~V2, z = ~V3, type = 'scatter3d', mode = 'l
 ```
 
 
+Estas ecuaciones son un modelo simplificado de convección,f(t, u) que es la transferencia de calor por el movimiento de fluidos. El sistema de Lorenz es un ejemplo famoso de un sistema caótico, Lo que significa que incluso pequeños cambios en las condiciones iniciales pueden conducir a un comportamiento muy diferente a largo plazo.
+
+es una visualización de la trayectoria del atractor de Lorenz en el espacio tridimensional. El atractor de Lorenz es un atractor extraño, que es un objeto geométrico que exhibe una dependencia sensible de las condiciones iniciales. Esto significa que incluso pequeños cambios en el punto de partida de la trayectoria conducirán a caminos completamente diferentes a través del atractor.
 
 
-Las ecuaciones de la transformación de Lorentz
+El atractor de Lorenz es un sistema tridimensional determinista de comportamiento caótico.
 
-Sin embargo, la transformación galileana viola los postulados de Einstein, porque las ecuaciones de velocidad establecen que un pulso de luz que se mueve con velocidad c a lo largo del eje de la x viajaría a la velocidad  c−v
-  en el otro marco inercial. En concreto, el pulso esférico tiene radio  r=ct
-  en el tiempo t en el marco no primo, y también tiene radio  r'=ct'
-  en el tiempo  t'
-  en el marco primo. Expresando estas relaciones en coordenadas cartesianas se obtiene
-  
- $ x2+y2+z2−c2t2=0$
-  $x′2+y′2+z′2−c2t′2=00.$
-  
-Los lados izquierdos de las dos expresiones se pueden igualar porque ambos son cero. Dado que  y=y'
-  y  z=z',
-  obtenemos
+Esto es, dados los mismos parámetros iniciales, y en el mismo instante de tiempo, obtendremos los mismos resultados, mas sin embargo, será extremadamente sensitivo a estos, dando el sello característico de la Teoría del caos.
 
-$x2−c2t2=x′2−c2t′2.$
 
 Las ecuaciones de transformación galileana son fundamentales para describir cómo las coordenadas y las velocidades se relacionan entre dos marcos de referencia inerciales. Permíteme explicarte más detalladamente.
 
@@ -96,8 +87,25 @@ Las leyes de Newton (segunda y tercera) se mantienen consistentes en ambos marco
 Limitaciones de la Transformación Galileana:
 Aunque la transformación galileana es válida para velocidades mucho menores que la velocidad de la luz ((c)), no es adecuada para describir fenómenos relativistas.
 La transformación galileana predice que un pulso de luz que se mueve con velocidad (c) en el eje (x) tendría una velocidad (c - v) en el otro marco inercial.
-Sin embargo, esto contradice los postulados de Einstein.
-Ecuaciones de Transformación de Lorentz:
+
+Las ecuaciones de la transformación de Lorentz
+
+Sin embargo, la transformación galileana viola los postulados de Einstein, porque las ecuaciones de velocidad establecen que un pulso de luz que se mueve con velocidad c a lo largo del eje de la x viajaría a la velocidad  c−v
+  en el otro marco inercial. En concreto, el pulso esférico tiene radio  r=ct
+  en el tiempo t en el marco no primo, y también tiene radio  r'=ct'
+  en el tiempo  t'
+  en el marco primo. Expresando estas relaciones en coordenadas cartesianas se obtiene
+  
+ $ x2+y2+z2−c2t2=0$
+  $x′2+y′2+z′2−c2t′2=0.$
+  
+Los lados izquierdos de las dos expresiones se pueden igualar porque ambos son cero. Dado que  y=y'
+  y  z=z',
+  obtenemos
+
+$x2−c2t2=x′2−c2t′2.$
+
+
 Para resolver esta contradicción, necesitamos las ecuaciones de transformación de Lorentz, que son válidas para todos los valores de velocidad, incluida la velocidad de la luz.
 Estas ecuaciones relacionan las coordenadas y los tiempos entre los dos marcos inerciales de acuerdo con la teoría de la relatividad especial.
 Por ejemplo, la relación entre los radios de un pulso esférico de luz en ambos marcos se expresa como: [ x^2 + y^2 + z^2 - c2t2 = x’^2 + y’^2 + z’^2 - c2t’2 ]
@@ -143,6 +151,100 @@ Identifique el aspecto conocido: \(\Delta t' = t_2' - t_1' = 1.2 \, \text{s}\); 
 Identifique la incógnita: \(\Delta t = t_2 - t_1\).
 
 Exprese la respuesta en forma de una ecuación. La señal de tiempo comienza como \((x', t_1')\) y se detiene en \((x', t_2')\). Tenga en cuenta que la coordenada \(x'\) de ambos eventos es la misma
+
+
+1- «Implemente la función representativa del sistema en lenguaje Rstudio Tenga en cuenta que la variable de estado sería un ndArray de 3 dimensiones. Por otra parte, la función recibe los parámetros de entrada σ , ρ y β».
+
+
+```{r}
+# Definir función solve_lorenz
+solve_lorenz <- function(state, t, sigma, rho, beta) {
+  x <- state[1]
+  y <- state[2]
+  z <- state[3]
+  
+  dx <- sigma * (y - x)
+  dy <- x * (rho - z) - y
+  dz <- x * y - beta * z
+  
+  return(c(dx, dy, dz))
+}
+
+# Ejemplo resolviendo para ciertas condiciones iniciales
+initial_state <- c(1, 1, 1)
+time <- 1
+sigma <- 10
+rho <- 28
+beta <- 8/3
+
+solution <- solve_lorenz(initial_state, time, sigma, rho, beta)
+print(solution)
+
+```
+
+2- «Escriba el código correspondiente a la simulación de este sistema para un intervalo de tiempo  t∈[0,100]  que contenga 3000 valores equidistantes. Además utilice los parámetros  σ=10 ,  ρ=28 ,  β=8/3  y el vector de condiciones iniciales  (1,1,1) . Emplee para ello la función odeint».
+
+
+```{r}
+# Definir condiciones iniciales
+initial_state <- c(1, 1, 1)
+
+# Definir parámetros
+sigma <- 10
+rho <- 28
+beta <- 8/3
+
+# Definir vector de tiempo
+t <- seq(0, 100, length.out = 3000)
+
+# Imprimir el tamaño del vector de tiempo
+print(paste("Valores equidistantes de t:", length(t)))
+
+```
+
+```{r}
+library(deSolve)
+library(plotly)
+
+# Definir función solve_lorenz
+solve_lorenz <- function(t, state, parameters) {
+  with(as.list(c(state, parameters)), {
+    dx <- sigma * (y - x)
+    dy <- x * (rho - z) - y
+    dz <- x * y - beta * z
+    return(list(c(dx, dy, dz)))
+  })
+}
+
+# Definir condiciones iniciales y parámetros
+initial_state <- c(x = 1, y = 1, z = 1)
+parameters <- c(sigma = 10, rho = 28, beta = 8/3)
+
+# Vector de tiempo
+t <- seq(0, 100, length.out = 3000)
+
+# Resolver ecuaciones diferenciales usando ode
+states <- ode(y = initial_state, times = t, func = solve_lorenz, parms = parameters)
+
+# Extraer resultados
+xs <- states[, "x"]
+ys <- states[, "y"]
+zs <- states[, "z"]
+
+# Crear gráfico 3D
+plot_ly(data = data.frame(xs = xs, ys = ys, zs = zs)) %>%
+  add_trace(x = ~xs, y = ~ys, z = ~zs, type = 'scatter3d', mode = 'lines') %>%
+  layout(title = "Atractor de Lorenz con ode")
+
+
+```
+
+# Aplicación en economia
+
+En el contexto económico, las ecuaciones de Lorenz se han utilizado para modelar fenómenos como el crecimiento económico, las fluctuaciones del mercado y el comportamiento financiero.
+
+Por ejemplo, las ecuaciones de Lorenz pueden utilizarse para modelar la dinámica de un mercado financiero, donde las variables del sistema podrían representar el precio de un activo, la oferta y la demanda, y otros factores que influyen en el comportamiento del mercado. Estos modelos pueden ayudar a los economistas y analistas financieros a comprender mejor las tendencias del mercado, pronosticar cambios en los precios de los activos y evaluar el riesgo financiero.
+
 
 
 
@@ -329,6 +431,54 @@ matplot(out[ , 1], out[ , 2:3], type = "l", xlab = "time", ylab = "Conc",
         main = "Lotka-Volterra", lwd = 2)
 legend("topright", c("prey", "predator"), col = 1:2, lty = 1:2)
 ```
+
+## Aplicación economica 
+
+Una de las aplicaciones más comunes de las ecuaciones de Lotka-Volterra en economía es en el estudio de la competencia entre empresas en un mercado. Estas ecuaciones pueden modelar la dinámica de dos empresas que compiten por recursos limitados o por la participación en el mercado. Aquí hay un ejemplo para ilustrar cómo se podrían aplicar:
+
+Supongamos que estamos estudiando el mercado de smartphones y queremos analizar la competencia entre dos empresas, A y B. Utilizando las ecuaciones de Lotka-Volterra, podemos modelar cómo cambian las participaciones de mercado de estas dos empresas con el tiempo.
+
+Las ecuaciones podrían verse así:
+
+```{r}
+library(knitr)
+
+# Define los parámetros del modelo
+r_A <- 0.1
+r_B <- 0.2
+alpha <- 0.3
+beta <- 0.4
+K <- 100
+
+# Calcula las participaciones de mercado a lo largo del tiempo
+time <- seq(0, 100, by = 1)
+A <- numeric(length(time))
+B <- numeric(length(time))
+A[1] <- 50
+B[1] <- 50
+for (i in 2:length(time)) {
+  dA <- r_A * A[i-1] * (1 - (A[i-1] + alpha * B[i-1]) / K)
+  dB <- r_B * B[i-1] * (1 - (B[i-1] + beta * A[i-1]) / K)
+  A[i] <- A[i-1] + dA
+  B[i] <- B[i-1] + dB
+}
+
+# Gráfica de las participaciones de mercado
+plot(time, A, type = 'l', col = 'blue', xlab = 'Tiempo', ylab = 'Participación de mercado', main = 'Dinámica de competencia entre empresas A y B')
+lines(time, B, type = 'l', col = 'red')
+legend('topright', legend = c('Empresa A', 'Empresa B'), col = c('blue', 'red'), lty = 1)
+
+```
+
+\begin{itemize}
+  \item $A$ y $B$ son las participaciones de mercado de las empresas $A$ y $B$, respectivamente.
+  \item $r_A$ y $r_B$ son las tasas de crecimiento intrínsecas de las empresas $A$ y $B$, respectivamente.
+  \item $\alpha$ y $\beta$ son los coeficientes que representan cómo la presencia de una empresa afecta el crecimiento de la otra.
+  \item $K$ es la capacidad de carga del mercado, es decir, el nivel máximo de participación en el mercado que puede ser sostenido.
+\end{itemize}
+
+Estas ecuaciones describen cómo cambian las participaciones de mercado de las dos empresas con el tiempo, teniendo en cuenta la competencia entre ellas y el tamaño máximo del mercado. Los investigadores y los responsables de políticas pueden utilizar este modelo para prever cómo evolucionará la competencia en el mercado y cómo podrían afectar las diferentes estrategias empresariales la dinámica del mercado a largo plazo.
+
 
 
 
@@ -672,6 +822,359 @@ sol_sis <- ggplot()+
   theme_bw()
 ggplotly(sol_sis)
 ```
+
+
+
+
+# Ejercicios que hicimos en clase
+
+1. $y'=cos(2t)+sen(3t)$, $0\leq t\leq 10$, $y(0)=1$.  Solución exacta 
+\begin{equation}
+y(t)=\frac{1}{2}sen(2t)-\frac{1}{3}cos(3t)+\frac{4}{3}.
+ \end{equation}
+ 
+```{r}
+library(ggplot2)
+library(plotly)
+
+# Definir la función dy/dx
+f <- function(t, y) {
+  cos(2 * t) + sin(3 * t)
+}
+
+# Definir la solución exacta
+sol_y <- function(t) {
+  0.5 * sin(2 * t) - 1/3 * cos(3 * t) + 4/3
+}
+
+# Método de Euler-Heun
+euler_heun <- function(f, t0, tf, y0, n) {
+  h <- (tf - t0) / n
+  t <- numeric(n+1)
+  y <- numeric(n+1)
+  t[1] <- t0
+  y[1] <- y0
+  for (i in 1:n) {
+    k1 <- f(t[i], y[i])
+    k2 <- f(t[i] + h, y[i] + h * k1)
+    y[i+1] <- y[i] + h * (k1 + k2) / 2
+    t[i+1] <- t[i] + h
+  }
+  data.frame(t = t, y = y)
+}
+
+# Método de Runge-Kutta de cuarto orden
+rk4 <- function(f, t0, tf, y0, n) {
+  h <- (tf - t0) / n
+  t <- numeric(n+1)
+  y <- numeric(n+1)
+  t[1] <- t0
+  y[1] <- y0
+  for (i in 1:n) {
+    k1 <- f(t[i], y[i])
+    k2 <- f(t[i] + h/2, y[i] + h/2 * k1)
+    k3 <- f(t[i] + h/2, y[i] + h/2 * k2)
+    k4 <- f(t[i] + h, y[i] + h * k3)
+    y[i+1] <- y[i] + h * (k1 + 2*k2 + 2*k3 + k4) / 6
+    t[i+1] <- t[i] + h
+  }
+  data.frame(t = t, y = y)
+}
+
+# Parámetros de la simulación
+t0 <- 0
+tf <- 10
+y0 <- 1
+n <- 100
+
+# Obtener aproximaciones numéricas
+aprox_euler <- euler_heun(f, t0, tf, y0, n)
+aprox_rk4 <- rk4(f, t0, tf, y0, n)
+
+# Gráfico comparativo
+sols_1 <- ggplot() +
+  geom_line(data = aprox_euler, aes(x = t, y = y, color = "Euler-Heun")) +
+  geom_line(data = aprox_rk4, aes(x = t, y = y, color = "Runge-Kutta 4")) +
+  stat_function(fun = sol_y, aes(color = "Solución Exacta")) +
+  labs(x = "t", y = "y", color = "Método") +
+  theme_bw()
+
+# Convertir a plotly
+ggplotly(sols_1)
+
+```
+
+
+3. 
+ 
+ \begin{equation}
+ y'=(t+2t^3)y^3-ty, \quad 0\leq t \leq 2, \quad y(0)=\frac{1}{3}
+ \end{equation}
+ 
+ Solución exacta.
+ 
+ \begin{equation}
+ y(t)=\frac{1}{\sqrt{3+2t^2+6e^{t^2}}}
+ \end{equation}
+ 
+ 
+```{r}
+
+library(ggplot2)
+library(plotly)
+
+# Definir la función dy/dt
+f <- function(t, y) {
+  (t + 2 * t^3) * y^3 - t * y
+}
+
+# Definir la solución exacta
+sol_y <- function(t) {
+  1 / sqrt(3 + 2 * t^2 + 6 * exp(t^2))
+}
+
+# Método de Euler-Heun
+euler_heun <- function(f, t0, tf, y0, n, improved = FALSE) {
+  h <- (tf - t0) / n
+  t <- numeric(n + 1)
+  y <- numeric(n + 1)
+  t[1] <- t0
+  y[1] <- y0
+  for (i in 1:n) {
+    k1 <- f(t[i], y[i])
+    if (improved) {
+      k2 <- f(t[i] + h, y[i] + h * k1)
+      y[i + 1] <- y[i] + h * (k1 + k2) / 2
+    } else {
+      y[i + 1] <- y[i] + h * k1
+    }
+    t[i + 1] <- t[i] + h
+  }
+  data.frame(t = t, y = y)
+}
+
+# Método de Runge-Kutta de cuarto orden
+rk4 <- function(f, t0, tf, y0, n) {
+  h <- (tf - t0) / n
+  t <- numeric(n + 1)
+  y <- numeric(n + 1)
+  t[1] <- t0
+  y[1] <- y0
+  for (i in 1:n) {
+    k1 <- f(t[i], y[i])
+    k2 <- f(t[i] + h / 2, y[i] + h / 2 * k1)
+    k3 <- f(t[i] + h / 2, y[i] + h / 2 * k2)
+    k4 <- f(t[i] + h, y[i] + h * k3)
+    y[i + 1] <- y[i] + h * (k1 + 2 * k2 + 2 * k3 + k4) / 6
+    t[i + 1] <- t[i] + h
+  }
+  data.frame(t = t, y = y)
+}
+
+# Parámetros de la simulación
+t0 <- 0
+tf <- 10
+y0 <- 1/3
+n <- 100
+
+# Obtener aproximaciones numéricas
+aprox_euler <- euler_heun(f, t0, tf, y0, n)
+aprox_rk4 <- rk4(f, t0, tf, y0, n)
+
+# Gráfico comparativo
+sols_2 <- ggplot() +
+  geom_line(data = aprox_euler, aes(x = t, y = y, color = "Euler-Heun")) +
+  geom_line(data = aprox_rk4, aes(x = t, y = y, color = "Runge-Kutta 4")) +
+  stat_function(fun = sol_y, aes(color = "Solución Exacta")) +
+  labs(x = "t", y = "y", color = "Método") +
+  theme_bw()
+
+# Convertir a plotly
+ggplotly(sols_2)
+
+
+```
+ 
+
+4. 
+
+\begin{equation}
+\begin{aligned}
+y'_1&=y_2, &\qquad y_1(0)=1;\\
+y'_2&=-y_1-2e^t+1, &\qquad y_2(0)=0;\\
+y'_3&=-y_1-e^t+1, &\qquad y_3(0)=1;
+\end{aligned}
+\end{equation}
+
+para $0\leq t \leq 2$. Donde las soluciones exactas son:
+
+
+\begin{equation}
+\begin{aligned}
+y_1(t)&=cos\,t+ sen\,t-e^t+1\\
+y_2(t)&=-sen\, t+cos\, t-e^t\\
+y_3(t)&=-sen\,t+cos\,t
+\end{aligned}
+\end{equation}
+
+
+```{r}
+f <- function(t,y){
+  as.matrix(c(y[2],-y[1]-2*exp(t)+1, -y[1]-exp(t)+1))
+}
+
+y1 <- function(t){cos(t)+sin(t)-exp(t)+1}
+y2 <- function(t){-sin(t)+cos(t)-exp(t)}
+y3 <- function(t){-sin(t)+cos(t)}
+
+
+y0 <- as.matrix(c(1,0,1))
+aprox_sis <- ode45(f, 0, 2,y0)
+
+my_colors <- c("y1"="firebrick", "y2"="deeppink", "y3"="gold",
+               "y1_a"="cyan", "y2_a"="dodgerblue3", "y3_a"="blue3")
+
+
+
+
+graf_sis <- ggplot()+
+  geom_function(aes(color="y1"), fun=y1)+
+  geom_function(aes(color="y2"), fun=y2)+
+  geom_function(aes(color="y3"), fun=y3)+
+  geom_line(aes(aprox_sis$t, aprox_sis$y[ , 1], color="y1_a"))+
+  geom_line(aes(aprox_sis$t, aprox_sis$y[ , 2], color="y2_a"))+
+  geom_line(aes(aprox_sis$t, aprox_sis$y[ , 3], color="y3_a"))+
+  theme_bw()
+ggplotly(graf_sis)
+```
+
+
+
+5. 
+
+\begin{equation}
+\begin{aligned}
+y'_1&=3y_1+2y_2-(2t^2+1)e^{2t}, &\qquad y_1(0)=1;\\
+y'_2&=4y_1+y_2+(t^2+2t-4)e^{2t}, &\qquad y_2(0)=1;
+\end{aligned}
+\end{equation}
+
+para $0\leq t \leq 1$. Donde las soluciones exactas son:
+
+
+\begin{equation}
+\begin{aligned}
+y_1(t)&=\frac{1}{3}e^{5t}-\frac{1}{3}e^{-t}+e^{2t}\\
+y_2(t)&=\frac{1}{3}e^{5t}+\frac{2}{3}e^{-t}+t^2e^{2t}
+\end{aligned}
+\end{equation}
+
+
+```{r}
+f <- function(t,y){
+as.matrix(c(3*y[1]+2*y[2]-(2*t^2+1)*exp(2*t), 
+  4*y[1]+y[2]+(t^2+2*t-4)*exp(2*t)))
+}
+
+y0 <- as.matrix(c(1, 1))
+
+y1 <- function(t){(1/3)*exp(5*t)-(1/3)*exp(-t)+exp(2*t)}
+y2 <- function(t){(1/3)*exp(5*t)+(2/3)*exp(-t)+t^2*exp(2*t)}
+
+sol_sis <- ode45(f, 0, 1, y0)
+
+my_colors <- c("y1"="firebrick", "y2"="deeppink", "y1_a"="cyan", "y2_a"="dodgerblue3")
+
+
+graf_sol <- ggplot()+
+  geom_function(aes(color="y1"), fun=y1, xlim=(c(0,1)))+
+  geom_function(aes(color="y2"), fun=y2, xlim=(c(0,1)))+
+  geom_line(aes(sol_sis$t, sol_sis$y[ ,1], color="y1_a"))+
+  geom_line(aes(sol_sis$t, sol_sis$y[ ,2], color="y2_a"))+
+  scale_color_manual(values=my_colors)+
+  theme_bw()
+
+ggplotly(graf_sol)
+
+
+```
+
+
+
+
+
+7. $y''-2y'+y=t\,e^t-t$, $0\leq t\leq 1$, $y(0)=y'(0)=0$.
+
+Solución exacta:
+
+\begin{equation}
+y(t)=\frac{1}{6}t^3e^t-te^t+2e^t-t-2.
+\end{equation}
+
+8. $y'''+2y''-y'-2y=e^t$, $0\leq t\leq 3$, $y(0)=1$, $y'(0)=2$, $y''(0)=0$. 
+
+Solución exacta: 
+
+\begin{equation}
+y(t)=\frac{43}{36}e^t+\frac{1}{4}e^{-t}-\frac{4}{9}e^{-2t}+\frac{1}{6}te^t.
+\end{equation}
+
+
+```{r}
+f <- function(t, u){
+  as.matrix(c(u[2], u[3], exp(t)-2*+u[3]+u[2]+2*u[1]))
+}
+
+u0 <- as.matrix(c(1, 2, 0))
+
+
+y <- function(t){
+  43/36 *exp(t)+1/4 * exp(-t) -4/9*exp(-2*t)+(1/6)*t*exp(t)
+}
+
+sol_sis <- ode45(f, 0, 3, u0)
+
+graf_sol8 <- ggplot()+
+  geom_function(aes(color="y"), fun=y, xlim=c(0,3))+
+  geom_line(aes(sol_sis$t, sol_sis$y[,1], color="y_a"))+
+  scale_color_manual(values=c("y"="#988ABC", "y_a"="#ADE111"))+
+  labs(x="t", y="y", color="Funciones",
+       title="Ejercicio 8")+
+  theme_bw()
+
+ggplotly(graf_sol8)
+
+
+```
+
+
+
+
+```{r}
+tabla_sol <- tibble(t=sol_sis$t, y_a=sol_sis$y[,1], y_real=y(t), error_real=y_real- y_a, error_abs= abs(error_real))
+
+ggplot(tabla_sol)+
+  geom_line(aes(t, error_abs), color="firebrick3")
+
+
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
