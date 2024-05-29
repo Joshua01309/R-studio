@@ -1,0 +1,13 @@
+"0","y1 <- function(t){cos(t)+sin(t)-exp(t)+1}"
+"0","y2 <- function(t){-sin(t)+cos(t)-exp(t)}"
+"0","y3 <- function(t){-sin(t)+cos(t)}"
+"0",""
+"0","sol_graf <- ggplot()+"
+"0","  geom_line(aes(t, y1(t)), color=""azure3"")+"
+"0","  geom_line(aes(t, y2(t)), color=""lightsteelblue"")+"
+"0","  geom_line(aes(t, y3(t)), color=""pink"")+"
+"0","  theme_bw()"
+"0",""
+"0","ggplotly(sol_graf)"
+"2","Error in cos(t) : non-numeric argument to mathematical function
+"

@@ -1,0 +1,12 @@
+"0","y1 <- function(t){2*exp(-4*t)-3*exp(-5*t)}"
+"0","y2 <- function(t){2*exp(-4*t)-2*exp(-5*t)}"
+"0",""
+"0",""
+"0","sol_graf <- ggplot()+"
+"0","  geom_line(aes(t, y1(t)), color=""#5AA354"")+"
+"0","  geom_line(aes(t, y2(t)), color=""#E84746"")+"
+"0","  theme_bw()"
+"0",""
+"0","ggplotly(sol_graf)"
+"2","Error in -4 * t : argumento no-numérico para operador binario
+"

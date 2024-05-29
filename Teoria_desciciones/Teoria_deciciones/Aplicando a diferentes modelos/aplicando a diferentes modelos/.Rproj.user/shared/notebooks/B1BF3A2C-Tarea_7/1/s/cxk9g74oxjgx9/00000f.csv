@@ -1,0 +1,18 @@
+"0","dy <- function(t,y){as.matrix(-7*y[1]+3*y[2], -2*y[1]-2*y[2])}"
+"0","y0 <- as.matrix(c(-1, 0))"
+"0",""
+"0","sol_rg <- ode45(dy, 0, 10, y0, hmax=0.01)"
+"0",""
+"0","sol_sis <- ggplot()+"
+"0","  geom_line(aes(sol_rg$t, sol_rg$y[ ,1]), color=""#4BBAC3"")+"
+"0","  geom_line(aes(sol_rg$t, sol_rg$y[ ,2]), color=""#CC243C"")+"
+"0","  theme_bw()"
+"0","ggplotly(sol_sis)"
+"2","Warning in file(file, ifelse(append, ""a"", ""w"")) :"
+"2","
+ "
+"2"," no fue posible abrir el archivo 'C:/Users/ivanj/OneDrive/Documentos/Github/R-studio/Teoria_desciciones/Teoria_deciciones/Aplicando a diferentes modelos/aplicando a diferentes modelos/.Rproj.user/shared/notebooks/B1BF3A2C-Tarea_7/1/BF21A23E8f60ee14/cxk9g74oxjgx9_t\_rs_html_deps_78104341776f.json': No such file or directory
+"
+"2","Error in file(file, ifelse(append, ""a"", ""w"")) : 
+  no se puede abrir la conexión
+"

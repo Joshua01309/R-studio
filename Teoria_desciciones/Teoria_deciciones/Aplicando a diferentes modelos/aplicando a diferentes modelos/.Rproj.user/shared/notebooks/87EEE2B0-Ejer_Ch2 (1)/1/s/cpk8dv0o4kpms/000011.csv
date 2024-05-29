@@ -1,0 +1,7 @@
+"2","Warning in gzfile(file, ""wb"") :"
+"2","
+ "
+"2"," cannot open compressed file 'C:/Users/ivanj/OneDrive/Documentos/Github/R-studio/Teoria_desciciones/Teoria_deciciones/Aplicando a diferentes modelos/aplicando a diferentes modelos/.Rproj.user/shared/notebooks/87EEE2B0-Ejer_Ch2 (1)/1/s/cpk8dv0o4kpms_t/d31e014f730f4bbfb8a1ebf0cf86fe0d.snapshot', probable reason 'No such file or directory'
+"
+"2","Error in gzfile(file, ""wb"") : no se puede abrir la conexión
+"
