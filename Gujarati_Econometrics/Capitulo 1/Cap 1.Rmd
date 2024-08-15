@@ -1,0 +1,91 @@
+
+
+La tabla 1.3 proporciona datos sobre el índice de precios al consumidor de siete países in-
+dustrializados, cuya base es 1982-1984  100.
+
+a) A partir de estos datos, calcule la tasa de infl ación en cada país.17
+
+
+```{r}
+library(readxl)
+Table1_3 <- read_excel("Github/R-studio/Gujarati_Econometrics/Capitulo 1/Table1_3.xlsx")
+ 
+
+```
+
+
+```{r}
+# Convertir todas las columnas (excepto la primera) a numéricas
+Table1_3[ , 2:ncol(Table1_3)] <- lapply(Table1_3[ , 2:ncol(Table1_3)], as.numeric)
+
+
+```
+
+
+```{r}
+# Crear un nuevo DataFrame para almacenar las tasas de inflación
+inflacion <- Table1_3
+
+# Iterar sobre las columnas (excepto la primera columna de años)
+for (col in 2:ncol(Table1_3)) {
+  # Calcular la tasa de inflación para cada país
+  inflacion[[col]] <- c(NA, diff(Table1_3[[col]]) / Table1_3[[col]][-nrow(Table1_3)] * 100)
+}
+
+# Cambiar los nombres de las columnas para reflejar que son tasas de inflación
+colnames(inflacion) <- colnames(Table1_3)
+
+# Mostrar las tasas de inflación
+inflacion
+
+```
+
+
+b) Grafi que la tasa de infl ación de cada nación en función del tiempo (es decir, asigne el eje
+horizontal al tiempo, y el vertical, a la tasa de infl ación).
+
+```{r}
+# Instalar y cargar el paquete tidyr
+install.packages("tidyr")
+library(tidyr)
+library(ggplot2)
+
+# Convertir los datos al formato largo
+inflacion_long <- pivot_longer(inflacion, 
+                               cols = -YEAR,  # Excluye la columna de años
+                               names_to = "Pais", 
+                               values_to = "inflacion")
+
+head(inflacion_long)
+
+
+ggplot(inflacion_long, aes(x = YEAR, y = inflacion, color = Pais, group = Pais)) +
+  geom_line() + 
+  geom_point() +  # Para resaltar los puntos
+  labs(title = "Tasa de Inflación por País", 
+       x = "Año", 
+       y = "Tasa de Inflación (%)") +
+  theme_minimal()
+
+ggplot(inflacion_long, aes(x = YEAR, y = inflacion, color = Pais, group = Pais)) +
+  geom_line(size = 1.2) +  # Cambia el grosor de las líneas
+  geom_point(size = 2) +   # Cambia el tamaño de los puntos
+  labs(title = "Tasa de Inflación por País", 
+       x = "Año", 
+       y = "Tasa de Inflación (%)") +
+  scale_color_brewer(palette = "Set1") +  # Cambia la paleta de colores
+  theme_minimal() +
+  theme(legend.title = element_blank())  # Oculta el título de la leyenda
+
+
+
+
+
+```
+ 
+
+
+
+
+
+
