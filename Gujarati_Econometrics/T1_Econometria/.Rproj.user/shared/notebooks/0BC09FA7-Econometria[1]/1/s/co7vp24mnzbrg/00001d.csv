@@ -1,0 +1,8 @@
+"0","tabla1 <- read.csv(""archivo.csv"")"
+"2","Warning in file(file, ""rt"") :"
+"2","
+ "
+"2"," no fue posible abrir el archivo 'archivo.csv': No such file or directory
+"
+"2","Error in file(file, ""rt"") : no se puede abrir la conexión
+"

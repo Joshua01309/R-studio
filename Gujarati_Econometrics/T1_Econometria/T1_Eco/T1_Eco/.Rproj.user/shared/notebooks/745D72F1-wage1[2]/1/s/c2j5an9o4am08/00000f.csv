@@ -1,0 +1,13 @@
+"0","n"
+"1","function () 
+"
+"1","{
+"
+"1","    peek_mask()$get_current_group_size()
+"
+"1","}
+"
+"1","<bytecode: 0x000002859e0b9d28>
+"
+"1","<environment: namespace:dplyr>
+"

@@ -1,0 +1,177 @@
+---
+title: "Practica 1: Wage"
+author: "Econometria."
+date: "19 agosto 2024"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(dplyr)
+```
+
+ (1) ¿Que mide la variable wage?
+
+Los salarios promedio
+
+ (2) ¿Que mide la variable educ?
+
+Años de estudio
+
+ (3) ¿Como se obtuvieron estos datos?
+
+Mediante una selección aleatoria  de un estudio anterior
+
+ (4) ¿Cuantas observaciones tiene esta muestra?
+ 
+```{r}
+tabla_1<-read.csv("wage1.csv")
+tabla_1
+
+n <- length(tabla_1$wage)
+```
+ 
+
+(5) Calcula la media de la variable wage.
+
+```{r}
+tabla_2<-select(tabla_1, wage, educ)
+tabla_2
+media_W<-mean(tabla_2$wage)
+media_W
+
+```
+
+(6) Calcula la media de la variable educ. ¿Que significa?
+
+```{r}
+media_educ<-mean(tabla_2$educ)
+media_educ
+```
+
+significa que los encuestados tienen en promedio 12 años de estudio
+
+(7) Calcula los maximos y mınimos de las observaciones para las variables.
+
+```{r}
+max_valores<-sapply(tabla_1, max, na.rm= TRUE)
+min_valores<-sapply(tabla_1, min, na.rm= TRUE)
+
+
+resumen_estadísticas <- data.frame(Max = max_valores, Min = min_valores)
+resumen_estadísticas
+
+
+```
+
+
+(8)
+```{r}
+tabla_2<-rename(tabla_2, X=wage, Y=educ)
+tabla_3<-mutate(tabla_2, x.=(X-mean(X)), y.=(Y-mean(Y)))
+tabla_3<-rename(tabla_3)
+tabla_3
+
+B2<-sum((tabla_3$x.)*(tabla_3$y.))/sum((tabla_3$x.)^(2))
+B2
+B1<-mean(tabla_3$Y)-B2*mean(tabla_3$X)
+B1
+
+y_gorro<-B1+tabla_3$X*B2
+y_gorro
+
+u<-tabla_3$Y-y_gorro
+
+tabla_3<-mutate(tabla_3, y_gorro, u,u2=u^2)
+tabla_3
+
+```
+
+
+(9) Calcula X¯
+
+(10) Calcula Y¯ 
+
+(11) 
+
+```{r}
+X2<-((tabla_3$X)^2)
+sum(X2)
+```
+
+(14) Realiza un diagrama de dispersion de los datos, con wage como variable dependiente y educ como variable independiente
+
+```{r}
+plot(Y~X, data=tabla_3)
+```
+
+
+(15) Considera un modelo lineal wagei = β1 + β2 educi + ui
+
+```{r}
+tabla_4<-select(tabla_1, educ, wage)
+tabla_4<-rename(tabla_4, edX=educ, waY=wage)
+tabla_4
+
+
+
+β2<-sum((tabla_4$edX-mean(tabla_4$edX))*(tabla_4$waY-mean(tabla_4$waY)))/sum((tabla_4$edX-mean(tabla_4$edX))^2)
+β2
+
+β1<-mean(tabla_4$waY)- β2*mean(tabla_4$edX)
+β1
+
+
+```
+
+```{r}
+modelo <- lm(waY ~ edX, data = tabla_4)
+resumen <- summary(modelo)
+resumen
+
+```
+
+(16) Vuelve a realizar diagrama de dispersi´on de los datos, con wage como variable
+dependiente y educ como variable independiente. Esta vez, grafica la l´ınea del
+modelo sobre el diagrama.
+
+
+```{r}
+plot(tabla_4$edX, tabla_4$waY,
+     xlab = "Educación (años)", 
+     ylab = "Salario", 
+     main = "Diagrama de dispersión de Educación vs Salario")
+
+abline(modelo, col = "cyan", lwd = 2)
+
+```
+
+
+
+(17) Verifica si
+
+```{r}
+y_go<-β1+tabla_4$edX*β2
+y_go
+
+u<-tabla_4$waY-y_go
+sum(u)
+
+residuos<-residuals(modelo)
+residuos
+sum(residuos)
+
+```
+
+(18) Verifica si
+
+```{r}
+sum(tabla_4$edX*u)
+```
+
+
+
+

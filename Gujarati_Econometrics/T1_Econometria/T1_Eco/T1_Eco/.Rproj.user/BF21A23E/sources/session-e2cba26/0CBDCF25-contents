@@ -1,0 +1,106 @@
+---
+title: "Practica 1"
+output: html_document
+date: "2024-08-15"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+```{r}
+library(dplyr)
+
+```
+
+(1)	¿Qué mide la variable wage?
+Los salarios promedios
+(2)	¿Qu´e mide la variable educ?
+Años de estudio
+(3)	¿Como se obtuvieron estos datos?
+Mediante una selección random  de un estudio anterior
+(4)¿Cuantas observaciones tiene esta muestra?
+```{r}
+n
+```
+(5)	Calcula la media de la variable wage.
+```{r}
+mw
+```
+(6) Calcula la media de la variable educ. ¿Que significa?
+```{r}
+me
+```
+significa que los encuestados tienen en promedio 12 años de estudio
+
+(7) Calcula los m´aximos y m´ınimos de las observaciones para las variables.
+```{r}
+maw
+miw
+mae
+mie
+```
+(8) Realiza una tabla con Xi, Yi, xi, yi, ˆ ui, ˆ u2
+```{r}
+tabla2 <- select(tabla1, wage, educ)
+tabla2 <- rename(tabla2, X = wage, Y = educ)
+tabla2 <- mutate(tabla2, x = (mean(X))-X)
+tabla2 <- mutate(tabla2, y = (mean(Y))-Y)
+b2 <- ((n*Xm*Ym)-sXY)/((n*X2)-sX2)
+b1 <- Ym-(b2*Xm)
+tabla2 <- mutate(tabla2, u = (Y-b1-(b2*X)))
+tabla2 <- mutate(tabla2, u2 = u^2)
+tabla2
+```
+
+(9) Calcula X
+```{r}
+Xm
+```
+
+(10) Calcula Y
+```{r}
+Ym
+```
+(11) Calcula sumatoria X2
+```{r}
+sum(tabla3$Xp2)
+```
+(12) Crea un diagrama de dispersion de los datos
+```{r}
+tabla1
+```
+
+```{r}
+plot(educ~wage, data = tabla1)
+```
+
+
+
+```{r}
+tabla1 <- read.csv("wage1.csv")
+tabla1
+n <- length(tabla1$wage)
+mw <- mean(tabla1$wage)
+maw <- max(tabla1$wage)
+miw <- min(tabla1$wage)
+me <- mean(tabla1$educ)
+mae <- max(tabla1$educ)
+mie <- min(tabla1$educ)
+```
+
+
+```{r}
+tabla3 <- tabla2
+Xm <- mean(tabla2$X)
+Ym <- mean(tabla2$Y)
+X2 <- Xm^2
+tabla3 <- mutate(tabla3, XY = X*Y)
+tabla3 <- mutate(tabla3, Xp2 = X^2)
+sXY <- sum(tabla3$XY)
+sX2 <- (sum(tabla3$X))^2
+tabla3
+```
+
+
+

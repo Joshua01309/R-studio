@@ -1,0 +1,3 @@
+"0","tabla_4<-select(tabla_1, educ, wage)"
+"0","tabla_4<-rename(tabla_4, edX=educ, waY=wage)"
+"0","tabla_4"
