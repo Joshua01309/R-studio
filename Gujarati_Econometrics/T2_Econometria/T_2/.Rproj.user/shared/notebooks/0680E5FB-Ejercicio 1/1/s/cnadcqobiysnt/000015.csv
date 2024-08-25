@@ -1,0 +1,4 @@
+"0","plot(tabla1$X, u, "
+"0","     xlab = ""años educación"", "
+"0","     ylab = ""perturbación estocastica"","
+"0","     main = ""ui vs Xi"")"

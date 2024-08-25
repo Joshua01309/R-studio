@@ -1,0 +1,191 @@
+---
+title: "Ejercicio 2"
+author: "Josue Ivan Murillo Alba "
+date: "2024-"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(dplyr)
+
+```
+Para esta pr´actica, utiliza los datos de la tabla wage1.
+Considera los mismos datos que en la primera parte, con Yi = wagei
+, Xi = educi
+.
+(1) Como se intertpreta el parametro estimado α.
+
+Este valor representa la intersección de la función de regresión muestral FRM 
+hacia el eje de las ordenadas, en este caso la intersección es negativa (-0.9) el cual 
+el eje representa el salario en este caso un salario negativo no tiene ningun 
+signicado real
+
+(2) Como se intertpreta el parametro estimado βˆ.
+
+Este coeficiente representa la pendiente de la función, es decir que cada que se aumenta un 
+año de ecolaridad el salario incrementa en proporción (0.54)
+
+
+(3) De acuerdo a este modelo lineal, ¿cuanto predice que sera el sueldo (wage),
+en promedio, para una persona con 10 años de educacion?
+
+```{r}
+tabla<-read.csv("wage1.csv")
+
+tabla<-select(tabla, wage, educ)
+
+tabla1<-rename(tabla, Y=wage, X=educ)
+ x.<-(tabla1$X-mean(tabla1$X))
+ y.<-(tabla1$Y-mean(tabla1$Y))
+
+
+B<-sum((x.)*(y.))/sum((x.)^(2))
+B
+a<-mean(tabla1$Y)-B*mean(tabla1$X)
+a
+
+y_gorro<-a+tabla1$X*B
+head(y_gorro)
+
+u<-tabla1$Y-y_gorro
+
+
+```
+
+```{r}
+W_10<-a+B*10
+W_10
+```
+
+(4) De acuerdo a este modelo lineal, ¿cu´anto predice que sera el sueldo (wage),
+en promedio, para una persona con 16 a˜nos de educacion?
+
+```{r}
+W_16<-a+B*16
+W_16
+```
+(5) De acuerdo a este modelo lineal, ¿cuanto predice que aumentara el sueldo
+(wage), en promedio, si una persona aumenta 1 a˜no de educacion?
+
+
+aumenta en proporcion al estimador de la pendiente "B" es decir 0.5413593
+
+(6) De acuerdo a este modelo lineal, ¿cu´anto predice que aumentara el sueldo
+(wage) si una persona aumenta 4 a˜nos de educacion?
+
+```{r}
+W_mas4<-B*4
+W_mas4
+```
+
+(7) Calcula 
+```{r}
+sum((y.)^2)
+```
+
+
+(8) Calcula 
+
+```{r}
+sum((y_gorro)^2)
+```
+(9) Calcula
+
+```{r}
+sum_u2<-sum(u^2)
+```
+(10) Realiza un diagrama de dispersion ˆui vs Xi, con ˆui en el eje vertical.
+
+```{r}
+plot(tabla1$X, u, 
+     xlab = "años educación", 
+     ylab = "perturbación estocastica",
+     main = "ui vs Xi")
+```
+
+(11) Calcula σˆ2
+
+```{r}
+n<-length(tabla1$X)
+
+varianza<-(sum_u2/n-2)
+varianza
+
+
+```
+
+
+(12) Calcula var(βˆ)
+
+```{r}
+sum_x2<-sum((x.)^2)
+var_B<-varianza/sum_x2
+var_B
+
+
+```
+
+(13) Calcula el error est´andar e.e.(βˆ)
+
+```{r}
+eeB<-(var_B)^(0.5)
+eeB
+```
+
+
+(14) Calcula var(ˆα)
+
+```{r}
+
+sum_X<-sum(tabla1$X)
+
+var_a<-(sum_X*varianza)/(n*sum_x2)
+var_a
+```
+
+(15) Calcula e.e(ˆα)
+
+```{r}
+eea<-(var_a)^(0.5)
+eea
+```
+
+
+(16) La covarianza entre βˆ y ˆα est´a dada por cov(ˆα, βˆ) = −Xvar ¯ (βˆ).
+Calcula cov(ˆα, βˆ).
+
+```{r}
+cov_ab<-(-mean(tabla1$X))*var_B
+cov_ab
+```
+(17) Compara el error estandar calculado, con las estimaciones dadas por R en el
+resumen (summary) de estimadores del modelo lineal
+
+```{r}
+modelo <- lm(Y ~ X, data = tabla1)
+resumen <- summary(modelo)
+resumen
+```
+
+diferencia
+```{r}
+dif_eeX<-0.05325-0.04824657
+dif_eeX
+
+dif_eeY<-0.68497-0.1710049
+dif_eeY
+```
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,4 @@
+"0","tabla_2<-rename(tabla_2, Y=wage, X=educ)"
+"0","tabla_3<-mutate(tabla_2, x.=(X-mean(X)), y.=(Y-mean(Y)))"
+"0","tabla_3<-rename(tabla_3)"
+"0","head(tabla_3)"
