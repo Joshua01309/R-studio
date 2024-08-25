@@ -1,7 +1,7 @@
 ---
-title: "Practica 1: Wage"
-author: "Econometria."
-date: "19 agosto 2024"
+title: "Practica 1: Wage-Educ"
+author: "Econometria. Josue Ivan Murillo Alba"
+date: "26 agosto 2024"
 output: html_document
 ---
 
@@ -15,7 +15,7 @@ library(dplyr)
 
  (1) ¿Que mide la variable wage?
 
-Los salarios promedio
+Los salarios de una muestra
 
  (2) ¿Que mide la variable educ?
 
@@ -29,7 +29,7 @@ Mediante una selección aleatoria  de un estudio anterior
  
 ```{r}
 tabla_1<-read.csv("wage1.csv")
-tabla_1
+head(tabla_1)
 
 n <- length(tabla_1$wage)
 ```
@@ -39,7 +39,7 @@ n <- length(tabla_1$wage)
 
 ```{r}
 tabla_2<-select(tabla_1, wage, educ)
-tabla_2
+head(tabla_2)
 media_W<-mean(tabla_2$wage)
 media_W
 
@@ -52,7 +52,7 @@ media_educ<-mean(tabla_2$educ)
 media_educ
 ```
 
-significa que los encuestados tienen en promedio 12 años de estudio
+significa que los encuestados tienen en promedio entre 12 y 13 años de estudio
 
 (7) Calcula los maximos y mınimos de las observaciones para las variables.
 
@@ -62,7 +62,7 @@ min_valores<-sapply(tabla_1, min, na.rm= TRUE)
 
 
 resumen_estadísticas <- data.frame(Max = max_valores, Min = min_valores)
-resumen_estadísticas
+head(resumen_estadísticas)
 
 
 ```
@@ -70,10 +70,10 @@ resumen_estadísticas
 
 (8)
 ```{r}
-tabla_2<-rename(tabla_2, X=wage, Y=educ)
+tabla_2<-rename(tabla_2, Y=wage, X=educ)
 tabla_3<-mutate(tabla_2, x.=(X-mean(X)), y.=(Y-mean(Y)))
 tabla_3<-rename(tabla_3)
-tabla_3
+head(tabla_3)
 
 B2<-sum((tabla_3$x.)*(tabla_3$y.))/sum((tabla_3$x.)^(2))
 B2
@@ -81,19 +81,28 @@ B1<-mean(tabla_3$Y)-B2*mean(tabla_3$X)
 B1
 
 y_gorro<-B1+tabla_3$X*B2
-y_gorro
+head(y_gorro)
 
 u<-tabla_3$Y-y_gorro
 
 tabla_3<-mutate(tabla_3, y_gorro, u,u2=u^2)
-tabla_3
+head(tabla_3)
 
 ```
 
 
 (9) Calcula X¯
+```{r}
+X_media<-mean(tabla_3$X)
+```
+
 
 (10) Calcula Y¯ 
+```{r}
+Y_media<-mean(tabla_3$Y)
+```
+
+
 
 (11) 
 
@@ -101,6 +110,33 @@ tabla_3
 X2<-((tabla_3$X)^2)
 sum(X2)
 ```
+
+```{r}
+Y2<-(tabla_3$Y)^2
+sum(Y2)
+```
+
+
+```{r}
+xy<-(tabla_3$x.)*(tabla_3$y.)
+sum(xy)
+```
+
+```{r}
+x2<-(tabla_3$x.)^2
+sum(x2)
+```
+
+```{r}
+XY<-(tabla_3$X)*(tabla_3$Y)
+sum(XY)
+
+XmasY<-tabla_3$X+tabla_3$Y
+sum(XmasY)
+
+sum(tabla_3$u2)
+```
+
 
 (14) Realiza un diagrama de dispersion de los datos, con wage como variable dependiente y educ como variable independiente
 
@@ -114,8 +150,6 @@ plot(Y~X, data=tabla_3)
 ```{r}
 tabla_4<-select(tabla_1, educ, wage)
 tabla_4<-rename(tabla_4, edX=educ, waY=wage)
-tabla_4
-
 
 
 β2<-sum((tabla_4$edX-mean(tabla_4$edX))*(tabla_4$waY-mean(tabla_4$waY)))/sum((tabla_4$edX-mean(tabla_4$edX))^2)
@@ -155,14 +189,11 @@ abline(modelo, col = "cyan", lwd = 2)
 
 ```{r}
 y_go<-β1+tabla_4$edX*β2
-y_go
+head(y_go)
 
 u<-tabla_4$waY-y_go
 sum(u)
-
-residuos<-residuals(modelo)
-residuos
-sum(residuos)
+round(sum(u))
 
 ```
 
@@ -170,6 +201,8 @@ sum(residuos)
 
 ```{r}
 sum(tabla_4$edX*u)
+round(sum(tabla_4$edX*u))
+
 ```
 
 
