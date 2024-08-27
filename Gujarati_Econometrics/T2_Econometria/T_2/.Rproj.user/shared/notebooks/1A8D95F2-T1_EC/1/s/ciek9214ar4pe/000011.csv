@@ -1,0 +1,6 @@
+"0","max_valores<-sapply(tabla_1, max, na.rm= TRUE)"
+"0","min_valores<-sapply(tabla_1, min, na.rm= TRUE)"
+"0",""
+"0",""
+"0","resumen_estadísticas <- data.frame(Max = max_valores, Min = min_valores)"
+"0","head(resumen_estadísticas)"

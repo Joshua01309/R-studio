@@ -1,0 +1,5 @@
+"0","plot(tabla_4$edX, tabla_4$waY,"
+"0","     xlab = ""Educación (años)"", "
+"0","     ylab = ""Salario"", "
+"0","     main = ""Diagrama de dispersión de Educación vs Salario"","
+"0","     pch=19, col=""red"")  "
