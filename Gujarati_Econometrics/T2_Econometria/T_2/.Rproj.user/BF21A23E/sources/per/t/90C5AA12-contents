@@ -50,23 +50,6 @@ sum_yh2
 ```
 
 
-```{r}
-graficar_funcion <- function(a, b, X) {
-  Y <- a + b * X
-  plot(X, Y, type="b", col="blue", pch=19, xlab="X", ylab="Y", main=paste("Gráfico de Y =", a, "+", b, "X"))
-}
-
-# Valores fijos para a y b
-a <- 2
-b <- 3
-
-# Vector X
-X <- c(294, 89, 99)
-
-# Llamar a la función para graficar
-graficar_funcion(a, b, X)
-
-```
 
 
 
