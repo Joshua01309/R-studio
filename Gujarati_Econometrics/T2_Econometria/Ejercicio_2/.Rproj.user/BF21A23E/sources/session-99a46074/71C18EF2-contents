@@ -1,0 +1,39 @@
+---
+title: "Ejercicio 2- Vote"
+date: "Agosto 2024"
+author: "Josue Murillo"
+output: 
+  html_document:
+    toc: true
+    toc_depth: 1
+    theme: darkly
+---
+
+
+<style>
+body {
+text-align: justify}
+</style>
+
+
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(dplyr)
+```
+
+
+
+```{r}
+tabla<-read.csv('vote1')
+summary("vote1")
+
+
+```
+
+
+
+
+

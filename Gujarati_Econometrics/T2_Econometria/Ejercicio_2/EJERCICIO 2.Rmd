@@ -1,0 +1,70 @@
+---
+title: "Ejercicio 2  26/Ago/24"
+output: html_document
+author: "Oliver Romero"
+date: "2024-08-26"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(dplyr)
+```
+
+
+
+```{r}
+tabla <-read.csv("vote1.csv")
+tabla <-select(tabla,voteA,expendA)
+lm(voteA~expendA,data = tabla)
+#head(tabla)
+```
+(1) C´omo se intertpreta el par´ametro estimado βˆ
+1.
+(2) C´omo se intertpreta el par´ametro estimado βˆ
+2.
+
+
+```{r}
+parametros<- lm(voteA~expendA,data=tabla)
+coeficientes<- coef(parametros)
+b1<-coeficientes[1]
+b2<-coeficientes[2]
+summary(parametros)
+tabla<-rename(tabla,Y=voteA,X=expendA)
+tabla<-mutate(tabla,Yh=43,17+0.0231*X,yh=Yh-mean(Yh),yh2=yh^2)
+
+sum(tabla$yh2)
+head(tabla)
+
+b1
+b2
+```
+$b1=43.17119$
+$b2=0.02360414$
+
+
+(3) De acuerdo a este modelo lineal, ¿cu´anto predice que ser´a el porcentaje de
+voto para el candidato A, en promedio, si hay un gasto de medio mill´on de
+d´olares?
+```{r}
+x<- b1+500*b2
+x
+```
+ 
+Calcula estimador 
+
+```{r}
+tabla1<-mutate(tabla,Yicuadrada=(b1+(b2*voteA))^2)
+tabla1
+```
+
+```{r}
+sum(tabla1$Yicuadrada)
+```
+
+
+
+
