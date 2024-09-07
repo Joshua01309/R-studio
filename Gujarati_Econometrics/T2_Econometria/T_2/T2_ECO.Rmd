@@ -142,8 +142,9 @@ eeB
 ```{r}
 
 sum_X<-sum(tabla1$X)
+sum_X2<-sum((tabla1$X)^2)
 
-var_a<-(sum_X*varianza)/(n*sum_x2)
+var_a<-(sum_X2*varianza)/(n*sum_x2)
 var_a
 ```
 
@@ -176,7 +177,7 @@ diferencia
 dif_eeX<-0.05325-0.04824657
 dif_eeX
 
-dif_eeY<-0.68497-0.1710049
+dif_eeY<-0.68497-0.6206303
 dif_eeY
 ```
 

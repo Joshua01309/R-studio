@@ -1,0 +1,144 @@
+---
+title: "PRÁCTICA 2"
+author: "Oliver Romero"
+date: "2024-08-29"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(dplyr)
+```
+```{r}
+tabla <-read.csv("wage1.csv")
+tabla
+```
+(1) Co ́mo se intertpreta el para ́metro estimado αˆ.
+(2) Co ́mo se intertpreta el para ́metro estimado βˆ.
+
+```{r}
+tabla2 <- rename(tabla,Y=wage,X=educ)
+modelo<- lm(X~Y,tabla2)
+coeficientes<- coef(modelo)
+b1<-coeficientes[1]
+b2<-coeficientes[2]
+b1
+b2
+```
+(3) De acuerdo a este modelo lineal, ¿cu ́anto predice que sera ́ el sueldo (wage), en promedio, para una persona con 10 an ̃os de educaci ́on?
+(4) De acuerdo a este modelo lineal, ¿cu ́anto predice que sera ́ el sueldo (wage), en promedio, para una persona con 16 an ̃os de educaci ́on?
+(5) De acuerdo a este modelo lineal, ¿cua ́nto predice que aumentara ́ el sueldo (wage), en promedio, si una persona aumenta 1 an ̃o de educacio ́n?
+(6) De acuerdo a este modelo lineal, ¿cua ́nto predice que aumentara ́ el sueldo (wage) si una persona aumenta 4 an ̃os de educacio ́n?
+
+
+Para este inciso nos referiremos a los años con la literal "a";
+```{r}
+a10 <- b1+(10*b2)
+a10
+
+a16 <- b1+(16*b2)
+a16
+
+a1 <- b1+(1*b2)
+a1
+
+a4 <- b1+(4*b2)
+a4
+```
+(7) Calcula Pni=1 yi2
+(8) Calcula Pni=1 yˆi2
+(9) Calcula Pni=1 uˆ2i
+
+```{r}
+tabla1 <- select(tabla, wage, educ)
+tabla1 <- rename(tabla1, Y = wage, X = educ)
+tabla1 <- mutate(tabla1, x = (mean(X))-X)
+tabla1 <- mutate(tabla1, x2 = x^2)
+tabla1 <- mutate(tabla1, y = (mean(Y))-Y)
+tabla1 <- mutate(tabla1, y2 = y^2)
+tabla1 <- mutate(tabla1, yi = (b1+(b2*X)))
+tabla1 <- mutate(tabla1, yi2 = yi^2)
+tabla1 <- mutate(tabla1, u = (Y-yi))
+tabla1 <- mutate(tabla1, u2 = u^2)
+
+head(tabla1)
+```
+(10) Realiza un diagrama de dispersio ́n uˆi vs Xi, con uˆi en el eje vertical.
+
+
+```{r}
+plot(u~X,data=tabla1)
+
+```
+Observaciones totales:
+526
+
+(11) Calcula σˆ2
+
+```{r}
+sum(tabla1$u2/524)
+```
+
+
+
+```{r}
+# Cálculo de la varianza residual
+vari <- sum(tabla1$u2) / (n - 2)
+vari
+```
+
+```{r}
+# Varianza del estimador de b2
+varb2 <- vari / sum(tabla1$x2)
+varb2
+```
+
+```{r}
+# Error estándar de b2
+eeb2 <- sqrt(vari) / sqrt(sum(tabla1$x2))
+eeb2
+```
+```{r}
+# Varianza del estimador de b1
+varb1 <- (sum(tabla1$x2) / (n * sum(tabla1$x2))) * vari
+varb1
+```
+
+```{r}
+# Error estándar de b1
+eeb1 <- sqrt(sum(tabla1$x2) / (n * sum(tabla1$x2))) * sqrt(vari)
+eeb1
+
+```
+```{r}
+# Covarianza entre X y b2
+cova <-mean(tabla1$x2) * varb2
+cova
+```
+
+
+___
+
+```{r}
+vari <- (sum(tabla1$u2))/(n-2)
+vari
+
+varb2 <- vari/sum(tabla1$x2)
+varb2
+
+eeb2 <- sqrt(vari)/sqrt(sum(tabla1$x2))
+eeb2
+
+varb1 <- (sum(tabla1$x2)/(n*sum(tabla1$x2)))*vari
+varb1
+
+eeb1 <- sqrt((sum(tabla1$x2)/(n*sum(tabla1$x2))))*sqrt(vari)
+eeb1
+
+cova <- -mean(tabla1$X)*varb2
+cova
+```
+
