@@ -1,0 +1,6 @@
+"0","# Generar el gráfico de dispersión"
+"0","plot(tabla1$X1, tabla1$Y,"
+"0","     xlab = ""PIB per capita en 1980 (USD)"", "
+"0","     ylab = ""Mortalidad infantil"", "
+"0","     main = ""Diagrama de dispersión de PIBCP vs mortalidad infantil"","
+"0","     pch=19, col=""red"")  "

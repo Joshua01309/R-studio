@@ -1,0 +1,121 @@
+---
+title: "Ejercicio 2"
+author: "Jesus Ruiz"
+date: "2024-08-26"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(dplyr)
+```
+
+```{r}
+tabla <- read.csv("vote1.csv")
+tabla <- select(tabla, voteA, expendA)
+head(tabla)
+```
+
+```{r}
+Model <- lm(voteA~expendA, data = tabla)
+Model
+
+summary(Model)
+```
+# (1) Como se interpreta el parametro β1
+Es la cantidad de votos asegurada.
+
+# (2) Como se interpreta el parametro β2
+Es el incremento de los votos por cada mil dolares, es decir un aumento de 2.36% por cada mil dolares.
+
+# (3) De acuerdo a este modelo lineal. Cuanto predice que sera el porcentaje de voto para el candidato A, en promedio, si hay un gasto de medio millon de dolares.
+
+```{r}
+VoteA <- 43.17 + 0.0236*500
+VoteA
+```
+# (4) Calcula Σyi^2
+
+```{r}
+tabla2 <- rename(tabla, Y=voteA, X=expendA)
+
+Ypromedio <- mean(tabla2)
+
+tabla2 <- mutate(tabla2, Yh=43.17 + 0.0236*X, yh= Yh-mean(Yh), yh2=yh^2, y=Y-mean(Y), y2=y^2, u=Y-yh, u2=u^2, x=X-mean(X), x2=x^2, xy=x*y)
+head(tabla2)
+
+sum_yh2 <- sum(tabla2$yh2)
+sum_yh2
+
+R2 <- sum(tabla2$yh2)/sum(tabla2$y2)
+R2
+```
+
+# Calcular R2. Coeficiente de determinación (explicación del modelo)
+
+```{r}
+R2 <- sum(tabla2$yh2)/sum(tabla2$y2)
+R2
+
+R2_otra_forma <- 1-sum(tabla2$u2)/sum(tabla2$y2)
+R2_otra_forma
+
+sum(tabla2$xy)^2/(sum(tabla2$x2)*sum(tabla2$y2))
+```
+
+# Calcular los intervalos de confianza para β1 y β2
+
+```{r}
+Significacia <- .05
+Grados_de_libertdad <- 171
+B1 <- 43.1712 
+B2 <-  0.0236  
+e_eB1 <- 1.755324
+e_eB2 <- 0.004196 
+
+  Area1 <- 1-(Significacia/2)
+valorqt <- qt(Area1,Grados_de_libertdad)
+valorqt
+
+Intervalo_confianza_B2p <- B2+e_eB2*valorqt
+Intervalo_confianza_B2p
+
+Intervalo_confianza_B2n <- B2-e_eB2*valorqt
+Intervalo_confianza_B2n
+
+```
+Calculo de los intervalor de confianza por la funcion confint
+
+```{r}
+Intervalos <- confint(Model)
+Intervalos
+```
+Calcular intervalos de confianza de B1
+
+```{r}
+Significacia <- .05
+Grados_de_libertdad <- 171
+B1 <- 43.1712 
+B2 <-  0.0236  
+e_eB1 <- 1.755324
+e_eB2 <- 0.004196 
+
+  Area2 <- 1-(Significacia/2)
+valorqt <- qt(Area2,Grados_de_libertdad)
+valorqt
+
+Intervalo_confianza_B1p <- B1+e_eB1*valorqt
+Intervalo_confianza_B1p
+
+Intervalo_confianza_B1n <- B1-e_eB1*valorqt
+Intervalo_confianza_B1n
+
+```
+
+
+
+
+
+
+

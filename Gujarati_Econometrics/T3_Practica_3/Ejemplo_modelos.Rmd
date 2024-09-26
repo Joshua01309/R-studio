@@ -1,0 +1,216 @@
+---
+title: "Practica 3"
+author: " Murillo Alba Josué Iván"
+date: "Septiembre 2024"
+output: 
+  html_document:
+    toc: true
+    toc_depth: 1
+    theme: cerulean
+---
+
+
+<style>
+body {
+text-align: justify}
+</style>
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(dplyr)
+
+```
+# 1 {.tabset}
+
+(1) Considera el comportamiento de la mortalidad infantil (MI) en relacion con
+el PIB per capita (PIBpc).
+
+MI = mortalidad infantil, el numero de defunciones de ninos menores de 5
+anos en un ano por cada 1 000 nacidos vivos.
+PIBPC = PIB per capita en 1980 (USD)
+
+```{r echo=FALSE}
+tabla<- read.csv("Practica3.csv")
+head(tabla)
+```
+## (a)
+Pide a R el resumen de los estimadores del modelo de regresion lineal.
+Escribe los estimadores βˆ1 y βˆ2 para el modelo
+MIi = β1 + β2 PIBpci + ui
+
+```{r echo=FALSE}
+tabla0<-select(tabla, MI, PIBPC)
+tabla1<- rename(tabla0, Y=MI, X1=PIBPC)
+head(tabla1)
+
+
+modelo <- lm(Y ~ X1, data = tabla1)
+resumen <- summary(modelo)
+resumen
+```
+
+Los estimadores son B1= 157.42 y B2= -0.003233
+
+```{r}
+B1<- 157.42
+B2<- -0.011364
+```
+
+
+## (b)
+Interpreta los estimadores.
+
+Ahora nuestra función de regresión puede entenderse como MI= 157.42 -0.011364PIBPCi+ui, B2 cada unidad de dolar que 
+se agregue al PIB per capita en 1980 en promedio disminuira el numero de defunciones de ninos menores de 5
+anos en un ano por cada 1 000 nacidos vivos en una proporción de 0.011364 lo cual tiene sentido ya que si se agrega un dolar a la  
+renta de un habitante aumentamos su calidad de vida del padre por tanto mas sano.
+B1 que es el estimador de intercepto podriamos decir que si hacemos 0 la variable explicativa, el numero de defunciones de ninos menores de 5
+anos en un ano por cada 1 000 nacidos seria de 157.42 niños menores de 4 años, aunque debe de tenerse cuidado con esta interpretación ya que si PIBPC=0 claramente aumentaria en gran medida el intercepto hablando en terminos logicos
+
+## (c)
+Calcula los intervalos de confianza para los estimadores, con una confianza
+del 90%, usando las siguientes formulas,
+βˆ1 − tα/2e.e.(βˆ1) ≤ β1 ≤ βˆ1 + tα/2e.e.(βˆ1)
+
+βˆ2 − tα/2e.e.(βˆ2) ≤ β2 ≤ βˆ2 + tα/2e.e.(βˆ2)
+
+donde t es la distribucion t con n − 2 grados de libertad.
+
+```{r echo=FALSE}
+n <- length(tabla1$Y)
+gl<- n-2
+significancia<- .1
+eeB1<- 9.845583
+eeB2<- 0.003233
+
+Area <- 1-(significancia/2)
+Vqt <- qt(Area,gl)
+
+# Para B1
+Intervalo_confianza_B1n <- B1-eeB1*Vqt
+Intervalo_confianza_B1n
+Intervalo_confianza_B1p <- B1+eeB1*Vqt
+Intervalo_confianza_B1p
+
+# Para B2
+
+Intervalo_confianza_B2n <- B2-eeB2*Vqt
+Intervalo_confianza_B2n
+Intervalo_confianza_B2p <- B2+eeB2*Vqt
+Intervalo_confianza_B2p
+
+
+```
+
+Compara tus resultados con los intervalos de confianza que calcula R,
+usando la funcion confint().
+
+```{r echo=FALSE}
+Intervalos_confianza <- confint(modelo, level = .90)
+Intervalos_confianza
+```
+
+
+## (d)
+Realiza el diagrama de dispersion, con la lınea de regresion.
+```{r echo=FALSE}
+# Generar el gráfico de dispersión
+plot(tabla1$X1, tabla1$Y,
+     xlab = "PIB per capita en 1980 (USD)", 
+     ylab = "Mortalidad infantil", 
+     main = "Diagrama de dispersión de PIBCP vs mortalidad infantil",
+     pch=19, col="red")  
+
+
+graficar_funcion <- function(B1, B2, X) {
+  Y <- B1 + B2 * X
+  lines(X, Y, type="l", col="blue", lwd=2)  
+}
+
+X <- tabla1$X1
+graficar_funcion(B1, B2, X)  # Llamar a la función con B1 y B2 definidos
+
+
+```
+
+
+## (e)
+Determina si el PIBpc ejerce un impacto negativo o positivo sobre la MI. Da una explicaci´on de por qu´e era de esperarse este resultado.
+
+Si tiene un impacto negativo PIBPC sobre MI, puesto que cuanto mayor sea la calidad de vida de una persona mucha mas salud y mejores condiciones opitimas tendra para procrear, asi el niño nacera fuerte y sano reduciendo asi la tasa de mortalidad infantil
+
+## (f)
+Escribe el coeficiente de determinacion R2 del modelo.
+
+
+```{r echo=FALSE}
+R<- 0.1662
+```
+
+El valor de R2 es aproximadamente 0.17 significa que casi 17% de la variación
+en la mortalidad infantil se explica mediante el PIBPC, lo cual es un  porcentaje pequeño
+si se considera que el valor máximo que puede tener R2
+es 1.
+
+
+# 2 {.tabset}
+
+Considera ahora tambien como variable independiente, el alfabetismo femenino,
+medido por la tasa de alfabetizacion de las mujeres (TAM). A priori, se espera que la TAM tambien ejerza un impacto negativo en la MI. Cuando se introducen ambas variables en el modelo, el modelo es:
+MIi = β1 + β2 *PIBpci + β3*TAMi + ui
+
+Ten en cuenta que la MI es el n´umero de muertes de ninos menores de 5
+anos por cada 1 000 nacidos vivos, el PIBPC es el PIB per capita en 1980
+(USD) y la TAM se mide en porcentaje. La muestra se realizo en 64 paıses.
+
+
+## (a) 
+Pide a R el resumen de los estimadores del modelo de regresion lineal.
+Comenta si los signos de los estimadores de los coeficientes son los esperados.
+
+```{r}
+tabla00<-select(tabla, MI, TAM, PIBPC)
+tabla2<- rename(tabla00, Y=MI, X1=PIBPC, X2=TAM)
+head(tabla2)
+```
+
+```{r}
+modelo2 <- lm(Y ~ X1 + X2, data = tabla2)
+summary(modelo2)
+```
+Los estimadores para B2 y B3 calculados en este nuevo modelo son negativos como se esperaba que ejerciera un impacto negativo en MI
+
+## (b)
+Escribe los estimadores num´ericos de βˆ1, βˆ2, βˆ3 para el modelo.
+
+```{r}
+B1<-263.641586
+B2<--0.005647
+B3<--2.231586
+```
+
+## (c) 
+Interpreta los valores numericos de los estimadores de acuerdo a este
+modelo.
+
+El modelo nos dice que que por cada aumento en una unidad de USD el numero de muertes de ninos menores de 5
+anos por cada 1 000 nacidos vivos se reduce en promedio en una proporcion de 0.005647 (B2) dejando constante los demas terminos, por cada punto porcentual que aumente la alfabetización de la mujer MI disminuye en promedio en una proporción de 2.231586 (B3) si se dejan constante los demas terminos, para B1 el numero nos dice que si los valores de las variables explicativas son 0 MI sera alrededor de 264 
+
+
+## (d) 
+Manteniendo constante P IBpc, ¿cu´anto tendr´ıa que aumentar T AM para
+tener una reducci´on de una muerte de un ni˜no menor de 5 a˜nos por cada
+1 000 nacidos vivos predichos?
+
+
+
+
+
+
+
+
+
