@@ -1,3 +1,0 @@
-"0","tabla00<-select(tabla, MI, TAM, PIBPC)"
-"0","tabla2<- rename(tabla00, Y=MI, X1=PIBPC, X2=TAM)"
-"0","head(tabla2)"
