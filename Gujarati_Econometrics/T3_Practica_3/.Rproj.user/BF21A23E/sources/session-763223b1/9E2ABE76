@@ -3,7 +3,7 @@
     "path": "~/Github/R-studio/Gujarati_Econometrics/T3_Practica_3/Ejemplo_modelos.Rmd",
     "project_path": "Ejemplo_modelos.Rmd",
     "type": "r_markdown",
-    "hash": "55710891",
+    "hash": "3726154286",
     "contents": "",
     "dirty": false,
     "created": 1727313222252.0,
@@ -12,16 +12,16 @@
     "properties": {
         "source_window_id": "",
         "Source": "Source",
-        "cursorPosition": "35,5",
-        "scrollLine": "26",
+        "cursorPosition": "229,3",
+        "scrollLine": "227",
         "last_setup_crc32": "763223b1bb338d19"
     },
     "folds": "",
-    "lastKnownWriteTime": 1727410988,
+    "lastKnownWriteTime": 1727569656,
     "encoding": "UTF-8",
     "collab_server": "",
     "source_window": "",
-    "last_content_update": 1727410988721,
+    "last_content_update": 1727569656136,
     "read_only": false,
     "read_only_alternatives": []
 }

@@ -6,7 +6,7 @@ output:
   html_document:
     toc: true
     toc_depth: 1
-    theme: cerulean
+    theme: journal
 ---
 
 
@@ -53,7 +53,7 @@ resumen <- summary(modelo)
 resumen
 ```
 
-Los estimadores son B1= 157.42 y B2= -0.003233
+Los estimadores son B1= 157.42 y B2= -0.011364
 
 ```{r}
 B1<- 157.42
@@ -64,12 +64,12 @@ B2<- -0.011364
 ## (b)
 Interpreta los estimadores.
 
-Ahora nuestra función de regresión puede entenderse como MI= 157.42 -0.011364PIBPCi+ui, B2 cada unidad de dolar que 
+Ahora nuestra función de regresión puede entenderse como MI= 157.42 -0.011364PIBPCi+ui, si dejamos todo lo demas constante en B2 cada unidad de dolar que 
 se agregue al PIB per capita en 1980 en promedio disminuira el numero de defunciones de ninos menores de 5
-anos en un ano por cada 1 000 nacidos vivos en una proporción de 0.011364 lo cual tiene sentido ya que si se agrega un dolar a la  
+anos en un ano por cada 1 000 nacidos vivos en promedio de 0.011364 lo cual tiene sentido ya que si se agrega un dolar a la  
 renta de un habitante aumentamos su calidad de vida del padre por tanto mas sano.
 B1 que es el estimador de intercepto podriamos decir que si hacemos 0 la variable explicativa, el numero de defunciones de ninos menores de 5
-anos en un ano por cada 1 000 nacidos seria de 157.42 niños menores de 4 años, aunque debe de tenerse cuidado con esta interpretación ya que si PIBPC=0 claramente aumentaria en gran medida el intercepto hablando en terminos logicos
+anos en un ano por cada 1 000 nacidos seria aproximadamente de 157.42 niños menores de 4 años, aunque debe de tenerse cuidado con esta interpretación ya que si PIBPC=0 claramente aumentaria en gran medida el intercepto hablando en terminos logicos
 
 ## (c)
 Calcula los intervalos de confianza para los estimadores, con una confianza
@@ -227,7 +227,8 @@ MI_ejem<-B1.+B2.*PIB_eJem+B3.*TAM_ejem
 ```
 
 
-(f) Suponga que un paıs A tiene un PIB per capita de 3870 USD, y una tasa
+## (f) 
+Suponga que un paıs A tiene un PIB per capita de 3870 USD, y una tasa
 de alfabetizacion de mujeres del 84%. Por otro lado, un paıs B tiene un
 PIB per capita de 1100 USD, y una tasa de alfabetizacion de mujeres del
 65% ¿Cual es la diferencia entre B y A en muertes de ninos menores de
