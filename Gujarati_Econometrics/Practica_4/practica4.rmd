@@ -1,80 +1,333 @@
+
 ---
-title: "Ejercicios regresion multiple"
-author: "Jesus Ruiz"
-date: "2024-09-26"
-output: html_document
+title: "Practica 4"
+author: " Murillo Alba Josué Iván"
+date: "Octubre 2024"
+output: 
+  html_document:
+    toc: true
+    toc_depth: 1
+    theme: journal
 ---
+
+
+<style>
+body {
+text-align: justify}
+</style>
+
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r}
 library(dplyr)
+```
+
+```{r}
+tabla<- read.csv("MEAP93.csv")
+head(tabla)
+```
+
+Considere el modelo
+math10i = β1 + β2totcompi + β3staffi + β4enrolli + ui
+
+```{r}
+tabla0<-select(tabla, math10, totcomp, staff, enroll)
+tabla1<- rename(tabla0, Y=math10, X1=totcomp, X2=staff, X3=enroll)
+head(tabla1)
+```
+
+```{r}
+modelo<-lm(Y~X1+X2+X3, data = tabla1)
+resumen<- summary(modelo)
+resumen
+```
+# a Estimadores {.tabset}
+## i)
+Escriba la ecuacion con los estimadores de los coeficientes y sus errores estandar.
+
+```{r}
+#ESTIMADORES
+B1<-2.2740209
+B2<-0.0004586
+B3<-0.0479199
+B4<--0.0001976 
+## ERRORES ESTANDAR
+ee1<- 6.1137938
+ee2<-0.0001004
+ee3<-0.0398140 
+ee4<-0.0002152
 
 ```
+
+math10i = 2.2740209 + 0.0004586totcompi + 0.0479199staffi  -0.0001976 enrolli + ui
+          (6.1137938)   (0.0001004)           (0.0398140)           (0.0002152)
+          
+          
+## ii)
+Interprete cada uno de los estimadores.
+B1(2.2740209) nos dice de manera mecanica que si las demas variables son equivalentes a un valor de cero el porcentaje de estudiantes que obtienen una puntuacion aprobatoria en la prueba estandarizada de matematicas del decimo grado es alrededor de 2.3, B2 (0.0004586)
+dejando las demas variables de manera constante si agregamos un dolar al año a las compensaciones y beneficios promedio para el personal de la escuela en promedio las puntuaciones aprobatorias en la prueba estandarizada de matematicas del decimo grado incrementan 0.0004586 puntos porcentuales, B3 (0.0398140) si dejamos las demas variables de manera constante e incrementamos 1 persona por cada 1000 estudiantes a la escuela en promedio las puntuaciones aprobatorias se incrementan 0.0479199 puntos porcentuales, B4(0.0002152) dejando las demas variables de manera constante si se incribe un estudiante mas a la escuela el numero de aprobacion de la prueba disminuye en promedio 0.0001976 puntos porcentuales
+
+
+## iii)
+Si una escuela cuenta con 1148 estudiantes inscritos, cuenta con 93 empleados
+como personal y el total de compensaciones y beneficios promedio para el
+personal de la escuela es de 36 512 dolares anuales ¿cual es el porcentaje
+promedio esperado de estudiantes que obtienen una puntuacion aprobatoria
+en la prueba estandarizada de matematicas del decimo grado, segun el modelo?
+
+```{r}
+math1<-B1+B2*(36512)+B3*(93)+B4*(1148)
+math1
+```
+
+## iv)
+Calcule el promedio del porcentaje de estudiantes que obtienen una puntuacion aprobatoria en la prueba estandarizada de matematicas del decimo
+grado de todas las escuelas.
+
+```{r}
+Y_mean<-mean(tabla1$Y)
+Y_mean
+```
+
+## v)
+Cuantos estudiantes inscritos tiene la escuela con mayor canitdad de estudiantes inscritos?
+
+
+```{r}
+max_enroll<-max(tabla1$X3)
+max_enroll
+
+```
+
+## vi)
+Cuantos estudiantes inscritos tiene la escuela con menor canitdad de estudiantes inscritos?
+```{r}
+min_enroll<-min(tabla1$X3)
+min_enroll
+```
+## vii)
+Discuta el signo y la magnitud del coeficiente estimado para staff en este
+modelo.
+
+en la función de la regresión podemos notar que la variable explicativa staff tiene una relación positiva con la variable dependiente math, es decir que cuanto mas aumente el personal de la escuela si dejamos todo lo demas constante umentara en promedio 0.0479199 puntos porcentuales la aprovación de prueba de examen de matematicas sin embargo podemos argumentar que el aumento de 0.0479199 puntos porcentuales parece pequeño. Esto sugiere que el impacto del aumento del personal en los resultados de matemáticas es bajo, al menos en el contexto de este modelo.
+
+No se especifica qué tipo de personal está incluido en "staff" (maestros, administrativos, asistentes). Si el personal adicional no está relacionado directamente con la enseñanza de matemáticas, su impacto real en el rendimiento de los estudiantes podría ser limitado.
+
+## viii)
+Discuta el signo y la magnitud del coeficiente estimado para enroll en este
+modelo
+
+En este modelo de regresión, el coeficiente estimado para la variable "enroll" (número de estudiantes inscritos) es -0.0001976. Este coeficiente indica que, manteniendo constantes las otras variables, por cada estudiante adicional inscrito en la escuela, el porcentaje de estudiantes que obtienen una puntuación aprobatoria en la prueba estandarizada de matemáticas del décimo grado (math10) disminuye, en promedio, en 0.0001976 puntos porcentuales.
+
+El signo negativo del coeficiente sugiere una relación inversa entre el tamaño de la escuela (enroll) y el desempeño en matemáticas. En otras palabras, a medida que aumenta el número de estudiantes inscritos, el porcentaje de estudiantes que aprueban tiende a disminuir. Esta relación podría tener sentido en contextos donde un mayor tamaño escolar está asociado con menos atención individual a los estudiantes, mayores dificultades logísticas o sobrecarga en los recursos de la escuela, lo que puede afectar negativamente el desempeño académico.
+
+El valor absoluto del coeficiente (-0.0001976) es pequeño, lo que indica que el efecto de un estudiante adicional sobre el porcentaje de aprobación en matemáticas es mínimo. Por ejemplo, si la escuela inscribiera 1000 estudiantes más, la tasa de aprobación disminuiría en aproximadamente 0.1976 puntos porcentuales. Aunque este efecto es pequeño a nivel individual, puede acumularse si el tamaño de la escuela aumenta considerablemente.
+
+
+## ix) 
+Manteniendo constantes staff y totcomp ¿cuanto tiene que aumentar enroll
+para tener una reduccion de 30 porciento de aprobacion en la prueba estandarizada de matematicas (math10)?
+
+
+```{r}
+tasa_cambioMATH<-30
+tasa_cambioENRROLL<-tasa_cambioMATH/abs(B4)
+tasa_cambioENRROLL
+
+```
+
+## x)
+Calcule R2adj 
+
+```{r}
+#calculo de u^2i estimada
+u_estimada<- (tabla1$Y-B1-B2*tabla1$X1-B3*tabla1$X2-B4*tabla1$X3)
+u2_estimada<-(u_estimada)^(2)
+sum_u2<-sum(u2_estimada)
+
+yi<-(tabla1$Y-mean(tabla1$Y))
+
+sum_yi2<-sum(yi^(2))
+
+R2<-1-(sum_u2/sum_yi2)
+R2
+k<-4
+n<-length(tabla1$Y)
+
+R2adj<-1-((sum_u2)*(n-1))/((sum_yi2)*(n-k))
+R2adj
+```
+
+## xi)
+ Suponga que una escuela A cuenta con 1572 estudiantes inscritos, cuenta
+con 82 empleados como personal y el total de compensaciones y beneficios
+promedio para el personal de la escuela es de 46 484 dolares anuales. Una
+escuela B cuenta con 2496 estudiantes inscritos, cuenta con 152 empleados
+como personal y el total de compensaciones y beneficios promedio para el
+personal de la escuela es de 66 321 dolares anuales ¿Cual es la diferencia
+entre B y A en porcentaje promedio esperado de estudiantes que obtienen
+una puntuacion aprobatoria en la prueba estandarizada de matematicas del
+decimo grado, segun el modelo?
+
+```{r}
+#Escuela A
+EsA<-B1+B2*(46484)+B3*(82)+B4*(1572)
+#Escuala B
+EsB<-B1+B2*(66321)+B3*(152)+B4*(2496)
+
+difAB<-abs(EsA-EsB)
+difAB
+
+```
+
+# b)  Inferencia  {.tabset}
+
+## (a) 
+Calcule un intervalo de confianza para los estimadores. Utilice una confianza del 95%.
+
+```{r}
+gl4<-n-k
+significancia95<- .05
+
+Area95 <- 1-(significancia95/2)
+Vqt95 <- qt(Area95,gl4)
+Vqt95
+
+# Para B1
+InConB1n <- B1-ee1*Vqt95
+InConB1n 
+InConB1p <- B1+ee1*Vqt95
+InConB1p
+
+# Para B2
+
+InConB2n <- B2-ee2*Vqt95
+InConB2n 
+InConB2p <- B2+ee2*Vqt95
+InConB2p
+
+# Para B3
+InConB3n <- B3-ee3*Vqt95
+InConB3n 
+InConB3p <- B3+ee3*Vqt95
+InConB3p
+
+# Para B4
+InConB4n <- B4-ee4*Vqt95
+InConB4n 
+InConB4p <- B4+ee4*Vqt95
+InConB4p
+
+
+
+```
+
+```{r}
+InCon95 <- confint(modelo, level = .95)
+InCon95
+```
+
+## (b) 
+Calcule el valor t de los estimadores de los coeficientes y comparelo con el valor que da el resumen de R.
+
+```{r}
+
+t1<-B1/ee1
+t1
+t2<-B2/ee2
+t2
+t3<-B3/ee3
+t3
+t4<-B4/ee4
+t4
+
+```
+
+```{r}
+coeficientes<-resumen$coefficients
+coeficientes
+
+```
+## (c) 
+Realice la prueba de hipotesis de dos maneras distintas 
+a) Usando el estadıstico t.
+
+
+```{r}
+t1_estadistico1 <- ifelse(abs(t1) > Vqt95, "H1 (rechazar H0)", "H0 (no rechazar H0)")
+t1_estadistico1
+t2_estadistico <- ifelse(abs(t2) > Vqt95, "H1 (rechazar H0)", "H0 (no rechazar H0)")
+t2_estadistico
+t3_estadistico <- ifelse(abs(t3) > Vqt95, "H1 (rechazar H0)", "H0 (no rechazar H0)")
+t3_estadistico
+t4_estadistico <- ifelse(abs(t4) > Vqt95, "H1 (rechazar H0)", "H0 (no rechazar H0)")
+t4_estadistico
+```
+
+
+
+b) Usando el valor p
+
+
+H0 : βj = 0
+H1 : βj ̸= 0
+para cada j, 1 ≤ j ≤ 4. Utilice una confianza del 95%
 
 
 Valor pt
 
 ```{r}
-valorqt <- qt(.975, 718)
-valorqt
-
-
-valorpt <- pt(1.963273,718)
+valorpt <- pt(Vqt95,gl4)
 valorpt
+
+pt1 <- (1-pt(abs(t1), gl4))*2
+pt1
+pt2 <- (1-pt(abs(t2), gl4))*2
+pt2
+pt3 <- (1-pt(abs(t3), gl4))*2
+pt3
+pt4 <- (1-pt(abs(t4), gl4))*2
+pt4
+
 ```
 
-Hacer la prueba de hipotesis para B2
-
-1. Considere el siguiente modelo sobre trabajadores:
-educi = 10.36 − 0.094sibsi + 0.131meduci + 0.210 f educi + ui
-(0.35850) (0.03447) (0.03269) (0.02747)
-n = 722, R
-2 = .214
 
 ```{r}
-B1 <- 10.36
-  B2 <- -0.094
-  B3 <- 0.131
-  B4 <- 0.210
-  n <- 722  
-  k <- 4
-  R2 <- .214
-  
-  e_eB1 <- 0.35850
-  e_eB2 <- 0.03447
-e_eB3 <- 0.03269
-e_eB4 <- 0.02747
-  
-  Grados_libertad <- n-k
-  
-```
+pt1_estadistico <- ifelse(pt1 < 0.05, "H1 (rechazar H0)", "H0 (no rechazar H0)")
+pt1_estadistico
 
+pt2_estadistico <- ifelse(pt2 < 0.05, "H1 (rechazar H0)", "H0 (no rechazar H0)")
+pt2_estadistico
 
+pt3_estadistico <- ifelse(pt3 < 0.05, "H1 (rechazar H0)", "H0 (no rechazar H0)")
+pt3_estadistico
 
-Hacer la prueba de hipotesis para B2
-
-```{r}
-t_estadistico_B2 <- B2/e_eB2
-t_estadistico_B2
-
-Absoluto_t <- -abs(t_estadistico_B2)
-Absoluto_t
-```
-Valor pt
-
-```{r}
-Valor_pt_B2 <- pt(Absoluto_t, Grados_libertad)*2
-Valor_pt_B2
+pt4_estadistico <- ifelse(pt4 < 0.05, "H1 (rechazar H0)", "H0 (no rechazar H0)")
+pt4_estadistico
 
 
 ```
-Que hipotesis usar
 
-```{r}
-resultados <- ifelse(Valor_pt_B2 > 0.05, "H0", "H1(evidencia para rechazar H0)")
+¿Que conclusiones obtiene de cada prueba de hipotesis?
 
-print(resultados)
-```
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
