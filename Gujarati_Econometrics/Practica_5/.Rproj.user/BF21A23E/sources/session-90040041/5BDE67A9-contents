@@ -1,0 +1,607 @@
+
+---
+title: "Practica 5"
+author: " Murillo Alba Josué Iván"
+date: "Octubre 2024"
+output: 
+  html_document:
+    toc: true
+    toc_depth: 1
+    theme: journal
+---
+
+
+<style>
+body {
+text-align: justify}
+</style>
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r}
+library(dplyr)
+```
+
+```{r}
+tabla<- read.csv("return.csv")
+head(tabla)
+```
+
+(1) El analisis de regresion puede emplearse para probar si el mercado emplea de
+manera eficiente la informacion sobre valuacion de acciones. En concreto, sea
+*return el rendimiento total de conservar una accion de una empresa durante
+el periodo de cuatro anos que va desde fines de 1990 hasta fines de 1994.
+La hipotesis de los mercados eficientes dice que estos rendimientos no deben
+estar relacionados de manera sistematica con la informacion conocida en 1990.
+Si las caracterısticas conocidas de una empresa al principio del periodo ayudaran a predecir los rendimientos de las acciones, entonces esta informacion podrıa usarse para elegir las acciones.
+Sea 
+*dkr el cociente de deuda sobre capital de una empresa,
+*eps las ganancias por accion, 
+*netinc el ingreso neto y 
+*salary la compensacion total del director
+general. 
+Considera el siguiente modelo:
+returni = β1 + β2dkri + β3epsi + β4netinci + β5salaryi + ui
+
+# RETURN {.tabset}
+
+## a
+
+Indica que significa cada una de las variables y que unidades tiene.
+
+```{r}
+tabla0<-select(tabla,return, dkr, eps, netinc, salary )
+tabla1<-rename(tabla0,Y=return, X2=dkr, X3=eps, X4=netinc, X5=salary)
+head(tabla1)
+```
+
+Y (return):
+Significado: El rendimiento total de la acción de la empresa durante el periodo (de fines de 1990 a fines de 1994).
+Unidades: Expresado en porcentaje (%), que representa el rendimiento acumulado o el retorno de la acción durante ese periodo.
+
+X2 (dkr):
+Significado: Cociente de deuda sobre capital (Debt-to-Equity Ratio) de la empresa al inicio del periodo.
+Unidades: Es un cociente, por lo que no tiene unidades específicas, pero expresa la proporción entre la deuda total y el capital de los accionistas. Un valor alto indica mayor apalancamiento financiero.
+
+X3 (eps):
+Significado: Ganancias por acción (Earnings per Share - EPS) de la empresa.
+Unidades: Generalmente expresado en la moneda de la empresa (por ejemplo, dólares o pesos por acción). Representa la porción de los beneficios de la empresa atribuible a cada acción en circulación.
+
+X4 (netinc):
+Significado: Ingreso neto (Net Income) de la empresa al inicio del periodo.
+Unidades: Expresado en la moneda local (por ejemplo, millones de dólares o millones de pesos). Representa las ganancias totales de la empresa después de deducir todos los costos e impuestos.
+
+X5 (salary):
+Significado: Compensación total del director general (CEO compensation) de la empresa.
+Unidades: Expresado en la moneda local (por ejemplo, en dólares o pesos). Representa la compensación total, que puede incluir salario base, bonos, acciones, y otros beneficios.
+
+
+## b
+¿Que signos consideras que tendrian β2, β3, β4 y β5? Justifica tu respuesta.
+
+β2 (dkr - Cociente de deuda sobre capital):
+
+Signo esperado: Negativo (β2 < 0).
+Justificación: Un mayor cociente de deuda sobre capital (dkr) generalmente indica que una empresa está más apalancada, lo que conlleva un mayor riesgo financiero. Esto podría generar un efecto negativo en el rendimiento de las acciones, ya que un alto nivel de deuda aumenta el riesgo de quiebra o dificultades financieras. Los inversionistas suelen ser más cautelosos ante empresas con altos niveles de endeudamiento, lo que podría reducir el retorno esperado.
+β3 (eps - Ganancias por acción):
+
+Signo esperado: Positivo (β3 > 0).
+Justificación: Un mayor EPS indica que la empresa está generando más beneficios por acción, lo que suele ser visto como una señal de buena salud financiera. Esto normalmente lleva a un mayor rendimiento de las acciones, ya que los inversionistas valoran más a las empresas con alta rentabilidad por acción. Un incremento en el EPS puede traducirse en una mayor demanda por las acciones, aumentando su valor.
+β4 (netinc - Ingreso neto):
+
+Signo esperado: Positivo (β4 > 0).
+Justificación: Un ingreso neto mayor refleja que la empresa está generando más ganancias después de deducir todos los costos e impuestos. Esto generalmente se asocia con un mejor desempeño de la empresa, lo que podría atraer a los inversionistas y aumentar el rendimiento de sus acciones. Un mayor ingreso neto suele ser un indicador de estabilidad financiera y éxito operativo, lo que tiende a impactar positivamente en los rendimientos.
+β5 (salary - Compensación del director general):
+
+Signo esperado: Ambiguo.
+Justificación: El efecto de la compensación del director general (salary) sobre el rendimiento de las acciones puede ser más complicado. Si la compensación está alineada con el rendimiento de la empresa, un β5 positivo podría significar que una mayor compensación incentiva al director general a mejorar el desempeño de la empresa, lo que generaría mayores rendimientos para los accionistas. Sin embargo, si la compensación es excesiva o no está relacionada con el rendimiento de la empresa, un β5 negativo podría sugerir que los altos salarios del CEO no están generando un retorno proporcional para los inversionistas, lo que podría resultar en un menor rendimiento.
+
+## c 
+Calcula los estimadores de los coeficientes para el modelo, utilizando R.
+Interpreta los estimadores.
+
+
+```{r}
+modelo<-lm(Y~X2+X3+X4+X5, data=tabla1)
+resumen<-summary(modelo)
+resumen
+```
+
+Intercepto (-14.370216):
+El intercepto indica que, cuando todas las demás variables independientes (dkr, eps, netinc, y salary) son cero, el rendimiento de las acciones es de aproximadamente -14.37. En este contexto, aunque es poco probable que todas las variables sean cero, el intercepto establece una base para el rendimiento en ausencia de los otros factores.
+
+X2 (dkr - Cociente de deuda sobre capital, coeficiente = 0.320544):
+El coeficiente de 0.320544 sugiere que, manteniendo las demás variables constantes, un aumento unitario en el cociente de deuda sobre capital está asociado con un aumento de aproximadamente 0.32 unidades en el rendimiento de las acciones.
+
+X3 (eps - Ganancias por acción, coeficiente = 0.042699):
+El coeficiente de 0.042699 indica que un aumento unitario en las ganancias por acción está asociado con un aumento de aproximadamente 0.043 unidades en el rendimiento de las acciones.
+
+X4 (netinc - Ingreso neto, coeficiente = -0.005109):
+El coeficiente negativo de -0.005109 indica que un aumento unitario en el ingreso neto está asociado con una disminución de aproximadamente 0.005 unidades en el rendimiento de las acciones.
+
+X5 (salary - Compensación del director general, coeficiente = 0.003499):
+El coeficiente positivo de 0.003499 sugiere que un aumento unitario en la compensación del director general está asociado con un aumento de aproximadamente 0.0035 unidades en el rendimiento de las acciones
+
+
+
+## d
+Calcula los intervalos de confianza para los estimadores.
+(i) Utilizando la formula (y los errores est´andar dados por el summary
+de R).
+
+```{r}
+B1<--14.370216
+B2<-0.320544
+B3<-0.042699 
+B4<--0.005109
+B5<-0.003499
+
+ee1<-6.893616 
+ee2<-0.200911
+ee3<-0.078138
+ee4<-0.004675
+ee5<-0.002194
+
+
+n<-length(tabla1$Y)
+k<-5
+gl5<-n-k
+significancia95<- .05
+
+Area95 <- 1-(significancia95/2)
+Vqt95 <- qt(Area95,gl5)
+Vqt95
+
+# Para B1
+InConB1n <- B1-ee1*Vqt95
+InConB1n 
+InConB1p <- B1+ee1*Vqt95
+InConB1p
+
+# Para B2
+
+InConB2n <- B2-ee2*Vqt95
+InConB2n 
+InConB2p <- B2+ee2*Vqt95
+InConB2p
+
+# Para B3
+InConB3n <- B3-ee3*Vqt95
+InConB3n 
+InConB3p <- B3+ee3*Vqt95
+InConB3p
+
+# Para B4
+InConB4n <- B4-ee4*Vqt95
+InConB4n 
+InConB4p <- B4+ee4*Vqt95
+InConB4p
+
+# Para B5
+InConB5n <- B5-ee5*Vqt95
+InConB5n 
+InConB5p <- B5+ee5*Vqt95
+InConB5p
+```
+
+(ii) Utilizando la funcion confint().
+
+```{r}
+InCon95 <- confint(modelo, level = .95)
+InCon95
+```
+
+
+
+
+
+## e
+Pruebe si al nivel de significancia de 5% las variables explicativas son
+conjuntamente significativas.
+Establezca la hipotesis nula y la alternativa.
+
+Hipótesis nula (H₀): Todas las variables explicativas tienen coeficientes iguales a cero, es decir, no tienen efecto significativo sobre la variable dependiente (el rendimiento). Formalmente:
+H0:B1=B2=B3=B4=B5=0
+
+Hipótesis alternativa (H₁): Al menos una de las variables explicativas tiene un coeficiente diferente de cero, es decir, al menos una variable tiene un efecto significativo sobre la variable dependiente:
+H1:B1 no igual 0, B2 no igual 0, B3 no igual 0, B4 no igual 0, B5 no igual 0
+
+(i) Calcula el estadıstico F y realiza la prueba de hipotesis.
+
+```{r}
+#calculo de u^2i estimada
+u_estimada<- (tabla1$Y-B1-B2*tabla1$X2-B3*tabla1$X3-B4*tabla1$X4-B5*tabla1$X5)
+u2_estimada<-(u_estimada)^(2)
+sum_u2<-sum(u2_estimada)
+
+yi<-(tabla1$Y-mean(tabla1$Y))
+
+sum_yi2<-sum(yi^(2))
+
+R2<-1-(sum_u2/sum_yi2)
+R2
+
+F<-(R2/(k-1))/((1-R2)/(n-k))
+F
+
+significancia95 <- 0.05   
+gl1 <- k - 1              
+gl2 <- n - k              
+
+
+Vqf95 <- qf(1 - significancia95, gl1, gl2)
+Vqf95
+
+```
+```{r}
+pf_estadistico <- ifelse(F > Vqf95, "H1 (rechazar H0)", "H0 (no rechazar H0)")
+pf_estadistico
+```
+
+globalmente las variables explicativas no tienen significancia o repercuten sobre la variable dependiente
+
+(ii) Calcula el valor p usando R y revisa que coincida con el valor que
+da R en el summary.
+
+```{r}
+p_value <- 1 - pf(F, gl1, gl2)
+p_value
+
+```
+El p-value de 0.2347 es mucho mayor que el nivel de significancia 
+𝛼=0.05
+Esto significa que no puedes rechazar la hipótesis nula al nivel de significancia del 5%.
+En otras palabras, las variables explicativas no son conjuntamente significativas en el modelo, ya que no hay suficiente evidencia estadística para demostrar que tienen un efecto significativo sobre la variable dependiente.
+
+
+
+## f
+¿Alguna de las variables explicativas es individualmente significativa de
+acuerdo al estadıstico t? Calcula el estadıstico t∗ y revisa que coincida
+con los valores que da R en el summary. Usa 95% de confianza.
+
+```{r}
+t1<-B1/ee1
+t1
+t2<-B2/ee2
+t2
+t3<-B3/ee3
+t3
+t4<-B4/ee4
+t4
+t5<-B5/ee5
+t5
+
+t1_estadistico1 <- ifelse(abs(t1) > Vqt95, "H1 (rechazar H0)", "H0 (no rechazar H0)")
+t1_estadistico1
+t2_estadistico <- ifelse(abs(t2) > Vqt95, "H1 (rechazar H0)", "H0 (no rechazar H0)")
+t2_estadistico
+t3_estadistico <- ifelse(abs(t3) > Vqt95, "H1 (rechazar H0)", "H0 (no rechazar H0)")
+t3_estadistico
+t4_estadistico <- ifelse(abs(t4) > Vqt95, "H1 (rechazar H0)", "H0 (no rechazar H0)")
+t4_estadistico
+t5_estadistico <- ifelse(abs(t5) > Vqt95, "H1 (rechazar H0)", "H0 (no rechazar H0)")
+t5_estadistico
+
+```
+
+el unico que individualmente es significativo es la estimación de la interseccion
+
+
+## g
+¿Alguna de las variables explicativas es individualmente significativa, de
+acuerdo al valor p? Establece las hip´otesis nula y la alternativa. Calcula
+el valor p usando R y revisa que coincida con los valores que da R en el
+summary
+
+```{r}
+valorpt <- pt(Vqt95,gl5)
+valorpt
+
+pt1 <- (1-pt(abs(t1), gl5))*2
+pt1
+pt2 <- (1-pt(abs(t2), gl5))*2
+pt2
+pt3 <- (1-pt(abs(t3), gl5))*2
+pt3
+pt4 <- (1-pt(abs(t4), gl5))*2
+pt4
+pt5 <- (1-pt(abs(t5), gl5))*2
+pt5
+
+pt1_estadistico <- ifelse(pt1 < 0.05, "H1 (rechazar H0)", "H0 (no rechazar H0)")
+pt1_estadistico
+
+pt2_estadistico <- ifelse(pt2 < 0.05, "H1 (rechazar H0)", "H0 (no rechazar H0)")
+pt2_estadistico
+
+pt3_estadistico <- ifelse(pt3 < 0.05, "H1 (rechazar H0)", "H0 (no rechazar H0)")
+pt3_estadistico
+
+pt4_estadistico <- ifelse(pt4 < 0.05, "H1 (rechazar H0)", "H0 (no rechazar H0)")
+pt4_estadistico
+
+pt5_estadistico <- ifelse(pt5 < 0.05, "H1 (rechazar H0)", "H0 (no rechazar H0)")
+pt5_estadistico
+
+```
+el unico valor significativo proviene de la intersección pero las demas variables explicativas no tienen relacion probabilistica alguna con la variable dependiente
+
+# CEOSAL2 {.tabset}
+
+(2) El archivo CEOSAL2.csv contiene datos de 177 CEO (directores generales) y
+puede utilizarse para examinar los efectos del desempeno de la empresa sobre
+el sueldo de los CEO.
+Considera el siguiente modelo
+
+log(salary) = β1+β2log(sales)i+β3log(mktval)i+β4profmargi+β5ceoteni+β6comteni+ui
+
+## (a)
+Indica que significa cada una de las variables y que unidades tiene.
+
+log(salary): El logaritmo natural del salario del CEO. Esta variable transforma el salario de su valor nominal a una escala logarítmica, lo que ayuda a interpretar los coeficientes como elasticidades. El salario se mide en dólares.
+
+log(sales): El logaritmo natural de las ventas de la empresa. Esta variable también se encuentra en una escala logarítmica, lo que significa que los coeficientes asociados miden el cambio porcentual en el salario del CEO por un cambio porcentual en las ventas de la empresa. Las ventas están en unidades monetarias (generalmente dólares).
+
+log(mktval): El logaritmo natural del valor de mercado de la empresa. El valor de mercado mide el valor total de todas las acciones en circulación de la empresa, en una escala logarítmica. Similar a las ventas, se mide en unidades monetarias (dólares).
+
+profmarg: El margen de beneficio de la empresa, expresado como un porcentaje. Representa el porcentaje de ingresos que queda como ganancia después de que se han pagado todos los costos.
+
+ceoten: El número de años que el CEO ha estado en su cargo (tenencia del CEO). Esta variable se mide en años.
+
+comten: El número de años que el CEO ha trabajado en la empresa (tenencia en la empresa), no necesariamente en el puesto de CEO. Se mide también en años.
+
+
+
+
+## b
+¿Que signos crees que tendran β2, β3, β4, β5 y β6? Justifica tu respuesta.
+(log(sales)):
+Signo esperado: positivo (+)
+Justificación: A medida que aumentan las ventas de la empresa, se espera que el salario del CEO aumente. Esto se debe a que un mayor nivel de ventas suele asociarse con una mayor responsabilidad y éxito en la gestión, lo que justifica una mayor compensación para el CEO. Además, un crecimiento en las ventas generalmente indica que la empresa está en expansión, lo que también podría llevar a un mayor salario para el director general.
+
+(log(mktval)):
+Signo esperado: positivo (+)
+Justificación: El valor de mercado de la empresa (market value) refleja el tamaño y la valoración de la empresa en los mercados financieros. Un mayor valor de mercado generalmente implica que la empresa es más valiosa y requiere una gestión más compleja, lo que justificaría un salario más alto para el CEO. Además, los inversores tienden a recompensar a los ejecutivos de empresas exitosas con altos salarios para retener su talento.
+
+(profmarg):
+Signo esperado: positivo (+)
+Justificación: El margen de beneficio refleja la eficiencia de la empresa en generar beneficios a partir de sus ingresos. Un mayor margen de beneficio sugiere que el CEO está haciendo un buen trabajo maximizando las ganancias de la empresa, lo cual debería estar asociado con un aumento en su salario. Los accionistas tienden a recompensar a los CEOs que maximizan los beneficios con compensaciones más altas.
+
+(ceoten):
+Signo esperado: positivo (+)
+Justificación: La tenencia del CEO (años en el cargo) generalmente tiene un efecto positivo en el salario. A medida que un CEO pasa más tiempo en su cargo, es probable que desarrolle más experiencia y mejores habilidades, lo que lo hace más valioso para la empresa. Además, una mayor tenencia puede llevar a una mayor confianza de la junta directiva, lo que justifica un salario más alto.
+
+  (comten):
+Signo esperado: positivo (+)
+Justificación: La tenencia en la empresa (años en la empresa) también debería tener un efecto positivo en el salario del CEO. Un CEO que ha estado en la empresa durante mucho tiempo probablemente tenga un profundo conocimiento de su funcionamiento, lo que lo hace más eficaz en su rol. Además, la lealtad y el compromiso a largo plazo con la empresa podrían ser recompensados con un salario más alto.
+
+
+## c
+Calcula los estimadores de los coeficientes para el modelo, utilizando R
+
+```{r}
+tabla2<- read.csv("ceosal2.csv")
+head(tabla2)
+```
+
+```{r}
+tabla21<-select(tabla2,salary, sales, mktval, profmarg, ceoten, comten )
+tabla22<-rename(tabla21,Y_=salary, X2_=sales, X3_=mktval, X4_=profmarg, X5_=ceoten, X6_=comten)
+
+tabla23 <- tabla22 %>%
+  mutate(
+    logY = log(tabla22$Y_),
+    logX2 = log(tabla22$X2_),
+    logX3 = log(tabla22$X3_)
+  )
+
+head(tabla23)
+
+# Ajustar el modelo lineal con los logaritmos de las variables
+modelo2 <- lm(logY ~ logX2 + logX3 + X4_ + X5_ + X6_, data=tabla23)
+
+resumen2 <- summary(modelo2)
+resumen2
+```
+
+## d
+Calcula los intervalos de confianza para los estimadores.
+(i) Utilizando la formula (y los errores est´andar dados por el summary).
+(ii) Utilizando la funci´on confint().
+
+
+```{r}
+B12<-4.571977
+B22<-0.187787
+B32<-0.099872 
+B42<--0.002211
+B52<-0.017104
+B62<--0.009238 
+
+ee12<-0.253466 
+ee22<-0.040003
+ee32<-0.049214
+ee42<-0.002105
+ee52<-0.005540
+ee62<-0.003337
+
+
+n<-length(tabla23$logY)
+k<-6
+gl6<-n-k
+significancia95.<- .05
+
+Area95. <- 1-(significancia95./2)
+Vqt95. <- qt(Area95.,gl6)
+Vqt95.
+
+# Para B1
+InConB1n. <- B12-ee12*Vqt95.
+InConB1n.
+InConB1p. <- B12+ee12*Vqt95.
+InConB1p.
+
+# Para B2
+
+InConB2n. <- B22-ee22*Vqt95.
+InConB2n. 
+InConB2p. <- B22+ee22*Vqt95.
+InConB2p.
+
+# Para B3
+InConB3n. <- B32-ee32*Vqt95.
+InConB3n. 
+InConB3p. <- B32+ee32*Vqt95.
+InConB3p.
+
+# Para B4
+InConB4n. <- B42-ee42*Vqt95.
+InConB4n. 
+InConB4p. <- B42+ee42*Vqt95.
+InConB4p.
+
+# Para B5
+InConB5n. <- B52-ee52*Vqt95.
+InConB5n. 
+InConB5p. <- B52+ee52*Vqt95.
+InConB5p.
+
+# Para B5
+InConB6n. <- B62-ee62*Vqt95.
+InConB6n. 
+InConB6p. <- B62+ee62*Vqt95.
+InConB6p.
+
+
+
+```
+
+
+```{r}
+InCon95. <- confint(modelo2, level = .95)
+InCon95.
+```
+
+
+## e
+Prueba si al nivel de significancia de 5% las variables explicativas son
+conjuntamente significativas.
+Establece la hipotesis nula y la alternativa.
+(i) Calcula el estad´ıstico F y realiza la prueba de hip´otesis.
+
+```{r}
+#calculo de u^2i estimada
+u22_estimada<- (tabla23$logY-B12-B22*tabla23$logX2-B32*tabla23$logX3-B42*tabla23$X4_-B52*tabla23$X5_-B62*tabla23$X6_)
+u22_estimada<-(u22_estimada)^(2)
+sum_u22<-sum(u22_estimada)
+
+yi2<-(tabla23$logY-mean(tabla23$logY))
+
+sum_yi22<-sum(yi2^(2))
+
+R22<-1-(sum_u22/sum_yi22)
+R22
+
+F2<-(R22/(k-1))/((1-R22)/(n-k))
+F2
+
+significancia95 <- 0.05   
+gl12 <- k - 1              
+gl22 <- n - k              
+
+
+Vqf95. <- qf(1 - significancia95, gl12, gl22)
+Vqf95.
+```
+
+
+```{r}
+pf_estadistico <- ifelse(F2 > Vqf95., "H1 (rechazar H0)", "H0 (no rechazar H0)")
+pf_estadistico
+```
+
+
+
+(ii) Calcula el valor p usando R y revisa que coincida con el valor que
+da R en el summary.
+
+
+```{r}
+p_value2 <- 1 - pf(F2, gl12, gl22)
+p_value2
+```
+
+globalmente las variables explicativas si influyen en la variable dependiente ya que se tienen suficientes datos para rechazar la hipotesis nula
+
+## f 
+¿Es alguna de las variables explicativas individualmente significativa de
+acuerdo al valor p? Establece las hipotesis nula y la alternativa. Calcula
+el valor p y revisa que coincida con los valores que da R en el summary
+
+```{r}
+t12<-B12/ee12
+t12
+t22<-B22/ee22
+t22
+t32<-B32/ee32
+t32
+t42<-B42/ee42
+t42
+t52<-B52/ee52
+t52
+t62<-B62/ee62
+t62
+
+valorpt2 <- pt(Vqt95.,gl6)
+valorpt2
+
+pt12 <- (1-pt(abs(t12), gl6))*2
+pt12
+pt22 <- (1-pt(abs(t22), gl6))*2
+pt22
+pt32 <- (1-pt(abs(t32), gl6))*2
+pt32
+pt42 <- (1-pt(abs(t42), gl6))*2
+pt42
+pt52 <- (1-pt(abs(t52), gl6))*2
+pt52
+pt62 <- (1-pt(abs(t62), gl6))*2
+pt62
+
+pt12_estadistico <- ifelse(pt12 < 0.05, "H1 (rechazar H0)", "H0 (no rechazar H0)")
+pt12_estadistico
+
+pt22_estadistico <- ifelse(pt22 < 0.05, "H1 (rechazar H0)", "H0 (no rechazar H0)")
+pt22_estadistico
+
+pt32_estadistico <- ifelse(pt32 < 0.05, "H1 (rechazar H0)", "H0 (no rechazar H0)")
+pt32_estadistico
+
+pt42_estadistico <- ifelse(pt42 < 0.05, "H1 (rechazar H0)", "H0 (no rechazar H0)")
+pt42_estadistico
+
+pt52_estadistico <- ifelse(pt52 < 0.05, "H1 (rechazar H0)", "H0 (no rechazar H0)")
+pt52_estadistico
+
+pt62_estadistico <- ifelse(pt62 < 0.05, "H1 (rechazar H0)", "H0 (no rechazar H0)")
+pt62_estadistico
+
+```
+
+La mayoria de las variables son significativas individualmente exepto la variable profmarg que es la eficiencia para hacer beneficios puede que esta no tenga alguna relacion o elasticidad con el salario del CEO
+
+
+
+
+
+
+
+
+
+
+

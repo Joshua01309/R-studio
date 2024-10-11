@@ -1,0 +1,6 @@
+"0","pf_estadistico <- ifelse(F2 > Vqf95., ""H1 (rechazar H0)"", ""H0 (no rechazar H0)"")"
+"0","pf_estadistico"
+"1","[1]"
+"1"," ""H1 (rechazar H0)"""
+"1","
+"

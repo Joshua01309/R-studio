@@ -1,0 +1,2 @@
+"0","tabla2<- read.csv(""ceosal2.csv"")"
+"0","head(tabla2)"

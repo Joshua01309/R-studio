@@ -1,0 +1,3 @@
+"0","tabla0<-select(tabla,return, dkr, eps, netinc, salary )"
+"0","tabla1<-rename(tabla0,Y=return, X2=dkr, X3=eps, X4=netinc, X5=salary)"
+"0","head(tabla1)"
