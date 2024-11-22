@@ -1,0 +1,84 @@
+---
+title: "Ejercicios regresion multiple"
+author: "Jesus Ruiz"
+date: "2024-09-26"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(dplyr)
+
+```
+
+
+Valor pt
+
+```{r}
+valorqt <- qt(.975, 718)
+valorqt
+
+
+valorpt <- pt(1.963273,718)
+valorpt
+```
+
+Hacer la prueba de hipotesis para B2
+
+1. Considere el siguiente modelo sobre trabajadores:
+educi = 10.36 − 0.094sibsi + 0.131meduci + 0.210 f educi + ui
+(0.35850) (0.03447) (0.03269) (0.02747)
+n = 722, R
+2 = .214
+
+```{r}
+B1 <- 10.36
+  B2 <- -0.094
+  B3 <- 0.131
+  B4 <- 0.210
+  n <- 722  
+  k <- 4
+  R2 <- .214
+  
+  e_eB1 <- 0.35850
+  e_eB2 <- 0.03447
+e_eB3 <- 0.03269
+e_eB4 <- 0.02747
+  
+  Grados_libertad <- n-k
+  
+```
+
+
+
+Hacer la prueba de hipotesis para B2
+
+```{r}
+t_estadistico_B2 <- B2/e_eB2
+t_estadistico_B2
+
+Absoluto_t <- -abs(t_estadistico_B2)
+Absoluto_t
+```
+Valor pt
+
+```{r}
+Valor_pt_B2 <- pt(Absoluto_t, Grados_libertad)*2
+Valor_pt_B2
+
+
+```
+Que hipotesis usar
+
+```{r}
+resultados <- ifelse(Valor_pt_B2 > 0.05, "H0", "H1(evidencia para rechazar H0)")
+
+print(resultados)
+```
+
+
+
+
+
+
+

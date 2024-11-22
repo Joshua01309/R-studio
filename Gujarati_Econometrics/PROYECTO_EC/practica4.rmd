@@ -1,0 +1,333 @@
+
+---
+title: "PROYECTO ECONOMETRIA"
+author: ""
+date: "NOVIEMBRE 2024"
+output: 
+  html_document:
+    toc: true
+    toc_depth: 1
+    theme: journal
+---
+
+
+<style>
+body {
+text-align: justify}
+</style>
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(dplyr)
+
+```
+
+
+```{r}
+library(dplyr)
+```
+
+# TABLA {.tabset}
+Organiza los datos en una tabla para RStudio
+
+```{r}
+tabla<- read.csv("proyecto.csv")
+head(tabla)
+```
+
+```{r}
+tabla0<-select(tabla,ADICCION,EDAD,ESCUELA,INGRESO,NOHIJOS,FCRA,FAMADIC, SERVICIOS, APOYO )
+tabla1<-rename(tabla0,Y=ADICCION, X2=EDAD, X3=ESCUELA,X4=INGRESO, X5=NOHIJOS, X6=FCRA, X7=FAMADIC, X8=SERVICIOS, X9=APOYO)
+head(tabla1)
+```
+
+# REGRESION LINEAL {.tabset}
+Desarrolla un modelo de regresión lineal múltiple que estime una variable numérica, a través de variables explicativas.
+
+
+```{r}
+modelo<-lm(Y~X2+X3+X4+X5+X6+X7+X8+X9, data=tabla1)
+resumen<-summary(modelo)
+resumen
+```
+# Parametros {.tabset}
+Calcula los siguientes parámetros: β1, β2,…, βk. Calcula sus intervalos de confianza.
+
+```{r}
+B1<-22.736747
+B2<--0.100907
+B3<-0.398501 
+B4<--0.002431 
+B5<--0.025065 
+B6<-0.608983
+B7<-1.190959 
+B8<--1.245133 
+B9<-1.065448
+
+
+ee1<-5.602100 
+ee2<-0.109045
+ee3<-0.268816
+ee4<-0.001779
+ee5<-0.815710
+ee6<-0.313457 
+ee7<-0.719793
+ee8<-0.579428
+ee9<-1.019314
+
+n<-length(tabla1$Y)
+k<-9
+gl5<-n-k
+significancia95<- .05
+
+Area95 <- 1-(significancia95/2)
+Vqt95 <- qt(Area95,gl5)
+Vqt95
+
+# Para B1
+InConB1n <- B1-ee1*Vqt95
+InConB1n 
+InConB1p <- B1+ee1*Vqt95
+InConB1p
+
+# Para B2
+
+InConB2n <- B2-ee2*Vqt95
+InConB2n 
+InConB2p <- B2+ee2*Vqt95
+InConB2p
+
+# Para B3
+InConB3n <- B3-ee3*Vqt95
+InConB3n 
+InConB3p <- B3+ee3*Vqt95
+InConB3p
+
+# Para B4
+InConB4n <- B4-ee4*Vqt95
+InConB4n 
+InConB4p <- B4+ee4*Vqt95
+InConB4p
+
+# Para B5
+InConB5n <- B5-ee5*Vqt95
+InConB5n 
+InConB5p <- B5+ee5*Vqt95
+InConB5p
+
+# Para B6
+
+InConB6n <- B6-ee6*Vqt95
+InConB6n 
+InConB6p <- B6+ee6*Vqt95
+InConB6p
+
+# Para B7
+InConB7n <- B7-ee7*Vqt95
+InConB7n 
+InConB7p <- B7+ee7*Vqt95
+InConB7p
+
+# Para B8
+InConB8n <- B8-ee8*Vqt95
+InConB8n 
+InConB8p <- B8+ee8*Vqt95
+InConB8p
+
+# Para B9
+InConB9n <- B9-ee9*Vqt95
+InConB9n 
+InConB9p <- B9+ee9*Vqt95
+InConB9p
+
+
+```
+
+(ii) Utilizando la funcion confint().
+
+```{r}
+InCon95 <- confint(modelo, level = .95)
+InCon95
+```
+# Significancia general {.tabset}
+Realiza una prueba de hipótesis para la significancia general del modelo.
+
+Hipótesis nula (H₀): Todas las variables explicativas tienen coeficientes iguales a cero, es decir, no tienen efecto significativo sobre la variable dependiente (el rendimiento). Formalmente:
+H0:B1=B2=B3=B4=B5=0
+
+Hipótesis alternativa (H₁): Al menos una de las variables explicativas tiene un coeficiente diferente de cero, es decir, al menos una variable tiene un efecto significativo sobre la variable dependiente:
+H1:B1 no igual 0, B2 no igual 0, B3 no igual 0, B4 no igual 0, B5 no igual 0
+
+(i) Calcula el estadıstico F y realiza la prueba de hipotesis.
+
+```{r}
+#calculo de u^2i estimada
+u_estimada<- (tabla1$Y-B1-B2*tabla1$X2-B3*tabla1$X3-B4*tabla1$X4-B5*tabla1$X5-B6*tabla1$X6-B7*tabla1$X7-B8*tabla1$X8-B9*tabla1$X9)
+u2_estimada<-(u_estimada)^(2)
+sum_u2<-sum(u2_estimada)
+
+yi<-(tabla1$Y-mean(tabla1$Y))
+
+sum_yi2<-sum(yi^(2))
+
+R2<-1-(sum_u2/sum_yi2)
+R2
+
+F<-(R2/(k-1))/((1-R2)/(n-k))
+F
+
+significancia95 <- 0.05   
+gl1 <- k - 1              
+gl2 <- n - k              
+
+
+Vqf95 <- qf(1 - significancia95, gl1, gl2)
+Vqf95
+
+```
+
+
+```{r}
+pf_estadistico <- ifelse(F > Vqf95, "H1 (rechazar H0)", "H0 (no rechazar H0)")
+pf_estadistico
+```
+```{r}
+p_value <- 1 - pf(F, gl1, gl2)
+p_value
+```
+
+
+
+# Significancia general {.tabset}
+
+Realiza una prueba de hipótesis para la significancia de cada coeficiente βi.
+
+## Utilizando el valor t
+
+```{r}
+t1<-B1/ee1
+t1
+t2<-B2/ee2
+t2
+t3<-B3/ee3
+t3
+t4<-B4/ee4
+t4
+t5<-B5/ee5
+t5
+t6<-B6/ee6
+t6
+t7<-B7/ee7
+t7
+t8<-B8/ee8
+t8
+t9<-B9/ee9
+t9
+
+
+t1_estadistico1 <- ifelse(abs(t1) > Vqt95, "H1 (rechazar H0)", "H0 (no rechazar H0)")
+t1_estadistico1
+t2_estadistico <- ifelse(abs(t2) > Vqt95, "H1 (rechazar H0)", "H0 (no rechazar H0)")
+t2_estadistico
+t3_estadistico <- ifelse(abs(t3) > Vqt95, "H1 (rechazar H0)", "H0 (no rechazar H0)")
+t3_estadistico
+t4_estadistico <- ifelse(abs(t4) > Vqt95, "H1 (rechazar H0)", "H0 (no rechazar H0)")
+t4_estadistico
+t5_estadistico <- ifelse(abs(t5) > Vqt95, "H1 (rechazar H0)", "H0 (no rechazar H0)")
+t5_estadistico
+t6_estadistico <- ifelse(abs(t6) > Vqt95, "H1 (rechazar H0)", "H0 (no rechazar H0)")
+t6_estadistico
+t7_estadistico <- ifelse(abs(t7) > Vqt95, "H1 (rechazar H0)", "H0 (no rechazar H0)")
+t7_estadistico
+t8_estadistico <- ifelse(abs(t8) > Vqt95, "H1 (rechazar H0)", "H0 (no rechazar H0)")
+t8_estadistico
+t9_estadistico <- ifelse(abs(t9) > Vqt95, "H1 (rechazar H0)", "H0 (no rechazar H0)")
+t9_estadistico
+
+```
+
+el unico que individualmente es significativo es la estimación de la interseccion y la variable X8
+
+
+## Utilizando el valor p
+
+```{r}
+valorpt <- pt(Vqt95,gl5)
+valorpt
+
+pt1 <- (1-pt(abs(t1), gl5))*2
+pt1
+pt2 <- (1-pt(abs(t2), gl5))*2
+pt2
+pt3 <- (1-pt(abs(t3), gl5))*2
+pt3
+pt4 <- (1-pt(abs(t4), gl5))*2
+pt4
+pt5 <- (1-pt(abs(t5), gl5))*2
+pt5
+pt6 <- (1-pt(abs(t6), gl5))*2
+pt6
+pt7 <- (1-pt(abs(t7), gl5))*2
+pt7
+pt8 <- (1-pt(abs(t8), gl5))*2
+pt8
+pt9 <- (1-pt(abs(t9), gl5))*2
+pt9
+
+
+pt1_estadistico <- ifelse(pt1 < 0.05, "H1 (rechazar H0)", "H0 (no rechazar H0)")
+pt1_estadistico
+
+pt2_estadistico <- ifelse(pt2 < 0.05, "H1 (rechazar H0)", "H0 (no rechazar H0)")
+pt2_estadistico
+
+pt3_estadistico <- ifelse(pt3 < 0.05, "H1 (rechazar H0)", "H0 (no rechazar H0)")
+pt3_estadistico
+
+pt4_estadistico <- ifelse(pt4 < 0.05, "H1 (rechazar H0)", "H0 (no rechazar H0)")
+pt4_estadistico
+
+pt5_estadistico <- ifelse(pt5 < 0.05, "H1 (rechazar H0)", "H0 (no rechazar H0)")
+pt5_estadistico
+
+pt6_estadistico <- ifelse(pt6 < 0.05, "H1 (rechazar H0)", "H0 (no rechazar H0)")
+pt6_estadistico
+
+pt7_estadistico <- ifelse(pt7 < 0.05, "H1 (rechazar H0)", "H0 (no rechazar H0)")
+pt7_estadistico
+
+pt8_estadistico <- ifelse(pt8 < 0.05, "H1 (rechazar H0)", "H0 (no rechazar H0)")
+pt8_estadistico
+
+pt9_estadistico <- ifelse(pt9 < 0.05, "H1 (rechazar H0)", "H0 (no rechazar H0)")
+pt9_estadistico
+
+```
+el unico valor significativo proviene de la variable X8 pero las demas variables explicativas no tienen relacion probabilistica alguna con la variable dependiente
+
+
+## Modelo Res y No Res
+Elimina algunas variables y compara el modelo restringido contra el modelo no restringido.
+
+```{r}
+Modelo_Restringido<- lm(Y~X6+X8+X9,  data = tabla1)
+summary(Modelo_Restringido)
+```
+
+USANDO el nuevo modelo restringido que se basa en solo meter variables que vengan del CRA se puede observar que su ajuste de bondad es menor que el modelo inicial, aunque ninguno de los dos modelos hay una significancia con las variables quiere decir que debe haber otros factores que afecten mas significativamente a la variable de adiccion.
+
+
+
+![Insertando imagen](Drugs.jpg){withd=80%}
+
+
+
+
+
+
+
+
+
+
+

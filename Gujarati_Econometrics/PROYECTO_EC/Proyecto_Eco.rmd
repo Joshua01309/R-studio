@@ -1,0 +1,508 @@
+---
+title: "PROYECTO CRA´s LEÓN"
+author: 
+  - "Josue Ivan Murillo Alba"
+  - "Oliver Romero Marin"
+  - "Jesus Alejandro Hernandez Gutierrez"
+  - "Marco Antonio Gutierrez Marquez"
+date: "2024-10-24"
+output:
+  rmdformats::readthedown:
+    highlight: kate
+---
+
+
+<style>
+body {
+text-align: justify}
+</style>
+
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+library(dplyr)
+library(png)
+library(magick)
+```
+
+
+```{r}
+library(dplyr)
+```
+# INTRODUCCION {.tabset} 
+El consumo y la recaída en adicciones constituyen un fenómeno complejo y creciente, especialmente en contextos urbanos como León, Guanajuato, donde factores sociodemográficos y familiares parecen desempeñar un papel clave. Según estudios recientes, las adicciones están asociadas a variables como el apoyo familiar, nivel educativo y situación laboral, que influyen tanto en el inicio como en la probabilidad de recaída. Identificar y analizar estas relaciones es esencial para diseñar intervenciones efectivas en los Centros de Rehabilitación de Adicciones (CRA). Este trabajo empleará un modelo de regresión múltiple para evaluar cómo factores como edad, sexo, estado civil, escolaridad, ocupación, número de hijos, índice de adicción, apoyo familiar y pago al CRA afectan la probabilidad de recaída en adicciones.
+
+La importancia de esta investigación radica en su capacidad para aportar evidencia empírica sobre un problema de salud pública urgente. León enfrenta una alta incidencia de consumo de sustancias y una limitada capacidad en los CRA para atender a personas en proceso de rehabilitación, situación que es agravada por la falta de estudios locales sobre los factores de recaída. El uso de un modelo de regresión múltiple permitirá no solo identificar las variables con mayor influencia, sino también cuantificar su impacto relativo, proporcionando una herramienta analítica sólida para mejorar las estrategias de intervención en los CRA.
+
+![Imajen](Drugs.jpg){withd=80%}
+
+
+# RELEVANCIA Y ANTECEDENTES {.tabset}
+En el ámbito internacional, investigaciones previas han destacado que el entorno familiar juega un papel decisivo en el desarrollo y la recuperación de las adicciones. Valero-Aguayo et al. (2013) concluyen que factores como el apoyo emocional y la cohesión familiar reducen significativamente la probabilidad de recaída. En el contexto nacional, informes como el de la Secretaría de Salud (2019) resaltan la necesidad de mejorar la calidad de los servicios en los CRA, particularmente en regiones con alta incidencia de consumo, como Guanajuato. Estos antecedentes subrayan la relevancia de analizar las características individuales y sociales que determinan el éxito de los programas de rehabilitación.
+
+# OBJETIVO DEL ESTUDIO {.tabset}
+A través del modelo de regresión múltiple, se busca identificar los factores determinantes de la recaída en adicciones, proporcionando así una base para implementar políticas públicas más efectivas y mejorar las condiciones de los CRA en la región. La evidencia obtenida también permitirá optimizar la asignación de recursos y la personalización de las intervenciones para lograr mejores resultados en la recuperación de los pacientes.
+
+# MARCO TEORICO {.tabset}
+En el municipio de León, Guanajuato, se estima que 1 de cada 18 personas ha consumido alguna sustancia psicoactiva al menos una vez en su vida, siendo el tabaco y el alcohol las sustancias más comunes. Estas sustancias suelen ser la puerta de entrada hacia el uso de drogas ilegales, con una tendencia mayor en hombres hacia el consumo y en mujeres hacia la drogodependencia.
+
+La Secretaría de Salud subraya la importancia de la prevención mediante la identificación temprana y el apoyo familiar, destacando estrategias como el diálogo abierto, la creación de vínculos positivos y la atención a cambios de comportamiento. No obstante, en Guanajuato existe una brecha significativa entre la demanda de servicios de rehabilitación y la cantidad de Centros de Rehabilitación de Adicciones (CRA) regulados.
+
+En León, de los 123 CRA registrados, únicamente seis cumplen con los estándares federales, lo que evidencia una respuesta insuficiente frente al incremento de esta problemática. Este análisis explora las causas del abuso de sustancias, su relación con conflictos familiares y la eficacia de los CRA. A partir de esta revisión, se busca proponer soluciones para mejorar la calidad y accesibilidad de los servicios, enfrentando una creciente crisis de salud pública en la región.
+
+A nivel nacional, la NOM-028-SSA2-2009 regula la prevención, tratamiento y control de las adicciones. Esta norma establece que ningún individuo bajo los efectos de sustancias psicoactivas debe ser negado a recibir atención en situaciones de urgencia, siendo derivado posteriormente a unidades especializadas para su tratamiento.
+
+El tratamiento se divide en dos modelos principales: ambulatorio y residencial.
+
+El modelo ambulatorio incluye 341 Centros de Atención Primaria en Adicciones (CAPA), 104 unidades de consulta externa en los Centros de Integración Juvenil (CIJ) y un número no especificado de clínicas privadas.
+Por su parte, la atención residencial está conformada por 11 unidades de hospitalización de los CIJ, 45 unidades residenciales públicas y 2,108 establecimientos residenciales privados, de los cuales solo 1,045 están registrados y 348 reconocidos a nivel nacional, según el informe de 2019 sobre el consumo de drogas en México.
+En Guanajuato, únicamente hay 13 establecimientos residenciales reconocidos para la rehabilitación de adicciones en el sector privado y una unidad residencial pública, lo que resulta insuficiente para una población de más de 6.1 millones de habitantes, según el censo del INEGI de 2020.
+
+Durante la pandemia, el problema de las adicciones en León se intensificó. Según un estudio en los Polígonos de Desarrollo, el 7.5% de los hogares incrementaron su consumo de alcohol y drogas (Ayuntamiento de León, 2021). De enero a octubre de 2021, se registraron 11,224 casos relacionados con adicciones (Sistema Nacional de Información en Salud). Además, entre enero de 2021 y febrero de 2022, se contabilizaron 24,872 delitos contra la salud en el municipio, asociados al tráfico y consumo de sustancias (SEDESHU, 2021).
+
+El bajo número de CRA regulados agrava la situación, ya que de los 123 existentes, solo seis cumplen con la normativa federal y respetan los derechos humanos, según datos de la CONADIC. Esta situación resalta la necesidad urgente de mejorar la regulación y supervisión de los CRA, así como de implementar estrategias eficaces para atender y prevenir esta problemática en León y el estado de Guanajuato.
+
+Los datos demuestran que las adicciones son una prioridad de salud pública que requiere un enfoque integral, con mejores estrategias de atención, regulación adecuada y mayor información sobre los servicios disponibles para combatir este problema de manera efectiva.
+
+# MÉTODO DE ANÁLISIS {.tabset}
+Para evaluar las relaciones entre los factores sociodemográficos y familiares y la recaída en adicciones, se empleará un enfoque econométrico basado en los siguientes pasos:
+
+Modelos econométricos:
+Se aplicarán modelos de regresión logística para analizar la probabilidad de recaída en función de variables independientes como el apoyo familiar, el nivel educativo y la situación laboral. Este tipo de modelo es adecuado dado que la variable dependiente es de naturaleza binaria (recaída: sí o no).
+
+Significancia estadística:
+Se realizarán pruebas t y valores p para determinar la significancia de los coeficientes estimados. Estas pruebas permitirán verificar si las variables independientes tienen un impacto estadísticamente significativo en la probabilidad de recaída.
+
+Medidas de ajuste:
+Se calculará el pseudo-R² para evaluar la proporción de variabilidad de la variable dependiente que es explicada por el modelo. Además, se utilizará la matriz de confusión y métricas como la sensibilidad y especificidad para evaluar el desempeño del modelo.
+
+Análisis descriptivo:
+Se presentarán estadísticas descriptivas de las variables involucradas para identificar tendencias y características generales de los datos, lo que permitirá contextualizar los resultados econométricos.
+
+Evaluación de supuestos:
+Se analizará la multicolinealidad entre las variables independientes mediante el cálculo del factor de inflación de la varianza (VIF). Asimismo, se realizarán pruebas para verificar la ausencia de heterocedasticidad y la adecuada especificación del modelo.
+
+Este enfoque proporcionará una base sólida para comprender los factores determinantes de la recaída en adicciones y para diseñar intervenciones basadas en evidencia.
+
+# VARIABLES {.tabset} 
+ Para reflejar nuestra hipótesis de que las personas recaigan en adicciones y probar la satisfacción que les brindan los centros de rehabilitación. 
+Edad. La edad que tienen los miembros del cada (CRA) nos ayuda a identificar rangos de población adicta y población en rehabilitación.La edad de la persona puede influir en el riesgo de recaída, ya que distintos grupos de edad presentan patrones de comportamiento y niveles de madurez emocional diferentes. 
+
+Sexo. nos identifica la orientación sexual de los adictos en rehabilitación.Existen diferencias en cómo hombres y mujeres experimentan adicciones y acceden al apoyo para rehabilitación.
+Estado civil. Indica si la persona es soltera, casada, divorciada, viuda, etc. El apoyo emocional de una pareja o la falta del mismo puede influir en la recuperación.
+
+Escolaridad.  Nivel de educación alcanzado (primaria, secundaria, preparatoria, universidad, etc.).Una mayor escolaridad podría estar relacionada con mayor conciencia sobre los riesgos de la adicción y mejor acceso a recursos de apoyo.
+
+Ocupación. Se refiere al tipo de empleo o actividad laboral de la persona.Las personas empleadas o con estabilidad laboral pueden tener menos tiempo de ocio que facilite recaídas, así como acceso a redes de apoyo.
+
+Hijos. Número de hijos que tiene la persona  o si tiene o no hijos La responsabilidad hacia los hijos podría actuar como motivación para mantenerse sobria, aunque también puede ser una fuente de estrés.
+
+Índice de adicción. Mide la severidad de la adicción (tiempo consumiendo, frecuencia, tipo de sustancia).Un mayor índice sugiere mayor dificultad para evitar recaídas.
+
+Apoyo de familiares.Nivel percibido de apoyo emocional, financiero y social de la familia. Un buen sistema de apoyo puede ser crucial para evitar recaídas.
+
+Pago de CRA.Monto que la persona o su familia debe pagar por los servicios del CRA.Los costos elevados podrían limitar la permanencia o el regreso al CRA, aumentando el riesgo de recaída.
+
+# TABLA {.tabset} 
+Organiza los datos en una tabla para RStudio
+
+```{r}
+tabla<- read.csv("proyecto.csv")
+head(tabla)
+```
+
+```{r}
+tabla0<-select(tabla,ADICCION,EDAD,ESCUELA,INGRESO,NOHIJOS,FCRA,FAMADIC, SERVICIOS, APOYO )
+tabla1<-rename(tabla0,Y=ADICCION, X2=EDAD, X3=ESCUELA,X4=INGRESO, X5=NOHIJOS, X6=FCRA, X7=FAMADIC, X8=SERVICIOS, X9=APOYO)
+head(tabla1)
+```
+
+# REGRESION LINEAL {.tabset}
+Desarrolla un modelo de regresión lineal múltiple que estime una variable numérica, a través de variables explicativas.
+
+
+```{r}
+modelo<-lm(Y~X2+X3+X4+X5+X6+X7+X8+X9, data=tabla1)
+resumen<-summary(modelo)
+resumen
+```
+# PARÁMETROS {.tabset}
+Calcula los siguientes parámetros: β1, β2,…, βk. Calcula sus intervalos de confianza.
+
+```{r}
+B1<-22.736747
+B2<--0.100907
+B3<-0.398501 
+B4<--0.002431 
+B5<--0.025065 
+B6<-0.608983
+B7<-1.190959 
+B8<--1.245133 
+B9<-1.065448
+
+
+ee1<-5.602100 
+ee2<-0.109045
+ee3<-0.268816
+ee4<-0.001779
+ee5<-0.815710
+ee6<-0.313457 
+ee7<-0.719793
+ee8<-0.579428
+ee9<-1.019314
+
+n<-length(tabla1$Y)
+k<-9
+gl5<-n-k
+significancia95<- .05
+
+Area95 <- 1-(significancia95/2)
+Vqt95 <- qt(Area95,gl5)
+```
+
+Para B1
+```{r}
+# 
+InConB1n <- B1-ee1*Vqt95
+InConB1n 
+InConB1p <- B1+ee1*Vqt95
+InConB1p
+```
+
+Para B2
+```{r}
+# 
+
+InConB2n <- B2-ee2*Vqt95
+InConB2n 
+InConB2p <- B2+ee2*Vqt95
+InConB2p
+```
+
+Para B3
+```{r}
+# 
+InConB3n <- B3-ee3*Vqt95
+InConB3n 
+InConB3p <- B3+ee3*Vqt95
+InConB3p
+```
+
+Para B4
+```{r}
+# 
+InConB4n <- B4-ee4*Vqt95
+InConB4n 
+InConB4p <- B4+ee4*Vqt95
+InConB4p
+```
+
+Para B5
+```{r}
+# 
+InConB5n <- B5-ee5*Vqt95
+InConB5n 
+InConB5p <- B5+ee5*Vqt95
+InConB5p
+```
+
+Para B6
+```{r}
+# 
+
+InConB6n <- B6-ee6*Vqt95
+InConB6n 
+InConB6p <- B6+ee6*Vqt95
+InConB6p
+```
+
+Para B7
+```{r}
+# 
+InConB7n <- B7-ee7*Vqt95
+InConB7n 
+InConB7p <- B7+ee7*Vqt95
+InConB7p
+```
+
+Para B8
+```{r}
+# 
+InConB8n <- B8-ee8*Vqt95
+InConB8n 
+InConB8p <- B8+ee8*Vqt95
+InConB8p
+```
+
+Para B9
+```{r}
+# 
+InConB9n <- B9-ee9*Vqt95
+InConB9n 
+InConB9p <- B9+ee9*Vqt95
+InConB9p
+```
+
+(ii) Utilizando la funcion confint().
+
+```{r}
+InCon95 <- confint(modelo, level = .95)
+InCon95
+```
+# SIGNIFICANCIA GENERAL {.tabset}
+Realiza una prueba de hipótesis para la significancia general del modelo.
+
+Hipótesis nula (H₀): Todas las variables explicativas tienen coeficientes iguales a cero, es decir, no tienen efecto significativo sobre la variable dependiente (el rendimiento). Formalmente:
+H0:B1=B2=B3=B4=B5=0
+
+Hipótesis alternativa (H₁): Al menos una de las variables explicativas tiene un coeficiente diferente de cero, es decir, al menos una variable tiene un efecto significativo sobre la variable dependiente:
+H1:B1 no igual 0, B2 no igual 0, B3 no igual 0, B4 no igual 0, B5 no igual 0
+
+(i) Calcula el estadıstico F y realiza la prueba de hipotesis.
+
+R2
+```{r}
+#calculo de u^2i estimada
+u_estimada<- (tabla1$Y-B1-B2*tabla1$X2-B3*tabla1$X3-B4*tabla1$X4-B5*tabla1$X5-B6*tabla1$X6-B7*tabla1$X7-B8*tabla1$X8-B9*tabla1$X9)
+u2_estimada<-(u_estimada)^(2)
+sum_u2<-sum(u2_estimada)
+
+yi<-(tabla1$Y-mean(tabla1$Y))
+
+sum_yi2<-sum(yi^(2))
+
+R2<-1-(sum_u2/sum_yi2)
+R2
+```
+
+F
+```{r}
+F<-(R2/(k-1))/((1-R2)/(n-k))
+F
+```
+
+SIGNIFICANCIA DEL 95
+```{r}
+significancia95 <- 0.05   
+gl1 <- k - 1              
+gl2 <- n - k              
+
+
+Vqf95 <- qf(1 - significancia95, gl1, gl2)
+Vqf95
+
+```
+
+PRUEBA ESTADISTICA F
+```{r}
+pf_estadistico <- ifelse(F > Vqf95, "H1 (rechazar H0)", "H0 (no rechazar H0)")
+pf_estadistico
+```
+VALOR P
+```{r}
+p_value <- 1 - pf(F, gl1, gl2)
+p_value
+```
+
+
+
+# SIGNIFICANCIA GENERAL DE LOS VALORES βi {.tabset}
+
+Realiza una prueba de hipótesis para la significancia de cada coeficiente βi.
+
+## Utilizando el valor t
+
+```{r}
+t1<-B1/ee1
+t1
+t2<-B2/ee2
+t2
+t3<-B3/ee3
+t3
+t4<-B4/ee4
+t4
+t5<-B5/ee5
+t5
+t6<-B6/ee6
+t6
+t7<-B7/ee7
+t7
+t8<-B8/ee8
+t8
+t9<-B9/ee9
+t9
+
+
+t1_estadistico1 <- ifelse(abs(t1) > Vqt95, "H1 (rechazar H0)", "H0 (no rechazar H0)")
+t1_estadistico1
+t2_estadistico <- ifelse(abs(t2) > Vqt95, "H1 (rechazar H0)", "H0 (no rechazar H0)")
+t2_estadistico
+t3_estadistico <- ifelse(abs(t3) > Vqt95, "H1 (rechazar H0)", "H0 (no rechazar H0)")
+t3_estadistico
+t4_estadistico <- ifelse(abs(t4) > Vqt95, "H1 (rechazar H0)", "H0 (no rechazar H0)")
+t4_estadistico
+t5_estadistico <- ifelse(abs(t5) > Vqt95, "H1 (rechazar H0)", "H0 (no rechazar H0)")
+t5_estadistico
+t6_estadistico <- ifelse(abs(t6) > Vqt95, "H1 (rechazar H0)", "H0 (no rechazar H0)")
+t6_estadistico
+t7_estadistico <- ifelse(abs(t7) > Vqt95, "H1 (rechazar H0)", "H0 (no rechazar H0)")
+t7_estadistico
+t8_estadistico <- ifelse(abs(t8) > Vqt95, "H1 (rechazar H0)", "H0 (no rechazar H0)")
+t8_estadistico
+t9_estadistico <- ifelse(abs(t9) > Vqt95, "H1 (rechazar H0)", "H0 (no rechazar H0)")
+t9_estadistico
+
+```
+
+El unico que individualmente es significativo es la estimación de la interseccion y la variable X8 Que representa la condicion de las instalaciones
+
+
+## Utilizando el valor p
+
+```{r}
+valorpt <- pt(Vqt95,gl5)
+valorpt
+
+pt1 <- (1-pt(abs(t1), gl5))*2
+pt1
+pt2 <- (1-pt(abs(t2), gl5))*2
+pt2
+pt3 <- (1-pt(abs(t3), gl5))*2
+pt3
+pt4 <- (1-pt(abs(t4), gl5))*2
+pt4
+pt5 <- (1-pt(abs(t5), gl5))*2
+pt5
+pt6 <- (1-pt(abs(t6), gl5))*2
+pt6
+pt7 <- (1-pt(abs(t7), gl5))*2
+pt7
+pt8 <- (1-pt(abs(t8), gl5))*2
+pt8
+pt9 <- (1-pt(abs(t9), gl5))*2
+pt9
+
+
+pt1_estadistico <- ifelse(pt1 < 0.05, "H1 (rechazar H0)", "H0 (no rechazar H0)")
+pt1_estadistico
+
+pt2_estadistico <- ifelse(pt2 < 0.05, "H1 (rechazar H0)", "H0 (no rechazar H0)")
+pt2_estadistico
+
+pt3_estadistico <- ifelse(pt3 < 0.05, "H1 (rechazar H0)", "H0 (no rechazar H0)")
+pt3_estadistico
+
+pt4_estadistico <- ifelse(pt4 < 0.05, "H1 (rechazar H0)", "H0 (no rechazar H0)")
+pt4_estadistico
+
+pt5_estadistico <- ifelse(pt5 < 0.05, "H1 (rechazar H0)", "H0 (no rechazar H0)")
+pt5_estadistico
+
+pt6_estadistico <- ifelse(pt6 < 0.05, "H1 (rechazar H0)", "H0 (no rechazar H0)")
+pt6_estadistico
+
+pt7_estadistico <- ifelse(pt7 < 0.05, "H1 (rechazar H0)", "H0 (no rechazar H0)")
+pt7_estadistico
+
+pt8_estadistico <- ifelse(pt8 < 0.05, "H1 (rechazar H0)", "H0 (no rechazar H0)")
+pt8_estadistico
+
+pt9_estadistico <- ifelse(pt9 < 0.05, "H1 (rechazar H0)", "H0 (no rechazar H0)")
+pt9_estadistico
+
+```
+El unico valor significativo proviene de la variable X8 pero las demas variables explicativas no tienen relacion probabilistica alguna con la variable dependiente
+
+
+## Modelo Res y No Res
+Elimina algunas variables y compara el modelo restringido contra el modelo no restringido.
+
+```{r}
+Modelo_Restringido<- lm(Y~X6+X8+X9,  data = tabla1)
+summary(Modelo_Restringido)
+```
+
+Usando el nuevo modelo restringido que se basa en solo meter variables que vengan del CRA se puede observar que su ajuste de bondad es menor que el modelo inicial, aunque ninguno de los dos modelos hay una significancia con las variables quiere decir que debe haber otros factores que afecten mas significativamente a la variable de adiccion.
+
+# CONCLUSIONES {.tabset}
+
+A partir del análisis realizado, se concluye que, de las variables consideradas en el modelo, los factores demográficos, familiares y personales presentan una influencia limitada sobre la probabilidad de que una persona recaiga en adicciones. Sin embargo, destaca como significativo el impacto de las instalaciones de los centros de rehabilitación, cuya estimación arrojó un coeficiente B2 de -2.3, con un nivel de confianza del 10%. Este resultado sugiere que la mejora en la calidad y accesibilidad de los servicios ofrecidos por los centros de rehabilitación puede ser determinante en la prevención y recuperación de las personas con problemas de adicciones.
+
+Implicaciones específicas del análisis:
+
+Factores con baja influencia:
+Variables como el nivel educativo, el apoyo familiar y el desempleo, que inicialmente se consideraban determinantes, no mostraron un impacto significativo en el modelo, lo que sugiere que las causas subyacentes de las adicciones pueden ser más complejas y multidimensionales de lo esperado.
+
+Importancia de los centros de rehabilitación:
+La única variable significativa en el modelo —las instalaciones de los centros de rehabilitación— evidencia que por cada mejora unitaria en la calidad de estas instalaciones, la incidencia de adicciones disminuye en promedio 2.3 unidades. Este hallazgo refuerza la necesidad de enfocar esfuerzos en la optimización de estos espacios, desde su infraestructura hasta la capacitación del personal.
+
+Implicaciones para políticas públicas:
+Basándose en los resultados del estudio, se plantean las siguientes recomendaciones:
+
+Fortalecimiento de los centros de rehabilitación:
+Se deben destinar mayores recursos a la mejora de las instalaciones y servicios en los centros de rehabilitación. Esto incluye programas de reintegración social y laboral para quienes concluyen su proceso de recuperación.
+
+Prevención temprana:
+A pesar de la baja significancia de factores demográficos y familiares, no se deben descartar estos elementos en las estrategias preventivas. Políticas dirigidas al fortalecimiento familiar y el acceso a actividades educativas y recreativas podrían complementar los esfuerzos actuales.
+
+Enfoque integral:
+Es fundamental diseñar intervenciones que combinen estrategias preventivas con políticas de tratamiento, teniendo como eje principal la calidad de las instituciones especializadas en la atención de adicciones.
+
+Reflexión final:
+El estudio demuestra que, aunque los factores sociodemográficos y familiares pueden jugar un rol marginal, la calidad de los servicios de rehabilitación es un factor crucial en la reducción de las tasas de adicción. Esto destaca la relevancia de abordar el problema desde una perspectiva institucional, enfocándose en la mejora continua de los espacios de atención y la profesionalización de sus procesos.
+
+
+## LIMITACIONES
+Limitaciones del análisis econométrico
+
+A pesar de los hallazgos obtenidos, es importante reconocer las limitaciones del modelo y del estudio, las cuales pueden influir en la interpretación de los resultados y la implementación de políticas públicas basadas en estos.
+
+Algunas variables clave, como las relacionadas con factores familiares o económicos, podrían no estar completamente capturadas debido a posibles sesgos en las respuestas de los encuestados o limitaciones en la medición. Esto podría explicar la baja significancia de dichos factores en el modelo.
+
+Aunque se analizaron factores demográficos, familiares y personales, es probable que existan variables omitidas que tengan una mayor influencia sobre las adicciones, como condiciones psicológicas, acceso a redes de apoyo comunitarias o influencias culturales. La exclusión de estas variables podría sesgar los resultados.
+
+Las limitaciones señaladas resaltan la necesidad de realizar estudios adicionales que consideren un diseño longitudinal, la inclusión de variables omitidas y una mayor amplitud geográfica. Esto permitirá obtener una comprensión más robusta y completa del fenómeno de las adicciones, contribuyendo a la elaboración de políticas públicas más efectivas.
+
+# BIBLIOGRAFÍA {.tabset}
+
+● Valero-Aguayo, Luis, Ortiz-Tallo, Margarita, Parra-García, María del Mar, & JiménezGuerra, Marta. (2013). Valoración de resultados y perfil psicosocial de un programa de
+rehabilitación de personas con drogodependencias. Anales de Psicología, 29(1), 38-47.
+https://dx.doi.org/10.6018/analesps.29.1.159131
+
+
+● Carbonell, J. (2024, 22 abril). ¿Por qué se consumen drogas? Síndrome Adicciones.
+https://sindrome-adicciones.es/blog/adicciones/por-que-se-consumen-drogas/
+
+
+● Guadalsalus, & Guadalsalus. (2024, 9 febrero). ¿Qué porcentaje de adictos se
+recuperan? Guadalsalus - Centro de Desintoxicación.
+https://www.guadalsalus.com/blog/que-porcentaje-de-adictos-se-recuperan
+
+
+● SSG ofrece atención para identificar oportunamente a los habitantes de León con
+alguna adicción. (2024, 28 agosto). Boletines Dependencias.
+https://boletines.guanajuato.gob.mx/2024/08/28/ssg-ofrece-atencion-para-identificaroportunamente-a-los-habitantes-de-leon-con-alguna-adiccion/
+
+
+● National Library of Medicine. (s. f.). Drogas y menores de edad.
+https://medlineplus.gov/spanish/drugsandyoungpeople.html
+
+
+● Adame, W. (2021, 21 abril). Tiene León 42 colonias de alto riesgo por consumo de
+drogas. Grupo Milenio. https://www.milenio.com/politica/comunidad/consumodrogas-leon-42-colonias-alto-riesgo
+
+
+● La Llum, L. (2023, 15 febrero). Recaídas de personas con adicción a alcohol y cocaína en épocas festivas. Centro Desintoxicación Valencia. Llaurant la Llum Tratamiento de Adicciones. https://www.llaurantlallum.com/informacion-adicciones/recaidas-de-personas-con-adiccion-a-alcohol-y-cocaina-en-epocas-festivas/
+
+
+● Trastorno de consumo de drogas: MedlinePlus enciclopedia médica. (s. f.-b). https://medlineplus.gov/spanish/ency/article/001522.htm
+
+
+● Adictalia, E. (2024, 12 noviembre). Cómo evitar y prevenir recaídas en una adicción - Adictalia. Adictalia. https://www.adictalia.es/noticias/evitar-y-prevenir-recaidas-adicciones/
+
+
+● El uso indebido de drogas y la adicción | National Institute on Drug Abuse. (2024, 5 enero). National Institute On Drug Abuse. https://nida.nih.gov/es/publicaciones/las-drogas-el-cerebro-y-la-conducta-la-ciencia-de-la-adiccion/abuso-y-adiccion-las-drogas
+
+
+● Pereira, M. (2020, 20 enero). Adicciones y recaídas: síndrome de la recaída - ISEP. ISEP. https://www.isep.es/actualidad/adicciones-y-recaidas-sindrome-de-la-recaida/
