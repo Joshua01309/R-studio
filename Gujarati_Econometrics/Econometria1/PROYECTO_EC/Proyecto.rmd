@@ -3,7 +3,6 @@ title: "PROYECTO CRA´s LEÓN"
 author: 
   - "Josue Ivan Murillo Alba"
   - "Oliver Romero Marin"
-  - "Jesus Alejandro Hernandez Gutierrez"
   - "Marco Antonio Gutierrez Marquez"
 date: "2024-10-24"
 output:
@@ -20,7 +19,7 @@ text-align: justify}
 
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = FALSE)
+knitr::opts_chunk$set(echo = TRUE)
 library(dplyr)
 library(png)
 library(magick)
