@@ -1,0 +1,471 @@
+
+---
+title: "Practica 1"
+author: " Murillo Alba Josué Iván"
+date: "Febrero 2025"
+output: 
+  html_document:
+    toc: true
+    toc_depth: 1
+    theme: journal
+---
+
+
+<style>
+body {
+text-align: justify}
+</style>
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r}
+library(dplyr)
+```
+
+
+1. Realiza una gráfica con los primeros 10 valores de las ecuaciones de diferencias.
+2. Realiza otra gráfica, ahora con los primeros 100 valores.
+3. Resuelve las ecuaciones en diferencias y verifica que coincida la estabilidad dinámica
+de las soluciones con la gráficas realizadas. verifica que coincida también el punto
+de equilibrio si es el caso.
+4. Realiza una gráfica con los primeros 10 valores de las soluciones de las ecuaciones
+de diferencias.
+
+
+# A {.tabset}
+La ecuación es:
+
+\[
+X_t = -X_{t-1} + 4
+\]
+
+Con la condición inicial:
+
+\[
+X_1 = 1
+\]
+
+## 1
+
+```{r}
+n <- 10
+X <- numeric(n)
+X[1] <- 1
+
+for(t in 2:n){
+  X[t] <- -X[t-1] + 4
+}
+
+X[10]
+
+plot(X, type = 'l', xlab = "t")
+```
+
+
+## 2
+
+```{r}
+n <- 100
+X <- numeric(n)
+X[1] <- 1
+
+for(t in 2:n)
+  X[t] <- -X[t-1]+4
+
+X
+plot(X)
+plot(X, type = 'l')
+```
+
+
+
+## 3
+
+Verificación de estabilidad dinámica y punto de equilibrio
+Estabilidad dinámica: ciclica alternante
+
+La solución contiene un término oscilante 
+(−1)^𝑡
+lo que indica que los valores alternan (suben y bajan en cada paso).
+Sin embargo, la solución siempre oscila alrededor de 2, lo que significa que la serie converge en promedio al punto de equilibrio que es 2.
+Conclusión: La serie es estable y converge a 2 en promedio, aunque alterna alrededor de este valor +- 1
+
+## 4
+
+```{r}
+n <- 10
+y <- numeric(n)
+
+for (t in 1:n)
+  y[t] <- 1*(-1)^t + 2
+
+plot(y, type="l", col="blue", lwd=2, xlab="t", ylab="X_t", main="Solución analítica de la ecuación en diferencias")
+points(y, pch=16, col="red")  
+
+```
+
+
+
+# B {.tabset}
+
+La ecuación es:
+
+\[
+X_t = -\frac{4}{5} X_{t-1} + 2
+\]
+
+Con la condición inicial:
+
+\[
+X_1 = 1
+\]
+
+## 1
+
+```{r}
+n <- 10
+X <- numeric(n)
+X[1] <- 1
+
+for(t in 2:n){
+  X[t] <- -(4/5)*X[t-1] + 2
+}
+
+X[10]
+
+plot(X, type = 'l', xlab = "t")
+```
+
+
+## 2
+
+```{r}
+n <- 100
+X <- numeric(n)
+X[1] <- 1
+
+for(t in 2:n)
+  X[t] <- -(4/5)*X[t-1] + 2
+
+X
+plot(X)
+plot(X, type = 'l')
+```
+
+
+
+## 3
+
+Verificación de estabilidad dinámica y punto de equilibrio
+Estabilidad dinámica: alternante convergente
+
+En la solución lambda esta entre -1 y 0 por lo que la funcion tendera a ir a rotar del punto de equilibrio que es 10/9  a +- 5/36
+alternando hasta converger o aproximarce a este punto de equililbrio es decir xt tendera a  10/9 cuanto t tienda a infinito
+
+## 4
+
+```{r}
+n <- 10
+y <- numeric(n)
+
+for (t in 1:n)
+  y[t] <- (5/36)*(-4/5)^t + (10/9) 
+
+plot(y, type="l", col="blue", lwd=2, xlab="t", ylab="X_t", main="Solución analítica de la ecuación en diferencias")
+points(y, pch=16, col="red")  
+
+```
+
+
+# C {.tabset}
+La ecuación es:
+
+\[
+X_t = 1.1 X_{t-1} + 1
+\]
+
+Con la condición inicial:
+
+\[
+X_1 = 2
+\]
+
+## 1
+
+```{r}
+n <- 10
+X <- numeric(n)
+X[1] <- 1
+
+for(t in 2:n){
+  X[t] <- 1.1*X[t-1] + 1
+}
+
+X[10]
+
+plot(X, type = 'l', xlab = "t")
+```
+
+
+## 2
+
+```{r}
+n <- 100
+X <- numeric(n)
+X[1] <- 1
+
+for(t in 2:n)
+  X[t] <- 1.1*X[t-1] + 1
+
+X
+plot(X)
+plot(X, type = 'l')
+```
+
+
+
+## 3
+
+Verificación de estabilidad dinámica y punto de equilibrio
+Estabilidad dinámica: Explosiva divergente
+
+En la solución lambda > 1 por lo que cuando xt -> inf 't' -> inf partiendo desde -10 o alejandose de este
+
+## 4
+
+```{r}
+n <- 10
+y <- numeric(n)
+
+for (t in 1:n)
+  y[t] <- 10.91*(1.1)^t-10
+
+plot(y, type="l", col="blue", lwd=2, xlab="t", ylab="X_t", main="Solución analítica de la ecuación en diferencias")
+points(y, pch=16, col="red")  
+
+```
+
+
+
+
+
+
+
+
+# D {.tabset}
+
+La ecuación es:
+
+\[
+X_t = -\frac{7}{3} X_{t-1} - \frac{2}{3} X_{t-2}
+\]
+
+Con las condiciones iniciales:
+
+\[
+X_1 = 0, \quad X_2 = 2
+\]
+
+## 1
+
+```{r}
+n <- 10
+X <- numeric(n)
+X[1] <- 1
+
+for(t in 3:n){
+  X[t] <- -(7/3)*X[t-1] - (2/3)*X[t-2]
+}
+
+X[10]
+
+plot(X, type = 'l', xlab = "t")
+```
+
+
+## 2
+
+```{r}
+n <- 100
+X <- numeric(n)
+X[1] <- 1
+
+for(t in 3:n)
+  X[t] <--(7/3)*X[t-1] - (2/3)*X[t-2]
+
+X
+plot(X)
+plot(X, type = 'l')
+```
+
+
+
+## 3
+
+Verificación de estabilidad dinámica y punto de equilibrio
+Estabilidad dinámica: divergente y alternante a largo plazo
+
+tenemos dos labda -1<lmda1<0 alternante convergente y lmda<-1 divergente, se observa que primero converge hacia cero
+pero despues tiende a tener un comportamiento explosivo incrementando hacia infinito
+
+## 4
+
+```{r}
+n <- 10
+y <- numeric(n)
+
+for (t in 1:n)
+  y[t] <- (108/432)*(-2)^t+(-18/5)*(-1/3)^t
+
+plot(y, type="l", col="blue", lwd=2, xlab="t", ylab="X_t", main="Solución analítica de la ecuación en diferencias")
+points(y, pch=16, col="red")  
+
+```
+
+
+
+
+
+# E {.tabset}
+
+La ecuación es:
+
+\[
+X_t = \frac{5}{6} X_{t-1} + \frac{1}{6} X_{t-2} + 2
+\]
+
+Con la condición inicial:
+
+\[
+X_1 = 1
+\]
+\[
+X_2 = 2
+\]
+
+## 1
+
+```{r}
+n <- 10
+X <- numeric(n)
+X[1] <- 1
+
+for(t in 3:n){
+  X[t] <- (5/6)*X[t-1] +  (1/6)*X[t-2] + 2
+}
+
+X[10]
+
+plot(X, type = 'l', xlab = "t")
+```
+
+
+## 2
+
+```{r}
+n <- 100
+X <- numeric(n)
+X[1] <- 1
+
+for(t in 3:n)
+  X[t] <- (5/6)*X[t-1] +  (1/6)*X[t-2] + 2
+
+X
+plot(X)
+plot(X, type = 'l')
+```
+
+
+
+## 3
+
+Verificación de estabilidad dinámica y punto de equilibrio
+Estabilidad dinámica: divergente
+
+Divergencia:
+El término 12/7𝑡 crece sin límite a medida que 𝑡aumenta, lo que causa que la serie en conjunto sea divergente.
+
+Alternancia:
+El segundo término alterna en signo debido a la base negativa 
+(−1/6), mientras que el primer y tercer término no alternan.
+
+En resumen, la serie es divergente debido al crecimiento lineal del tercer término y contiene un término que alterna en signo.
+
+## 4
+
+```{r}
+n <- 10
+y <- numeric(n)
+
+for (t in 1:n)
+  y[t] <- (-65/49)*(1)^t+(-180/49)*(-1/6)^t+(12/7)*t
+
+plot(y, type="l", col="blue", lwd=2, xlab="t", ylab="X_t", main="Solución analítica de la ecuación en diferencias")
+points(y, pch=16, col="red")  
+
+```
+
+
+
+
+
+
+
+## Comportamiento de la serie según el valor de λ
+
+Si \(0 < \lambda < 1\):
+
+- La serie es **convergente y decreciente**.
+- A medida que \(t\) aumenta, \(\lambda^t\) tiende a 0.
+
+Si \(\lambda > 1\):
+
+- La serie es **divergente**.
+- A medida que \(t\) aumenta, \(\lambda^t\) tiende a infinito.
+
+Si \(\lambda = 1\):
+
+- La serie es **constante**.
+- \(\lambda^t = 1\) para todos los valores de \(t\).
+
+Si \(-1 < \lambda < 0\):
+
+- La serie es **alternante y decreciente**.
+- A medida que \(t\) aumenta, \(\lambda^t\) tiende a 0, alternando en signo.
+
+Si \(\lambda < -1\):
+
+- La serie es **divergente y alternante**.
+- A medida que \(t\) aumenta, \(\lambda^t\) crece en magnitud hacia infinito, alternando en signo.
+
+Si \(\lambda = -1\):
+
+- La serie es **alternante y constante**.
+- \(\lambda^t = (-1)^t\), alternando entre -1 y 1 para valores de \(t\) pares e impares respectivamente.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
