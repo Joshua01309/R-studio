@@ -1,0 +1,397 @@
+
+---
+title: "Practica 1"
+author: " Murillo Alba Josué Iván"
+date: "Febrero 2025"
+output: 
+  html_document:
+    toc: true
+    toc_depth: 1
+    theme: journal
+---
+
+
+<style>
+body {
+text-align: justify}
+</style>
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r}
+library(dplyr)
+```
+
+
+
+```{r}
+v <- ts(sample(0:1,10, replace =TRUE)*2-1)
+v
+plot(v)
+
+x<-numeric(100)
+for (t in 2:100) {
+  x[t]<-x[t-1]+v[t]
+  
+}
+
+plot(x, type = 'l')
+
+
+```
+
+
+
+```{r}
+# Ruido blanco
+w<-ts(rnorm(100))
+
+plot(w)
+
+# Caminata aleatoria
+x <- ts(numeric(100))
+for(t in 2:100)
+  x[t]<-x[t-1] + w[t]
+
+plot(x)
+
+# MA
+y <- ts(numeric(100))
+for (t in 3:100) 
+  y[t]<-1/2*w[t-1]+1/2*w[t-2]+w[t]
+  
+plot(y)
+
+# Autoregresivo
+
+z <- ts(numeric(100))
+for (t in 3:100) 
+  z[t]<-1/4*z[t-1]+1/3*z[t-2]+w[t]
+  
+plot(z)
+```
+
+
+
+Sea {Wt} un proceso de ruido blanco i.i.d. N(0, 1). Varianza σ
+2 = 1.
+Considera los procesos estocásticos en los incisos.
+1. Realiza una gráfica con los primeros 100 valores.
+2. Identifica cada proceso estocástico y escribe su nombre.
+3. Realiza una gráfica con los primeros 1000 valores.
+4. Calcula la media de una serie de tiempo con 1000 valores, de cada proceso estocástico, usando R (mean(Xt)).
+5. Calcula algebraicamente el valor esperado para los incisos a), b) y c).
+6. Determina si la parte homogénea de los procesos estocásticos es convergente o explosiva.
+7. Calcula las covarianzas cov(Xt
+, Xt−1), cov(Xt
+, Xt−4) de los procesos estocásticos
+
+
+
+# A {.tabset}
+a) Xt = Wt
+
+## 1
+
+```{r}
+
+x <- numeric(100)
+for (t in 1:100) {
+  x[t]<- w[t]  
+  
+}
+plot(x, type = 'l')
+
+
+```
+
+
+## 2
+
+Es de termino de ruido blanco de o
+
+## 3
+
+```{r}
+x <- numeric(1000)
+for (t in 1:1000) {
+  x[t]<- w[t]  
+  
+}
+plot(x, type = 'l')
+
+```
+
+
+## 4
+
+```{r}
+x <- numeric(100)
+for (t in 1:100) 
+  x1<-x[t]<- w[t]  
+
+
+  
+mean(x1)
+```
+
+
+
+# B {.tabset}
+
+b) Xt = Xt−1 + Wt
+, con X1 = 0
+
+
+## 1
+
+```{r}
+
+x <- numeric(100)
+for (t in 2:100) {
+  x[t]<- x[t-1] + w[t]  
+  
+}
+plot(x, type = 'l')
+
+
+```
+
+
+## 2
+
+Caminata aleatoria
+
+## 3
+
+```{r}
+x <- numeric(1000)
+for (t in 2:1000) {
+  x[t]<-x[t-1] + w[t]  
+  
+}
+plot(x, type = 'l')
+
+```
+
+
+## 4
+
+```{r}
+x <- numeric(100)
+for (t in 2:100) {
+  x[t]<- x[t-1] + w[t]  
+  
+}
+mean(x[t])
+```
+
+# C {.tabset}
+c) Xt =1/2Wt−3 −1/3Wt−2 −1/4Wt−1 + Wt
+, con X1 = 0, X2 = 0, X3 = 0
+
+## 1
+
+```{r}
+
+x <- numeric(100)
+for (t in 4:100) {
+  x[t]<- (1/2)*w[t-3]-(1/3)*w[t-2]-(1/4)*w[t-1]+w[t]
+  
+}
+plot(x, type = 'l')
+
+
+```
+
+
+## 2
+
+Es de termino de Moving Average
+
+## 3
+
+```{r}
+x <- numeric(1000)
+for (t in 4:1000) 
+  x[t]<- (1/2)*w[t-3]-(1/3)*w[t-2]-(1/4)*w[t-1]+ w[t]
+plot(x, type = 'l')
+
+```
+
+
+## 4
+
+```{r}
+x <- numeric(100)
+for (t in 4:100) {
+  x[t]<- w[t]  
+  
+}
+mean(x[t])
+```
+
+
+
+# D {.tabset}
+d) Xt =−1/2 Xt−1 + Wt
+, con X1 = 2
+
+
+## 1
+
+```{r}
+
+x <- numeric(100)
+for (t in 2:100) {
+  x[t]<- -(1/2)*x[t-1] + w[t]
+  
+}
+plot(x, type = 'l')
+
+
+```
+
+
+## 2
+
+Es de termino Autoregresivo
+
+## 3
+
+```{r}
+x <- numeric(1000)
+for (t in 4:1000) 
+  x[t]<- -(1/2)*x[t-1] + w[t]
+plot(x, type = 'l')
+
+```
+
+
+## 4
+
+```{r}
+x <- numeric(100)
+for (t in 4:100) {
+  x[t]<- -(1/2)*x[t-1] + w[t]
+  
+}
+mean(x[t])
+```
+
+
+
+
+# E {.tabset}
+e) Xt = Xt−1 − Xt−2 + Wt con X1 = 2 y X2 = 4.
+
+
+## 1
+
+```{r}
+
+x <- numeric(100)
+for (t in 3:100) {
+  x[t]<- x[t-1] - x[t-2] + w[t]
+  
+}
+plot(x, type = 'l')
+
+
+```
+
+
+## 2
+
+Es de termino Autoregresivo
+
+## 3
+
+```{r}
+x <- numeric(1000)
+for (t in 3:1000) 
+  x[t]<- x[t-1] - x[t-2] + w[t]
+plot(x, type = 'l')
+
+```
+
+
+## 4
+
+```{r}
+x <- numeric(100)
+for (t in 3:100) {
+  x[t]<- x[t-1] - x[t-2] + w[t]
+  
+}
+mean(x[t])
+```
+
+
+# F {.tabset}
+e) f) Xt = 1/2Xt−1 −1/2Xt−2 + Wt
+, con X1 = 1 y X2 = 4.
+
+
+## 1
+
+```{r}
+
+x <- numeric(100)
+for (t in 3:100) {
+  x[t]<- (1/2)*x[t-1] - (1/2)*x[t-2] + w[t]
+  
+}
+plot(x, type = 'l')
+
+
+```
+
+
+## 2
+
+Es de termino Ruido blanco
+
+## 3
+
+```{r}
+x <- numeric(1000)
+for (t in 3:1000) 
+  x[t]<- (1/2)*x[t-1] - (1/2)*x[t-2] + w[t]
+plot(x, type = 'l')
+
+```
+
+
+## 4
+
+```{r}
+x <- numeric(100)
+for (t in 4:100) {
+  x[t]<- (1/2)*x[t-1] - (1/2)*x[t-2] + w[t]
+  
+}
+mean(x[t])
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
