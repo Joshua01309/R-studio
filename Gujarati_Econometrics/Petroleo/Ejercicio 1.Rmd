@@ -1,0 +1,74 @@
+---
+title: "Ejercicio 1"
+author: "Josue"
+date: "2024-08-12"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(dplyr)
+
+```
+
+```{r}
+tabla1 <- read.csv("archivo.csv")
+tabla1
+
+tabla2 <- select(tabla1, Ingreso, GastoMuestra1)
+tabla2
+
+tabla2 <- rename(tabla2, X=Ingreso, Y=GastoMuestra1)
+
+
+tabla3 <- mutate(tabla2, X2=X^2)
+mutate(tabla3, XY=X*Y, Y2=Y^2, XmasY=X+Y)
+```
+
+
+```{r}
+tabla1 <- read.csv("archivo.csv")
+
+n <- length(tabla1$Ingreso)
+
+1/n*sum(tabla1$Ingreso)
+
+mean(tabla1$Ingreso)
+
+mean(tabla1$GastoMuestra1)
+
+1/n*sum(tabla1$GastoMuestra1)
+
+plot(GastoMuestra1~Ingreso, data = tabla1)
+
+plot(tabla1$GastoMuestra1~tabla1$Ingreso)
+```
+
+Ejercicio: Calcular los estimadores para Beta1 y Besta 2
+
+```{r}
+n <- length(tabla3$X)
+
+# Calculo de Beta 2
+
+X <- mean(tabla3$X)
+valor_x <-tabla3$X
+
+Y <- mean(tabla3$Y)
+valor_y<-tabla3$Y
+
+Beta_2<-sum((valor_x-X)*(valor_y-Y))/sum((valor_x-X)^2)
+Beta_2
+
+# Calculo de Beta 1
+
+Beta_1<-Y-Beta_2*X
+Beta_1
+
+```
+
+
+
