@@ -1,6 +1,6 @@
 
 ---
-title: "Practica 1"
+title: "Practica 2"
 author: " Murillo Alba Josué Iván"
 date: "Febrero 2025"
 output: 
@@ -29,10 +29,13 @@ library(dplyr)
 
 
 ```{r}
-v <- ts(sample(0:1,10, replace =TRUE)*2-1)
+# Generar el ruido blanco
+v <- ts(sample(0:1,100, replace =TRUE)*2-1)
 v
+
 plot(v)
 
+# Caminata Aletoria
 x<-numeric(100)
 for (t in 2:100) {
   x[t]<-x[t-1]+v[t]
@@ -98,6 +101,8 @@ a) Xt = Wt
 ## 1
 
 ```{r}
+set.seed(1)
+w <-ts(rnorm(100))
 
 x <- numeric(100)
 for (t in 1:100) {
@@ -112,11 +117,15 @@ plot(x, type = 'l')
 
 ## 2
 
-Es de termino de ruido blanco de o
+Es un proceso estocastico de ruido blanco ya que el valor actual depende de un valores que son independientes y que tienen una
+distribucion identica a lo largo del tiempo con media 0 e igual varianza
 
 ## 3
 
 ```{r}
+set.seed(1)
+w <-ts(rnorm(1000))
+
 x <- numeric(1000)
 for (t in 1:1000) {
   x[t]<- w[t]  
@@ -130,28 +139,96 @@ plot(x, type = 'l')
 ## 4
 
 ```{r}
-x <- numeric(100)
-for (t in 1:100) 
-  x1<-x[t]<- w[t]  
+set.seed(1)
+w <-ts(rnorm(1000))
 
-
+x <- numeric(1000)
   
-mean(x1)
+mean(w)
 ```
+
+## 5
+El valor esperado (media) de \(X_t\) es simplemente la esperanza de \(W_t\):
+
+\[ 
+E[X_t] = E[W_t] 
+\]
+
+Por definición del proceso, 
+
+\[ 
+E[W_t] = 0 
+\]
+
+Por lo tanto:
+
+\[ 
+E[X_t] = 0 
+\]
+
+En un proceso de ruido blanco i.i.d., cada \(W_t\) es independiente de los demás y sigue una distribución normal con media \(0\). Esto implica que:
+\[ 
+E[W_t] = 0 \quad \text{para todo } t.
+\]
+Independencia del Tiempo
+
+La media de \(X_t = W_t\) no depende de \(t\), ya que todas las \(W_t\) son idénticamente distribuidas.
+
+## 6
+
+Razones por las que no aplica
+
+No hay componente homogénea
+
+La ecuación \(X_t = W_t\) no contiene términos autorregresivos (como \(X_{t-1}, X_{t-2}\), etc.). Por lo tanto, no hay una "parte homogénea" asociada al proceso. La ecuación es puramente no homogénea (depende solo del ruido \(W_t\)).
+
+Estructura del modelo
+
+Ecuación general: \(X_t =\) Componente homogénea + Componente no homogénea (ruido)
+
+En este caso: \(X_t = 0 + W_t\)
+
+No hay términos en \(X_{t-k}\), por lo que la parte homogénea es trivialmente nula.
+
+
+## 7
+Propiedades de {W_t}
+\[ 
+E[W_t] = 0 
+\]
+
+\[ 
+\text{Var}(W_t) = 1 
+\]
+
+\[ 
+\text{Cov}(W_t, W_{t-h}) = 0 \quad \text{para } h \neq 0
+\]
+
+Covarianzas
+
+\[ 
+\text{Cov}(X_t, X_{t-1}) = \text{Cov}(W_t, W_{t-1}) = 0 
+\]
+
+\[ 
+\text{Cov}(X_t, X_{t-4}) = \text{Cov}(W_t, W_{t-4}) = 0 
 
 
 
 # B {.tabset}
-
-b) Xt = Xt−1 + Wt
+ Xt = Xt−1 + Wt
 , con X1 = 0
 
 
 ## 1
 
 ```{r}
+set.seed(2)
+w <-ts(rnorm(100))
 
 x <- numeric(100)
+x[1] <- 0 
 for (t in 2:100) {
   x[t]<- x[t-1] + w[t]  
   
@@ -164,12 +241,16 @@ plot(x, type = 'l')
 
 ## 2
 
-Caminata aleatoria
+Caminata aleatoria: el pronostico actual es igual al pronostico anterior mas cercano y un error o ruido blanco
 
 ## 3
 
 ```{r}
+set.seed(2)
+w <-ts(rnorm(1000))
+
 x <- numeric(1000)
+x[1] <- 0 
 for (t in 2:1000) {
   x[t]<-x[t-1] + w[t]  
   
@@ -182,13 +263,42 @@ plot(x, type = 'l')
 ## 4
 
 ```{r}
-x <- numeric(100)
-for (t in 2:100) {
-  x[t]<- x[t-1] + w[t]  
-  
+set.seed(2)
+w <- rnorm(1000)
+
+x <- numeric(1000)
+x[1] <- 0 
+
+for (t in 2:1000) {
+  x[t] <- x[t-1] + w[t]
 }
-mean(x[t])
+
+media_x <- mean(x)
+print(media_x)
 ```
+
+## 5
+ Valor Esperado de \(X_t\)
+
+El valor esperado de \(X_t\) es cero para todo \(t \geq 1\), independientemente del tiempo. Esto ocurre porque el proceso es una caminata aleatoria sin deriva (no hay término constante), y los choques aleatorios \(W_t\) tienen media cero.
+
+
+\[
+E[X_t] = 0 \quad \text{para todo } t \geq 1
+\]
+
+
+
+## 6
+
+Raíz unitaria: Procesos no estacionarios con varianza creciente 
+
+## 7 
+
+cov (xt, xt-1)= t-2
+cov (xt, xt-4)= t-5
+
+
 
 # C {.tabset}
 c) Xt =1/2Wt−3 −1/3Wt−2 −1/4Wt−1 + Wt
@@ -197,8 +307,13 @@ c) Xt =1/2Wt−3 −1/3Wt−2 −1/4Wt−1 + Wt
 ## 1
 
 ```{r}
+set.seed(3)
+w <- rnorm(100)
 
 x <- numeric(100)
+x[1] <- 0 
+x[2] <- 0 
+x[3] <- 0 
 for (t in 4:100) {
   x[t]<- (1/2)*w[t-3]-(1/3)*w[t-2]-(1/4)*w[t-1]+w[t]
   
@@ -211,12 +326,18 @@ plot(x, type = 'l')
 
 ## 2
 
-Es de termino de Moving Average
+Es de termino de Moving Average de orden 3: el momento actual depende de ruido blanco de momentos anteriores
 
 ## 3
 
 ```{r}
+set.seed(3)
+w <- rnorm(1000)
+
 x <- numeric(1000)
+x[1] <- 0 
+x[2] <- 0 
+x[3] <- 0 
 for (t in 4:1000) 
   x[t]<- (1/2)*w[t-3]-(1/3)*w[t-2]-(1/4)*w[t-1]+ w[t]
 plot(x, type = 'l')
@@ -227,13 +348,47 @@ plot(x, type = 'l')
 ## 4
 
 ```{r}
-x <- numeric(100)
-for (t in 4:100) {
-  x[t]<- w[t]  
+set.seed(3)
+w <- rnorm(1000)
+
+x <- numeric(1000)
+x[1] <- 0 
+x[2] <- 0 
+x[3] <- 0 
+for (t in 4:1000) 
+  x[t]<- (1/2)*w[t-3]-(1/3)*w[t-2]-(1/4)*w[t-1]+w[t]
   
-}
-mean(x[t])
+  
+mean(x)
 ```
+
+## 5
+
+La esperanza es 0 ya que esta conformado por ruido blanco y la esperanza del ruido blanco es 0
+
+
+## 6
+
+Estacionariedad:
+Los modelos MA son siempre estacionarios (en covarianza), ya que son combinaciones lineales finitas de términos de ruido blanco.
+
+La estacionariedad no depende de los coeficientes 
+θi
+
+MA no contienen parte homogenea
+
+## 7
+Covarianzas
+
+Para \(h = 1\):
+
+La covarianza depende de la superposición de los términos de ruido en \(X_t\) y \(X_{t-1}\). Solo los términos \(W_{t-1}, W_{t-2}, W_{t-3}\) están presentes en ambos momentos, pero debido al orden del modelo MA(3), la contribución se calcula como arriba.
+
+Para \(h = 4\):
+
+No hay superposición de términos de ruido entre \(X_t\) y \(X_{t-4}\), ya que \(X_t\) depende de \(W_t, W_{t-1}, W_{t-2}, W_{t-3}\), mientras que \(X_{t-4}\) depende de \(W_{t-4}, W_{t-5}, W_{t-6}, W_{t-7}\). Por lo tanto, son independientes.
+
+
 
 
 
@@ -245,8 +400,11 @@ d) Xt =−1/2 Xt−1 + Wt
 ## 1
 
 ```{r}
+set.seed(4)
+w <- rnorm(100)
 
 x <- numeric(100)
+x[1] <- 2
 for (t in 2:100) {
   x[t]<- -(1/2)*x[t-1] + w[t]
   
@@ -259,13 +417,17 @@ plot(x, type = 'l')
 
 ## 2
 
-Es de termino Autoregresivo
+Es de termino Autoregresivo de orden 1 y coeficiente -1/2
 
 ## 3
 
 ```{r}
+set.seed(4)
+w <- rnorm(1000)
+
 x <- numeric(1000)
-for (t in 4:1000) 
+x[1]<-2
+for (t in 2:1000) 
   x[t]<- -(1/2)*x[t-1] + w[t]
 plot(x, type = 'l')
 
@@ -275,13 +437,30 @@ plot(x, type = 'l')
 ## 4
 
 ```{r}
-x <- numeric(100)
+set.seed(4)
+w <- rnorm(1000)
+
+x <- numeric(1000)
+x[1]<-2
 for (t in 4:100) {
   x[t]<- -(1/2)*x[t-1] + w[t]
   
 }
-mean(x[t])
+mean(x)
 ```
+
+
+## 5
+(-1/2)^(t-1) * 2
+
+## 6
+
+su raiz es -0.5< 1 por tanto convergente
+
+## 7
+
+
+
 
 
 
@@ -293,8 +472,12 @@ e) Xt = Xt−1 − Xt−2 + Wt con X1 = 2 y X2 = 4.
 ## 1
 
 ```{r}
+set.seed(5)
+w <- rnorm(100)
 
 x <- numeric(100)
+x[1]<-2
+x[2]<-4
 for (t in 3:100) {
   x[t]<- x[t-1] - x[t-2] + w[t]
   
@@ -307,12 +490,17 @@ plot(x, type = 'l')
 
 ## 2
 
-Es de termino Autoregresivo
+Es de termino Autoregresivo de orden 2
 
 ## 3
 
 ```{r}
+set.seed(5)
+w <- rnorm(1000)
+
 x <- numeric(1000)
+x[1]<-2
+x[2]<-4
 for (t in 3:1000) 
   x[t]<- x[t-1] - x[t-2] + w[t]
 plot(x, type = 'l')
@@ -323,13 +511,27 @@ plot(x, type = 'l')
 ## 4
 
 ```{r}
-x <- numeric(100)
+set.seed(5)
+w <- rnorm(1000)
+
+x <- numeric(1000)
+x[1]<-2
+x[2]<-4
 for (t in 3:100) {
   x[t]<- x[t-1] - x[t-2] + w[t]
   
 }
-mean(x[t])
+mean(x)
 ```
+
+## 5
+
+## 6
+
+## 7
+
+
+
 
 
 # F {.tabset}
@@ -340,8 +542,13 @@ e) f) Xt = 1/2Xt−1 −1/2Xt−2 + Wt
 ## 1
 
 ```{r}
+set.seed(6)
+w <- rnorm(100)
 
 x <- numeric(100)
+x[1]<-1
+x[2]<-4
+
 for (t in 3:100) {
   x[t]<- (1/2)*x[t-1] - (1/2)*x[t-2] + w[t]
   
@@ -354,12 +561,17 @@ plot(x, type = 'l')
 
 ## 2
 
-Es de termino Ruido blanco
+Es de termino Autorgresion de 2do orden
 
 ## 3
 
 ```{r}
+set.seed(6)
+w <- rnorm(1000)
+
 x <- numeric(1000)
+x[1]<-1
+x[2]<-4
 for (t in 3:1000) 
   x[t]<- (1/2)*x[t-1] - (1/2)*x[t-2] + w[t]
 plot(x, type = 'l')
@@ -370,14 +582,24 @@ plot(x, type = 'l')
 ## 4
 
 ```{r}
-x <- numeric(100)
+set.seed(6)
+w <- rnorm(1000)
+
+x <- numeric(1000)
+x[1]<-1
+x[2]<-4
 for (t in 4:100) {
   x[t]<- (1/2)*x[t-1] - (1/2)*x[t-2] + w[t]
   
 }
-mean(x[t])
+mean(x)
 ```
 
+## 5
+
+## 6
+
+## 7
 
 
 
