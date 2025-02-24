@@ -459,8 +459,13 @@ su raiz es -0.5< 1 por tanto convergente
 
 ## 7
 
+Para \(h = 1\):
 
+Es negativa \(\left(-\frac{2}{3}\sigma^2\right)\) debido al coeficiente autorregresivo negativo \(\left(\phi = -\frac{1}{2}\right)\).
 
+Para \(h = 4\):
+
+Es positiva \(\left(\frac{1}{12}\sigma^2\right)\) porque \(\left(-\frac{1}{2}\right)^4 = \frac{1}{16}\), y la autocovarianza decae exponencialmente con el desfase.
 
 
 
@@ -525,10 +530,30 @@ mean(x)
 ```
 
 ## 5
+Valor Esperado de \(X_t\)
+
+El valor esperado de \(X_t\) está dado por la siguiente expresión:
+
+\[ 
+E[X_t] = -2 \cos\left(\frac{\pi t}{3}\right) + 2 \sqrt{3} \sin\left(\frac{\pi t}{3}\right)
+\]
+
 
 ## 6
+Oscilaciones Persistentes
+
+Las raíces complejas en el círculo unitario implican que la solución homogénea tiene componentes sinusoidales que no se amortiguan (oscilaciones perpetuas).
+
+Efecto del Ruido \(W_t\):
+
+El término \(W_t\) (ruido blanco) introduce variabilidad adicional, haciendo que la varianza del proceso crezca con el tiempo. El proceso es no convergente debido a:
+
+- Raíces características en el círculo unitario (\(|r| = 1\)).
+- Oscilaciones perpetuas en la media.
+- Varianza creciente con el tiempo.
 
 ## 7
+
 
 
 
@@ -596,8 +621,27 @@ mean(x)
 ```
 
 ## 5
+Valor Esperado de \(X_t\)
+
+\[ 
+E[X_t] = 16.14 \left(\frac{\sqrt{2}}{2}\right)^t \cos\left(\sqrt{7}t\right) + 32.82 \left(\frac{\sqrt{2}}{2}\right)^t \sin\left(\sqrt{7}t\right)
+\]
+Valor Esperado a Largo Plazo
+
+\[ 
+E[X_t] \rightarrow 0 \quad \text{cuando } t \rightarrow \infty 
+\]
+
+La esperanza decae oscilando hacia cero debido a las raíces complejas y el módulo menor que 1.
 
 ## 6
+
+El proceso es estacionario porque las raíces están dentro del círculo unitario (\(|r| < 1\)).
+Cálculo de \( |r| \)
+
+\[ 
+|r| = \sqrt{\left(\frac{4}{1}\right)^2 + \left(\frac{4}{7}\right)^2} = \sqrt{\frac{16}{1} + \frac{16}{49}} = \sqrt{\frac{16}{8}} = \sqrt{2} < 1
+\]
 
 ## 7
 
