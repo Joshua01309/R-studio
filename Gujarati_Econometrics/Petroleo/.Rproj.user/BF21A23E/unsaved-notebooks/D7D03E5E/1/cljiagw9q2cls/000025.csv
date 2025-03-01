@@ -1,6 +1,0 @@
-"0",""
-"0","tabla2 <- rename(tabla2, X=ANO, Y=HIDRO)"
-"0",""
-"0",""
-"0","tabla3 <- mutate(tabla2, X2=X^2)"
-"0","mutate(tabla3, XY=X*Y, Y2=Y^2, XmasY=X+Y)"
