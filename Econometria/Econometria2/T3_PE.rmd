@@ -57,7 +57,8 @@ for(t in 3:n)
 
 cov(x,x2)
 
-acf(x)
+
+
 
 ```
 
@@ -111,11 +112,6 @@ for (t in 4:n)
   x[t] <- 3*w[t-3] + w[t]
 
 plot(x, type = 'l')
-
-
-ACF <- acf(x)
-ACF
-
 
 
 
@@ -202,8 +198,6 @@ for (t in 2:n)
 plot(x, type = 'l')
 
 
-ACF <- acf(x)
-ACF
 
 ```
 
@@ -286,8 +280,6 @@ for (t in 3:n)
 
 plot(x, type = 'l')
 
-ACF <- acf(x)
-ACF 
 
 
 ```
@@ -377,8 +369,7 @@ for (t in 3:n)
 
 plot(x, type = 'l')
 
-ACF <- acf(x)
-ACF 
+
 
 ```
 
@@ -415,8 +406,7 @@ for (t in 4:n)
 
 plot(x, type = 'l')
 
-ACF <- acf(x)
-ACF
+
 
 ```
 
