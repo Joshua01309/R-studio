@@ -84,19 +84,9 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 
-```{r}
-library(tseries)
-```
-
-
-
-
-
-
-
 # Series de Tiempo Integradas {.tabset}
 
-## a)
+a)
 Carga en R los datos del archivo. Los datos contienen una serie de tiempo.
 ```{r}
 file1 <- read.csv('PracR.csv')
@@ -105,8 +95,9 @@ file3<- read.csv('PracX.csv')
 file4<- read.csv('PracY.csv')
 ```
 
+## PracR {.tabset}
 
-## b)
+### b
 Determina si la serie de tiempo es estacionaria o no. Realiza la gr´afica y
 utiliza la prueba de Dickey-Fuller Aumentada.
 Explica por que es o por qu´e no es estacionaria.
@@ -124,6 +115,49 @@ acf(x, main = "ACF de la Serie Original")
 adf_result <- adf.test(x)
 print(adf_result)
 
+```
+
+Reglas Clave en Pruebas de Estacionariedad
+Valor-p (p-value)
+- Si `p-value < 0.05` → Rechazas la hipótesis nula (*H0*).  
+  **Conclusión:** La serie es estacionaria.  
+- Si `p-value ≥ 0.05` → No rechazas *H0*.  
+  **Conclusión:** La serie NO es estacionaria (tiene raíz unitaria).  
+
+Estadístico de Dickey-Fuller vs. Valores Críticos
+Compara el estadístico Dickey-Fuller (`−2.8317`) con los valores críticos típicos:  
+- **1%:** `−3.43`  
+- **5%:** `−2.86`  
+- **10%:** `−2.57`  
+- Si el estadístico es menor (más negativo) que el valor crítico → Rechazas *H0*.  
+- Si el estadístico es mayor (menos negativo) que el valor crítico → No rechazas *H0*.  
+
+Lag Order (Rezagos)
+El **Lag order** (`34`) indica el número de rezagos usados para modelar la autocorrelación.  
+- Si el *Lag order* es muy alto en comparación con el tamaño de la serie, la prueba puede perder potencia.  
+- Verifica que el número de observaciones (*n*) sea mayor que `Lag order + 20`.  
+
+
+En nuestro caso:
+Notamos que la grafica tiene una tendencia postiva o que incrementa a lo largo de los momentos
+con la prueba de DF tenemos que 
+
+Valor-p
+- `0.2251 > 0.05`  
+  **Conclusión:** No estacionaria.
+
+Estadístico Dickey-Fuller
+- `−2.8317 > −2.86` (valor crítico al 5%)  
+  **Conclusión:** No estacionaria.
+
+Lag Order
+20 + 34 < 40002  aceptable 
+
+### c
+ Convierte la serie de tiempo en una serie de tiempo estacionaria. Explica
+tu procedimiento.
+
+```{r}
 # Diferenciar
 d1x <- diff(x)
 adf.test(d1x)  
@@ -139,9 +173,278 @@ plot(d2x, type = 'l')
 acf(d2x)
 
 
+```
+
+
+primero observamos con una diferencia que los elementos estadisticos no se reflejan ya que no tiene una tendencia fija y sigue  teniendo una tendcencia o positiva o negativa ademas la correlaccion tiene bastantes retrasos y que caen de manera muy lenta, cuando aplilcamos la segunda diferencia observamos directamente por sus graficas que tiene una tendencia fija y su correlacion solo se puede observar un retraso y por los indicadores tenemos:
+Valor-p
+- `0.01<0.05`  
+  **Conclusión:** estacionaria.
+
+Estadístico Dickey-Fuller
+- -33.504< -2.86
+  **Conclusión:** estacionaria.
+
+### d
+Concluye que la serie es integrada de orden d, I(d). ¿Cu´al es el valor de d?
+
+Valor de d
+El valor de d (orden de integración) es **2**, por lo que la serie es **I(2)**.
+
+Serie Original (I(0))
+- **No estacionaria:**
+  - ADF test: `p-value = 0.2251 > 0.05`, `Dickey-Fuller = -2.83 > -2.86` (valor crítico al 5%).
+  - Gráfica y ACF muestran tendencia y correlación persistente.
+
+ Primera Diferencia (I(1))
+- **Sigue sin ser estacionaria:**
+
+Segunda Diferencia (I(2))
+- **Estacionaria:**
+  - ADF test: `p-value = 0.01 < 0.05`, `Dickey-Fuller = -33.504 < -2.86`.
+  - Gráfica sin tendencia y ACF con decaimiento rápido.
+
+ Conclusión Final
+La serie original requiere 2 diferenciaciones para volverse estacionaria, por lo que es integrada de orden **2**, denotada como **I(2)**.
+
+Fórmula de Integración
+
+$$
+\nabla^2 x_t = (1 - L)^2 x_t = x_t - 2x_{t-1} + x_{t-2}
+$$
+
+Donde:  
+- $\nabla$ es el operador de diferencia.  
+- $L$ es el operador de rezago.
+
+
+
+
+## PracT {.tabset}
+
+### b
+Determina si la serie de tiempo es estacionaria o no. Realiza la grafica y
+utiliza la prueba de Dickey-Fuller Aumentada.
+Explica por que es o por qu´e no es estacionaria.
+
+```{r}
+x <- file2$x
+n <- nrow(file2)
+
+# Original
+plot(x, type = 'l', main = "Serie Original", col = "cyan", xlab = "Tiempo", ylab = "Valor")
+
+acf(x, main = "ACF de la Serie Original")
+
+# Prueba DF
+adf_result <- adf.test(x)
+print(adf_result)
 
 ```
-Reglas
+
+En nuestro caso:
+Es estacionaria, si observamos las graficas vemos que esta tiene una tendencia fija a lo largo del eje x, la grafica de correlacion los retrasos caen rapidamente y por las pruebas tenemos que
+
+Dickey-Fuller = -33.379, Lag order = 34, p-value = 0.01
+
+
+Valor-p
+- `0.01 < 0.05`  
+  **Conclusión:** estacionaria.
+
+Estadístico Dickey-Fuller
+- `-33.379 < −2.86` (valor crítico al 5%)  
+  **Conclusión:** estacionaria.
+
+
+
+## PracX {.tabset}
+
+### b
+Determina si la serie de tiempo es estacionaria o no. Realiza la gr´afica y
+utiliza la prueba de Dickey-Fuller Aumentada.
+Explica por que es o por qu´e no es estacionaria.
+
+```{r}
+x <- file3$x
+n <- nrow(file3)
+
+# Original
+plot(x, type = 'l', main = "Serie Original", col = "cyan", xlab = "Tiempo", ylab = "Valor")
+
+acf(x, main = "ACF de la Serie Original")
+
+# Prueba DF
+adf_result <- adf.test(x)
+print(adf_result)
+
+```
+
+
+
+En nuestro caso:
+Notamos que la grafica tiene una tendencia negaiva o que decrementa a lo largo de los momentos
+con la prueba de DF tenemos que 
+
+Dickey-Fuller = -0.81458, Lag order = 34, p-value = 0.9607
+
+Valor-p
+- `0.9607 > 0.05`  
+  **Conclusión:** No estacionaria.
+
+Estadístico Dickey-Fuller
+- `-0.81458 > −2.86` (valor crítico al 5%)  
+  **Conclusión:** No estacionaria.
+
+
+### c
+ Convierte la serie de tiempo en una serie de tiempo estacionaria. Explica
+tu procedimiento.
+
+```{r}
+# Diferenciar
+d1x <- diff(x)
+adf.test(d1x)  
+
+plot(d1x, type = 'l')
+acf(d1x)
+
+
+```
+
+
+ 
+Ciuando aplicamod la priemera diferencia observamos directamente por sus graficas que tiene una tendencia fija y su correlacion se observa que los retrasos caen rapidamente, con los indicadores tenemos que:
+
+Valor-p
+- `0.01<0.05`  
+  **Conclusión:** estacionaria.
+
+Estadístico Dickey-Fuller
+- -31.576< -2.86
+  **Conclusión:** estacionaria.
+
+### d
+Concluye que la serie es integrada de orden d, I(d). ¿Cu´al es el valor de d?
+
+Valor de d
+El valor de d (orden de integración) es **1**, por lo que la serie es **I(1)**.
+
+
+Dickey-Fuller = -0.81458, Lag order = 34, p-value = 0.9607
+
+Serie Original (I(0))
+- **No estacionaria:**
+  - ADF test: `p-value = 0.9607 > 0.05`, `Dickey-Fuller = -0.81458 > -2.86` (valor crítico al 5%).
+  - Gráfica y ACF muestran tendencia y correlación persistente.
+
+ Primera Diferencia (I(1))
+- **Estacionaria:**
+  - Gráfica sin tendencia y ACF con decaimiento rápido.
+
+ Conclusión Final
+La serie original requiere 1 diferenciaciones para volverse estacionaria, por lo que es integrada de orden **1**, denotada como **I(1)**.
+
+
+
+
+## PracY {.tabset}
+
+### b
+Determina si la serie de tiempo es estacionaria o no. Realiza la gr´afica y
+utiliza la prueba de Dickey-Fuller Aumentada.
+Explica por que es o por qu´e no es estacionaria.
+
+```{r}
+x <- file4$x
+n <- nrow(file4)
+
+# Original
+plot(x, type = 'l', main = "Serie Original", col = "cyan", xlab = "Tiempo", ylab = "Valor")
+
+acf(x, main = "ACF de la Serie Original")
+
+# Prueba DF
+adf_result <- adf.test(x)
+print(adf_result)
+
+```
+
+
+
+En nuestro caso:
+Se observa que la grafica no tiene una tendencia fija va de arriba hacia abajo y la grafica de correlacion los retrasos parecen que son constantes.
+
+Dickey-Fuller = -1.5551, Lag order = 34, p-value = 0.7677
+
+Valor-p
+- `0.7677 > 0.05`  
+  **Conclusión:** No estacionaria.
+
+Estadístico Dickey-Fuller
+- `-1.5551 > −2.86` (valor crítico al 5%)  
+  **Conclusión:** No estacionaria.
+
+
+### c
+ Convierte la serie de tiempo en una serie de tiempo estacionaria. Explica
+tu procedimiento.
+
+```{r}
+# Diferenciar
+d1x <- diff(x)
+adf.test(d1x)  
+
+plot(d1x, type = 'l')
+acf(d1x)
+
+
+```
+
+
+ 
+Ciuando aplicamod la priemera diferencia observamos directamente por sus graficas que tiene una tendencia fija y su correlacion se observa que los retrasos caen rapidamente, con los indicadores tenemos que:
+
+Dickey-Fuller = -33.651, Lag order = 34, p-value = 0.01
+
+Valor-p
+- `0.01<0.05`  
+  **Conclusión:** estacionaria.
+
+Estadístico Dickey-Fuller
+- -33.651< -2.86
+  **Conclusión:** estacionaria.
+
+### d
+Concluye que la serie es integrada de orden d, I(d). ¿Cu´al es el valor de d?
+
+Valor de d
+El valor de d (orden de integración) es **1**, por lo que la serie es **I(1)**.
+
+
+Serie Original (I(0))
+- **No estacionaria:**
+  - Gráfica y ACF muestran tendencia y correlación persistente.
+
+ Primera Diferencia (I(1))
+- **Estacionaria:**
+  - Gráfica sin tendencia y ACF con decaimiento rápido.
+
+ Conclusión Final
+La serie original requiere 1 diferenciaciones para volverse estacionaria, por lo que es integrada de orden **1**, denotada como **I(1)**.
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
