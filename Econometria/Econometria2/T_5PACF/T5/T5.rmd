@@ -1,0 +1,86 @@
+
+---
+title: "Practica 5"
+author: " Murillo Alba Josué Iván"
+date: "marzo 2025"
+output: 
+  html_document:
+    toc: true
+    toc_depth: 1
+    theme: journal
+---
+
+
+<style>
+body {
+text-align: justify}
+</style>
+
+
+```{r}
+n <- 1e3
+w <- rnorm(n)
+x <- numeric(n)
+x1 <- numeric(n)
+x2 <- numeric(n)
+x3 <- numeric(n)
+
+# para x
+for(t in 3:n)
+  x[t] <- 0.33*x[t-1] + 0.4*x[t-2] + w[t]
+
+plot(x, type = 'l')
+
+# para x1
+for(t in 2:n)
+  x1[t] <- x[t-1]
+head(x)
+head(x1)
+# para x2
+for(t in 3:n)
+  x2[t] <- x[t-2]
+head(x)
+head(x2)
+# para x3
+for(t in 4:n)
+  x3[t] <- x[t-3]
+head(x)
+head(x3)
+
+# para fi 1
+lm(x~x1)
+#para fi 2
+lm(x~x1+x2)
+#para fi 2
+lm(x~x1+x2+x3)
+
+# parcial
+p <- pacf(x)
+p
+
+# total
+a <- acf(x)
+a
+
+
+
+
+```
+
+
+
+
+
+# A {.tabset}
+a) Xt = Wt
+
+## 1
+
+
+
+
+
+
+
+
+

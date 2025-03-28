@@ -434,12 +434,198 @@ Serie Original (I(0))
 La serie original requiere 1 diferenciaciones para volverse estacionaria, por lo que es integrada de orden **1**, denotada como **I(1)**.
 
 
+# Parte 2 {.tabset}
+
+## A {.tabset}
+
+Xt = 2Xt−1 − Xt−2 + .2Wt−1 + .3Wt−2 + Wt
+
+### a
+Determina si la serie de tiempo es estacionaria o no. Realiza la gr´afica y utiliza la prueba de Dickey-Fuller Aumentada.
+Explica por qu´e es o por qu´e no es estacionaria.
+
+
+```{r}
+n = 1e4
+w <- rnorm(n)
+x <- numeric(n)
+
+for (t in 3:n) {
+  x[t] <- 2*x[t-1] - x[t-2] + 0.2*w[t-1] + 0.3*w[t-2] + w[t]
+  
+}
+
+plot(x, type = 'l')
+
+acf(x)
+
+adf.test(x)
+
+```
+
+podemos ver que la grafica tiene una tendencia, por la grafica de autocorrelacion observamos que los picos o los retrasos
+decrecen muy lento o se mantienen constantes a lo largo de los momentos
+ y por la prueba podemos ver que es 0.6 > -2.86 por tanto no estacionario
+
+
+### b
+Convierte la serie de tiempo en una serie de tiempo estacionaria. Explica tu procedimiento.
+
+```{r}
+d1x <- diff(x)
+adf.test(d1x)
+
+plot(d1x, type = 'l')
+
+acf(d1x)
+
+d2x <- diff(d1x)
+adf.test(d2x)
+
+plot(d2x, type = 'l')
+
+acf(d2x)
+```
+
+
+primero la diferenciamos una vez, observamos que la grafica sigue teniendo una tendencia y su autocorrelacion
+decrece lentamente, cuando aplicamos una segunda diferencia la grafica esta dentro de un rango su autocorrelacion 
+decae rapidamente y por la prueba tenemos que -20.264 < -2.86 por tanto estacionario
+
+### c
+c) Concluye que la serie es integrada de orden d, I(d). ¿Cu´al es el valor de d?
+
+La serie original requiere 2 diferenciaciones para volverse estacionaria, por lo que es integrada de orden **2**, denotada como **I(2)**
+
+
+
+## B {.tabset}
+
+Xt = 3Xt−1 − 3Xt−2 + Xt−3 + Wt
+
+### a
+Determina si la serie de tiempo es estacionaria o no. Realiza la gr´afica y utiliza la prueba de Dickey-Fuller Aumentada.
+Explica por qu´e es o por qu´e no es estacionaria.
+
+
+```{r}
+n = 1e4
+w <- rnorm(n)
+x2 <- numeric(n)
+
+for (t in 4:n) {
+  x2[t] <- 3*x2[t-1] - 3*x2[t-2] + x2[t-3] + w[t]
+  
+}
+
+plot(x2, type = 'l')
+
+acf(x2)
+
+adf.test(x2)
+
+```
+
+podemos ver que la grafica tiene una tendencia, por la grafica de autocorrelacion observamos que los picos o los retrasos
+decrecen muy lento o se mantienen constantes a lo largo de los momentos
+ y por la prueba podemos ver que p es 0.99 > 0.05 por tanto no estacionario
+
+
+### b
+Convierte la serie de tiempo en una serie de tiempo estacionaria. Explica tu procedimiento.
+
+```{r}
+d1x2 <- diff(x2)
+adf.test(d1x2)
+
+plot(d1x2, type = 'l')
+
+acf(d1x2)
+
+d2x2 <- diff(d1x2)
+adf.test(d2x2)
+
+plot(d2x2, type = 'l')
+
+acf(d2x2)
+
+d3x2 <- diff(d2x2)
+adf.test(d3x2)
+
+plot(d3x2, type = 'l')
+
+acf(d3x2)
+
+
+
+```
+
+
+primero la diferenciamos una vez, observamos que la grafica sigue teniendo una tendencia y su autocorrelacion
+decrece lentamente, hasta cuandeo aplicamos una tercera  diferencia la grafica esta dentro de un rango su autocorrelacion 
+decae rapidamente y por la prueba tenemos que p es 0.01 < 0.05 por tanto estacionario
+
+### c
+c) Concluye que la serie es integrada de orden d, I(d). ¿Cu´al es el valor de d?
+
+La serie original requiere 3 diferenciaciones para volverse estacionaria, por lo que es integrada de orden **3**, denotada como **I(3)**
 
 
 
 
+## c {.tabset}
+
+Xt = Xt−1 + .1Wt−1 + .5Wt−3 + Wt
+
+### a
+Determina si la serie de tiempo es estacionaria o no. Realiza la gr´afica y utiliza la prueba de Dickey-Fuller Aumentada.
+Explica por qu´e es o por qu´e no es estacionaria.
 
 
+```{r}
+n = 1e4
+w <- rnorm(n)
+x3 <- numeric(n)
+
+for (t in 4:n) {
+  x3[t] <- x3[t-1] + 0.1*w[t-1] + 0.5*w[t-3] + w[t]
+  
+}
+
+plot(x3, type = 'l')
+
+acf(x3)
+
+adf.test(x3)
+
+```
+
+podemos ver que la grafica tiene una tendencia, por la grafica de autocorrelacion observamos que los picos o los retrasos
+decrecen muy lento o se mantienen constantes a lo largo de los momentos
+ y por la prueba podemos ver que p es 0.5024 > 0.05 por tanto no estacionario
+
+
+### b
+Convierte la serie de tiempo en una serie de tiempo estacionaria. Explica tu procedimiento.
+
+```{r}
+d1x3 <- diff(x3)
+adf.test(d1x3)
+
+plot(d1x3, type = 'l')
+
+acf(d1x3)
+
+```
+
+
+primero la diferenciamos una vez, observamos que la grafica  esta dentro de un rango su autocorrelacion 
+decae rapidamente y por la prueba tenemos que p es 0.01 < 0.05 por tanto estacionario
+
+### c
+c) Concluye que la serie es integrada de orden d, I(d). ¿Cu´al es el valor de d?
+
+La serie original requiere 1 diferenciaciones para volverse estacionaria, por lo que es integrada de orden **1**, denotada como **I(1)**
 
 
 
