@@ -441,6 +441,13 @@ hist(resid(modelo4), freq = FALSE)
 
 Se puede apreciar una distribucion normal en los residuos de nuestro modelo
 
+```{r}
+plot(AA)
+plot(modelo4)
+
+```
+La raiz parece estar en un punto intermedio, por tanto considero el modelo estable numericamente.
+
 ## Pronostico
 
 ```{r}
@@ -502,4 +509,35 @@ Proponemos optimizar la recolección de datos mediante:
 - Ventajas:
   - Más sencillo observar aumentos/disminuciones entre periodos consecutivos
   - Elimina la necesidad de transformaciones adicionales
-```
+
+
+# CONCLUSION FINAL DEL PROYECTO
+
+Durante la realización de esta investigación se lograron recabar datos respecto al consumo de energía en el país, tras la recabación de datos se optó por seleccionar un año base, que en este caso fue 2013, y respecto a este valor se calcularon las variaciones porcentuales.
+Tanto el modelo acf y pacf mostraron un movimiento sinusoidal decreciente, esto siendo indicativo de que el modelo sería un arima.
+Tras la selección del modelo mediante la prueba aic, se observó que un modelo (3,1,2) sería el más adecuado para lograr una mejor descripción del modelo.
+Se utilizó una función auto-arima, la cual arrojó un modelo diferente, más simple y con menos variables significativas, únicamente 2 variables ma. Este modelo sin embargo mostró un coeficiente aic mayor al obtenido por el método anterior. Por lo que se puede concluir que el modelo (3,1,2) es mejor.
+Consecuentemente se realizó un análisis de los residuos, para determinar la factibilidad del modelo, los cuales arrojaron resultados que añaden validez al modelo.
+Finalmente se corrió un modelo predictivo que muestra que se tendrá un incremento en el consumo de energía, siendo este menor al 10%.
+
+Como observación se puede pensar que la recabación de datos se puede optimizar mediante una diferente recolección de los mismos. Se puede pensar en no obtener las variaciones totales respecto al año base, sino obtener los incrementos y decrementos respecto al periodo anterior. De esta manera logrando un modelo que nos permita observar más fácilmente cuánto crece o reduce el consumo inmediatamente y sin realizar conversiones respecto al año base.
+
+# FUENTES
+
+1. Instituto Nacional de Estadística y Geografía (INEGI). Disponible en: <https://www.inegi.org.mx/>
+
+2. Solow, R. M. (1956). A Contribution to the Theory of Economic Growth. *The Quarterly Journal of Economics*, 70(1), 65-94.
+
+3. Calderón, C., & Servén, L. (2010). Infrastructure and Economic Development in Sub-Saharan Africa. *Journal of African Economies*, 19(suppl_1), i13-i87.
+
+4. ONUDI (2016). *Electricity and Industrial Productivity: The Role of Energy Access in Structural Transformation*.
+
+5. Desarrollo como libertad: Entrevista con Amartya Sen (2006). *Cuadernos del Cendes*, 23(63), 123-137. Recuperado el 19 de mayo de 2025, de <http://ve.scielo.org/scielo.php?script=sci_arttext&pid=S1012-25082006000300006&lng=es&tlng=es>.
+
+
+
+
+
+
+
+
