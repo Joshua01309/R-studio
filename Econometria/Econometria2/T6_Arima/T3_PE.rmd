@@ -1,13 +1,17 @@
 ---
-title: "PROYECTO"
-author: " "
-date: "MAYO 2025"
+title: "Un análisis de serie de tiempo del INDICE ENERGETICO NACIONAL"
+author: 
+  - "Josue Ivan Murillo Alba"
+  - "Oliver Romero Marin"
+  - "Marco Antonio Gutierrez Marquez"
+  - "Jesus Alejandro Hernández Gutiérrez"
+date: "2025-05-20"
 output:
   html_document:
-    css: assets/rany_style.css
+    css: assets/mi_estilo.css
     df_print: paged
     highlight: tango
-    theme: cosmo
+    theme: readable
     toc: yes
     toc_float:
       collapsed: true
@@ -21,42 +25,165 @@ body {
 </style>
 
 
-```{r}
-library(tseries)
-library(dplyr)
-library(lmtest)
-library(forecast)
-library(ggfortify)
-```
-
-
-
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = FALSE)
 ```
+
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+suppressPackageStartupMessages({
+  library(tseries)
+  library(dplyr)
+  library(lmtest)
+  library(forecast)
+  library(ggfortify)
+})
+```
+![Imajen](imajen.JPEG){withd=80%}
+
+
+# ANTECEDENTES {.tabset}
+
+## Introduccion 
+La disponibilidad de electricidad es una condición necesaria, aunque no representa un determinante para el desarrollo económico y social de una nación. Desde una perspectiva económica, el acceso confiable y sostenible a la energía eléctrica permite a los países expandir su actividad productiva, mejorar la calidad de vida de la población y fortalecer la infraestructura para el desarrollo industrial, tecnológico y educativo.
+
+En economías emergentes y en desarrollo, la expansión de la red eléctrica y la inversión en infraestructura energética se consideran catalizadores del crecimiento. Sin embargo, la relación entre disponibilidad eléctrica y desarrollo económico no siempre es lineal, ya que intervienen factores como la gobernanza, la eficiencia del uso energético, la desigualdad en el acceso y la calidad de los servicios públicos.
+
+Este proyecto de econometría también pretende analizar el impacto de la disponibilidad de electricidad sobre el desarrollo económico, tomando a México como caso de estudio, y contrastando con otros  países donde, a pesar de una alta cobertura eléctrica, no siempre se usa esta disponibilidad como se espera
+Para tener un enfoque más amplio analizaremos la evolución de la energía eléctrica en México. El país  cuenta con una gran diversidad de opciones para la generación de energía la principal Las centrales térmicas convencionales utilizan combustibles fósiles como carbón, gas natural o petróleo para calentar agua y producir vapor, que a su vez mueve turbinas generadoras de electricidad. representando un 55% de la producción nacional, también cuenta con generacion de energia a traves de una planta nuclear (Laguna Verde en Veracruz), que genera energía a partir de la fisión nuclear. de igual manera se cuenta con una generación combinada que Usa gas natural para generar electricidad de manera más eficiente que las termoeléctricas tradicionales.
+El futuro para las energías en México la energía solar es una muy buena alternativa ya que en más del 80% del territorio mexicano es viable desarrollar proyectos solares, y actualmente existen 23 centrales solares capaces de producir aproximadamente 4.0 teravatios.
+México se encuentra en plena transición energética, con claras expectativas de crecimiento y adaptación hacia tecnologías más limpias y sostenibles. Esta evolución responde tanto a compromisos internacionales como a la urgencia de reducir las emisiones contaminantes y diversificar las fuentes de energía.
+De acuerdo con el Programa de Desarrollo del Sistema Eléctrico Nacional (Prodesen) 2023–2037, publicado por la Secretaría de Energía, se plantea que para el año 2050, al menos el 50% de la energía producida en México provenga de fuentes limpias. Entre las acciones destacadas se encuentra la adición de 150 megawatts (MW) de capacidad nuclear y la conversión de 1,024 MW de ciclos combinados para utilizar una combinación de gas natural e hidrógeno verde, lo que marca un paso hacia la descarbonización de la generación eléctrica.
+apostar por las energías renovables no solo es una necesidad ambiental, sino una estrategia clave para el desarrollo económico y social del país.
+
+
+
+## Marco Teorico
+Para poder darle sustento a este espectro desde donde vemos las cosas, es importante citar ciertas contribuciones notables de los teóricos de la economía que pudieron según ellos predecir de cierta forma el comportamiento de una economía.  
+
+Haciendo un análisis un poco más exhaustivo sería prudente hacer mención a una obra importante de la economía como **la Riqueza de las Naciones por Smith**, donde el mismo desarrollaba y hacía hincapié en la idea de que el aumento proporcional en las facultades productivas del trabajo, donde claramente hemos visto este ejemplo en países con un mayor nivel de industrialización e ingresos. Pero no solo se trata de eso, sino también con el hecho de que este progreso tiene que ver con la extensión del mercado, que a su vez está ligado con otros factores como la densidad de población, cantidad de recursos naturales y con la estabilidad del mercado interno.  
+
+De manera análoga, **Marshall (1961)** nos indicó de manera similar que Smith que la división del trabajo es la principal razón por la cual la tecnología llega a presentar rendimientos crecientes a escala, sin embargo hasta acá llega la teoría del crecimiento endógeno pues Marshall no sabía cómo compaginar todo esto a un equilibrio en presencia de dificultades analíticas como curvas de demanda negativas.  
+
+Entrando en materia, sabemos que **la electricidad es un insumo esencial para el funcionamiento de los sectores productivos modernos**. Su disponibilidad permite la mecanización, automatización y digitalización de procesos, lo cual reduce los costos unitarios de producción, incrementa la eficiencia del trabajo y mejora la productividad marginal tanto del capital como del trabajo. Esto se vincula con el **modelo de crecimiento económico neoclásico de Solow (1956)**, que sostiene que el crecimiento sostenido en el largo plazo depende del progreso tecnológico, el cual está mediado por la inversión en infraestructura como la energética.  
+
+El acceso a electricidad está estrechamente vinculado con el **Índice de Desarrollo Humano (IDH)**, ya que facilita el acceso a servicios básicos como educación, salud y condiciones adecuadas de vivienda. La electricidad es un habilitador de capacidades humanas, como lo plantea el enfoque del desarrollo humano de **Amartya Sen**: “sin servicios básicos energéticos, las personas no pueden desarrollar todo su potencial”.  
+
+Y ya para poder ir cerrando con la parte teórica, según **Frank y Dos Santos** y la **lotería de la dependencia** se nos dice que el acceso a recursos estratégicos como la electricidad no garantiza el desarrollo si la estructura económica es dependiente de intereses externos y/o se basa en un modelo meramente extractivista. En estos casos, la energía puede usarse para sostener economías que son primordialmente exportadoras, sin beneficiar el desarrollo interno ni reducir desigualdades.  
+
+**Esto pues existe el caso de algunos países** que poseen la estructura eléctrica para alimentar cualquier industria orientada al extractivismo (minería, maquilas) y no necesariamente se integran estos beneficios al desarrollo nacional o el permeo de la riqueza en la estructura social es mínimo.  
+
+**Un ejemplo donde estos casos** donde vemos demostrado que a veces el tener la infraestructura eléctrica no es indicio de aprovechamiento del consumo ni de crecimiento a la par con el mismo.  
+
+**Casos Similares:**  
+- **Nigeria**: Tiene una amplia red eléctrica, pero con frecuentes apagones, baja calidad del servicio y corrupción institucional.  
+- **Sudáfrica**: A pesar de ser una de las economías más desarrolladas de África, enfrenta graves crisis energéticas (load shedding) que han afectado la inversión y el crecimiento económico.  
+
+**Análisis del caso mexicano:**  
+La red eléctrica en México comenzó a desarrollarse a finales del siglo XIX, con la instalación de las primeras plantas hidroeléctricas y termoeléctricas en zonas urbanas e industriales.  
+En 1937, se creó la **Comisión Federal de Electricidad (CFE)** con el objetivo de electrificar el país de forma más equitativa. Posteriormente, en 1960, con la nacionalización de la industria eléctrica, el Estado asumió el control casi total del sistema eléctrico, promoviendo la expansión de la red hacia zonas rurales y marginadas.  
+Desde la reforma energética de 2013, la red eléctrica opera bajo un **modelo mixto**, en el que empresas privadas pueden participar en la generación y comercialización de electricidad, mientras que la transmisión y distribución siguen siendo funciones exclusivas del Estado, a través de la CFE.  
+
+**Atributos de la red eléctrica mexicana**  
+- **Cobertura amplia**: Llega a prácticamente todo el país, incluyendo zonas rurales.  
+- **Capacidad de interconexión**: Permite el intercambio de energía entre regiones, facilitando la integración de energías renovables.  
+- **Operación centralizada**: A través de **CENACE**, lo que mejora el control del sistema eléctrico nacional.  
+- **Infraestructura sólida**: Especialmente en las zonas urbanas e industriales.  
+
+**Desventajas y retos**  
+- **Infraestructura envejecida**: Muchas instalaciones de transmisión y distribución necesitan modernización.  
+- **Pérdidas técnicas y no técnicas**: Se pierde una parte significativa de la energía durante su transporte (alrededor del 10%).  
+- **Baja penetración de renovables en la red**: Aunque está creciendo, aún hay barreras técnicas y regulatorias para integrar más energía solar y eólica.  
+- **Dependencia del gas natural**: La red depende en gran medida de fuentes no renovables.  
+- **Desigualdad regional**: Algunas comunidades aún tienen acceso limitado o poco confiable al servicio eléctrico.  
+
+**La red eléctrica de México** ha sido clave en el desarrollo económico y social del país, pero enfrenta importantes desafíos para adaptarse a las exigencias del siglo XXI. La modernización tecnológica, la reducción de pérdidas, y la integración de energías limpias son pasos fundamentales para que la red eléctrica continúe siendo un motor de progreso.  
+
+## Objetivo del Estudio
+Esta investigación tiene como objetivo analizar la estacionariedad del Indicador Mensual de la Actividad Industrial (IMAI) asociado a la generación, transmisión y distribución de energía eléctrica en México, como representante clave del sistema energético nacional. El estudio se centra en evaluar si las características estadísticas fundamentales de esta serie temporal —como la media, la varianza y la correlación temporal— se mantienen constantes a lo largo del tiempo, condición esencial para garantizar la confiabilidad de modelos predictivos avanzados como **ARIMA (Autoregressive Integrated Moving Average)**.
+
+Adicionalmente, se busca identificar patrones estacionales, tendencias o ciclos que influyan en el comportamiento del indicador, con el fin de explicar su dinámica y mejorar la precisión de las proyecciones. En caso de detectar no estacionariedad —es decir, variaciones sistemáticas en las propiedades estadísticas—, se aplicarán técnicas de transformación como diferenciación para estabilizar su estructura y facilitar el modelado predictivo.  
+
+El presente estudio tiene como objetivo analizar la estacionalidad del indicador industrial de generación, transmisión y distribución de energía eléctrica en México, con el propósito de identificar patrones temporales significativos que permitan explicar su comportamiento a lo largo del tiempo. A partir de dicho análisis, se busca construir un modelo econométrico predictivo confiable, utilizando la metodología **ARIMA (Autoregressive Integrated Moving Average)**, que sirva como herramienta para proyectar el comportamiento futuro del sector energético y apoyar la toma de decisiones en materia de planeación e inversión en infraestructura eléctrica.
+
+Este análisis no solo posee relevancia estadística, sino también implicaciones prácticas para el sector energético mexicano:  
+
+1. **Planificación de infraestructura**: Proyecciones confiables permiten anticipar demandas futuras de energía y optimizar inversiones en redes de transmisión y distribución.  
+2. **Estabilidad operativa**: Identificar fluctuaciones críticas ayuda a diseñar estrategias para mitigar riesgos en la red eléctrica frente a variaciones de demanda o oferta.  
+3. **Políticas públicas**: Los modelos predictivos aportan evidencia cuantitativa para diseñar regulaciones que fomenten la eficiencia energética y la transición hacia fuentes sostenibles.  
+4. **Eficiencia económica**: La capacidad de predecir ciclos o estacionalidades mejora la gestión de recursos y reduce costos operativos en el sector.
+
+## Metodologia
+
+**Obtención de datos:**  
+Fuente: Serie mensual del IMAI para "Generación, Transmisión y Distribución de Energía Eléctrica" descargada del INEGI (2010-2023).  
+Variables clave: Índice desestacionalizado y serie original.  
+Los datos para la elaboración del índice se obtienen de Registros administrativos: Provienen principalmente de entidades estatales como la CFE (Comisión Federal de Electricidad).  
+
+**Cálculo del Índice:**  
+Volumen físico: Medido en gigavatios-hora (electricidad) y metros cúbicos (agua/gas).  
+Ponderación: Basada en la contribución al valor agregado industrial de 2018.  
+Índice = (volumen actual / volumen base 2018) *100.  
+Se utilizó este periodo para tener un alcance a largo plazo (10 años).  
+
+**Herramientas utilizadas:**  
+Se utilizó Microsoft Excel para organizar los datos en formato CSV, correspondientes al periodo 2010–2023. Posteriormente, estos datos fueron importados y analizados en RStudio, donde se desarrolló un documento en formato HTML que permite visualizar todas las funciones empleadas en el análisis del indicador, así como la interpretación de los resultados obtenidos para cada parámetro incorporado.  
+
+
+# ANALISIS EXPLORATORIO DE LOS DATOS {.tabset}
+
+## Tabla
 
 ```{r}
 # Generamos Tabla con los datos a evaluar
-tabla<-read.csv('energia.csv')
-tabla2<-select(tabla,Periodo=y,IE=x)
+tabla <- read.csv('energia.csv')
+tabla2 <- select(tabla, Periodo=y, IE=x)
 head(tabla2)
+```
 
-# Grafico de los datos
+**Variables utilizadas:**
+- **Periodo**  
+- **Índice de Generación, Transmisión y Distribución de Energía Eléctrica (IE)**: Refleja el incremento de la actividad económica, obtenido de la plataforma de datos del INEGI [1].  
+
+**Horizonte de análisis:** Periodo 2010-2023, para evaluar el comportamiento a largo plazo.
+
+## Grafica
+
+```{r}
+# Grafico de los datos con etiquetas de periodos reales
 plot(tabla2$IE, type = 'l',
      main = "Índice de Generación, Transmisión y Distribución de Energía Eléctrica",
      col = "#3585A6",
      xlab = "Periodo mensual desde 2010",
-     ylab = "Índice (base 2013 = 100)")
+     ylab = "Porcentaje de incremento",
+     xaxt = 'n')  # Suprimimos el eje x predeterminado
 
+# Definimos las posiciones para las etiquetas (puedes ajustar esto)
+posiciones_etiquetas <- seq(1, length(tabla2$Periodo), by = 12)  # Por ejemplo, cada 12 meses
 
+# Agregamos el eje x con los valores de periodo reales
+axis(1, at = posiciones_etiquetas, labels = tabla2$Periodo[posiciones_etiquetas])
+
+# Opcional: Agregar una cuadrícula para facilitar la lectura
+grid()
 ```
 
+En la grafica podemos observar que la actividad de este indice va incrementando, sin embargo alrededor del perido del 2020-2021 hay un gran descenso pudiendose tratar de varios fenomenos economicos como:
+
+El descenso de la actividad industrial y comercial durante la pandemia de COVID‑19, que redujo la demanda energética; por cambios en la política eléctrica impulsados por el gobierno de AMLO, que favorecieron a la CFE y sus plantas de carbón y combustóleo en detrimento de proyectos renovables privados; por la incertidumbre regulatoria y los conflictos contractuales que frenaron nuevas inversiones en energía eólica y solar; por la ola de frío en Texas que ocasionó escasez de gas natural e interrumpió el suministro a plantas mexicanas; y por la disminución de las exportaciones eléctricas a Centroamérica a causa de la menor capacidad de producción doméstica. Además, datos de la AIE muestran que el crecimiento de la demanda eléctrica se desaceleró drásticamente respecto a tendencias previas, mientras la CFE enfrentó problemas financieros y menor eficiencia operativa en sus plantas fósiles.
+
+## Dickey Fuller Aumentada
 
 ```{r}
 # Prueba de Dickey Fuller Aumentada
 x<-tabla2$IE
 adf.test(x)
 ```
+
+Siendo que el p-value de la ecuacion es mayor a 0.05, no se rechaza la hipotesis nula, por lo que la serie no es estacionaria
+
+### Deretermina si es integrada y de que orden
+
 ```{r}
 # 1era Diferencia
 d1x <- diff(x)
@@ -66,20 +193,43 @@ plot(d1x, type = 'l',
      col = "#2E628C",
      xlab = "Periodo",
      ylab = "Cambio mensual en el índice")
-
-# Funcion de autocorrelacion (MA)
-acf(d1x)
-
-# Funcion de autocorrelacion parcial (AR)
-pacf(d1x)
-
 ```
+
+ Unicamente fue necesaria una diferenciación a la serie para que esta se volviera estacionaria, esto indicado por su p-value que es menor a 0.05
+
+
+## Gráfica acf
+
+```{r}
+# Funcion de autocorrelacion (MA)
+a <- acf(d1x)
+a
+```
+
+
+Encontramos que la serie es estacionaria, mostrando datos con una baja correlación, em la grafica se puede apreciar un movimiento sinusoidal que decrece muy lentamente
+
+## Gráfica pacf
+
+```{r}
+# Funcion de autocorrelacion parcial (AR)
+p<-pacf(d1x)
+p
+```
+
+Encontramos que los primeros valores muestran una significancia mayor que los posteriores. Se puede observar que la serie decae gradualemente en un movimiento sinusoidal
+
+Debido a las caracteristicas del modelo, se buscara un Arima cuyos valores p y q sean de 4, mientras que ya que solo fue diferenciado una vez, el vlor de d, sera menor a 1
+
+# AJUSTE DEL MODELO {.tabset}
+## Mejor modelo AIC
+### Ajuste ARIMA
 
 ```{r}
 # Ajustar un modelo Arima con AIC
-p <- 3
-q <- 3
-d <- 0:2 
+p <- 4
+q <- 4
+d <- 0:1
 
 tabla0 <- data.frame()
 
@@ -104,59 +254,97 @@ tabla0
 
 ```
 
+La tabla muestra que los valores ideales de p y q son de 4, ya que el modelo unicamente se diferenció 1 vez, d es igual a 1 en la mayoria de los casos.
+
+### Se analizarán los Coeficientes significativos
+
 ```{r}
 # Coeficientes significativos? Los 5 mejores 
 # Calcular estadísticos t manualmente
-modelo1 <- arima(x, order = c(3,1,3))
+modelo1 <- arima(x, order = c(4,1,4))
 resumen <-summary(modelo1)
 coeficientes <- coef(modelo1)
 errores <- sqrt(diag(modelo1$var.coef))  # Errores estándar
 t_calculado <- coeficientes / errores
 significativos <- abs(t_calculado) >= 1.98
 significativos
+resumen
+```
 
 
-modelo2 <- arima(x, order = c(3,1,2))
-resumen2<-summary(modelo1)
+```{r}
+modelo2 <- arima(x, order = c(4,1,2))
+resumen2<-summary(modelo2)
 coeficientes <- coef(modelo2)
 errores <- sqrt(diag(modelo2$var.coef))  # Errores estándar
 t_calculado2 <- coeficientes / errores
 significativos2 <- abs(t_calculado2) >= 1.98
 significativos2
-
-
-#modelo3 <- arima(x, order = c(3,1,1))
-#summary(modelo1)
-
-#modelo4 <- arima(x, order = c(2,0,2))
-#summary(modelo1)
-
-#modelo5 <- arima(x, order = c(3,0,3))
-#summary(modelo1)
-#coeficientes <- coeftest(modelo5)
-
-
-```
-
-```{r}
-# Intervalos de confianza del mejor modelo
-confint(modelo2, level = 0.95)
-
-```
-Ecuacion del mejor modelo
-
-```{r}
-modelo2 <- arima(x, order = c(3,1,2))
-resumen2<-summary(modelo1)
 resumen2
 ```
 
-(1−1.1552R−0.0023R^2 +0.5776R^3)(1−R)^1*Xt=(1-1.4294R+0.4986R^2+0.2586R^3)Wt
+
+```{r}
+modelo3 <- arima(x, order = c(3,1,3))
+resumen3<-summary(modelo3)
+coeficientes <- coef(modelo3)
+errores <- sqrt(diag(modelo3$var.coef))  # Errores estándar
+t_calculado3 <- coeficientes / errores
+significativos3 <- abs(t_calculado3) >= 1.98
+significativos3
+resumen3
+```
+
+
+```{r}
+modelo4 <- arima(x, order = c(3,1,2))
+resumen4<-summary(modelo4)
+coeficientes <- coef(modelo4)
+errores <- sqrt(diag(modelo4$var.coef))  # Errores estándar
+t_calculado4 <- coeficientes / errores
+significativos4 <- abs(t_calculado4) >= 1.98
+significativos4
+resumen4
+```
+
+
+```{r}
+modelo5 <- arima(x, order = c(4,1,3))
+resumen5<-summary(modelo5)
+coeficientes <- coef(modelo5)
+errores <- sqrt(diag(modelo5$var.coef))  # Errores estándar
+t_calculado5 <- coeficientes / errores
+significativos5 <- abs(t_calculado5) >= 1.98
+significativos5
+resumen5
+```
+
+
+Podemos observar que los primeros modelos cuentan con coeficientes no significativos, por lo cual son descaratados, a pesar de tener un aic menor. el modelo (3,1,2) es quien muestra un coeficiente aic menor y ademas todos su coeficientes son significativos, junto con (4,1,3), sin embargo, este ultimo tiene un coeficiente aic mayor.
+
+### Intervalos de confianza
+
+```{r}
+# Intervalos de confianza del mejor modelo
+confint(modelo4, level = 0.95)
+
+```
+
+Podemos observar que los intervalos de confianza prueban que todos los valores contribuyen significativamente al modelo arima
+
+### Ecuacion del mejor modelo
+
+Original Equation:
+$$(1 - 1.3932B + 0.411B^2 + 0.33391B^3)(1-B)^1 X_t = (1 - 1.687B + 0.946B^2)W_t$$
+Final Developed Equation:
+$$X_t - 2.3932X_{t-1} + 1.8042X_{t-2} - 0.07709X_{t-3} - 0.33391X_{t-4} = W_t - 1.687W_{t-1} + 0.946W_{t-2}$$
+
+### Intervalos para los parametros previamente calculados
 
 ```{r}
 # Intervalos de confianza
-coeficientes <- coef(modelo2)
-errores <- sqrt(diag(modelo2$var.coef))
+coeficientes <- coef(modelo4)
+errores <- sqrt(diag(modelo4$var.coef))
 
 
 tabla_intervalos <- data.frame(
@@ -170,12 +358,20 @@ tabla_intervalos <- data.frame(
 tabla_intervalos
 ```
 
+Los intervalos de confianza coinciden con aquellos que fueron calculados anteriormente
+
+## Mejor modelo de ajuste de R 
+### Auto Arima
+
 ```{r}
 # Auto Arima
 AA<-auto.arima(x)
 AA
-
 ```
+
+Este modelo autogenerado resulta ser muy diferente a aquel que fue calculado manualmente, es bueno, sin embargo podemos observar que su coeficiente aic es mayor a aquel calculado anteriormente. 
+
+### Intervalos de confianza
 
 ```{r}
 # Intervalos de confianza
@@ -185,9 +381,18 @@ t_calculado <- coeficientes / errores
 significativos <- abs(t_calculado) >= 1.98
 significativos
 ```
-Ecuacion
-(1-R)Xt= (1+0.1902R + 0.4488R^2)Wt
 
+Podemos observar que los intervalos de confianza son significativos ambos
+
+### Ecuacion de modelo
+
+Ecuación Original:
+$$(1 - B)X_t = (1 + 0.1902B + 0.4488B^2)W_t$$
+Ecuación Final Desarrollada:
+$$X_t = X_{t-1} + W_t + 0.1902W_{t-1} + 0.4488W_{t-2}$$
+
+
+### Intervalos de confianza
 
 ```{r}
 # Intervalos de confianza
@@ -206,20 +411,95 @@ tabla_intervalosA <- data.frame(
 tabla_intervalosA
 ```
 
+Los intervalos mostrados prueban que todos los valores influyesn en el modelo arima
+
+
+# RESIDUOS {.tabset}
+
+## Gráfica de los residuos
 ```{r}
-n <- length(x)  # n = 160 (mayo 2023)
-plot(forecast(AA, 50), xlim = c(n - 50, n + 50)) 
+residuos <- residuals(modelo4)
+plot(residuos, main = "Gráfica de los Residuos", ylab = "Residuos", xlab = "Periodo")
+acf(residuos)
 ```
 
+Podemos observar que los residuos muestran una gran aleatoriedad y que la autocorrelacion que estos tienen es muy poca, lo que nos permite ver que el modelo planteado es adecuado.
 
+## Prueba de Ljumg-Box
 
+```{r}
+Box.test(resid(modelo4), lag = 20, type = "Ljung-Box")
+```
 
+El valor arrojado, p-value es apenas mas alto que el 0.05, por lo tanto no se rechaza la hipotesis nula
 
+## Histograma de los residuos
 
+```{r}
+hist(resid(modelo4), freq = FALSE)
+```
 
+Se puede apreciar una distribucion normal en los residuos de nuestro modelo
 
+## Pronostico
 
+```{r}
+pronostico <- forecast(AA, h=p)
+plot(pronostico)
+```
 
+```{r}
+pronostico <- forecast(modelo4, h=p)
+plot(pronostico)
+```
 
+El modelo prnostica un incremento en el consumo de energía, a pesar de  esto tambien es posible que el consumo se mantenga estable o que reduzca un poco, sindo esto ultimo lo menos probable. 
 
+## Raices
 
+```{r}
+autoplot(AA)
+```
+
+```{r}
+autoplot(modelo4)
+```
+
+El modelo parece ser mayormente estable, siendo que no se observa que este sea muy rigido, ni muy holgado, permitiendo pensar que el pronostico que pueda arrojar, sera certero.
+
+# CONCLUSION
+#Análisis de Series Temporales del Consumo Energético
+
+## Metodología
+
+Durante la realización de este estudio recopilamos datos sobre el consumo de energía en el país y, con el fin de estandarizar las comparaciones, elegimos **2013 como año base** para calcular las variaciones porcentuales. 
+
+Al examinar los gráficos de:
+- **Función de Autocorrelación (FAC)**
+- **Función de Autocorrelación Parcial (FAPC)**
+
+observamos un comportamiento ondulatorio con tendencia decreciente, típico de series que admiten un modelo ARIMA.
+
+## Selección del Modelo
+
+Aplicando el **criterio AIC**, determinamos que la especificación **ARIMA(3,1,2)** proporcionaba el mejor ajuste a nuestros datos. 
+
+Notas clave:
+- La función automática `auto.arima()` sugirió un modelo más sencillo (con dos parámetros MA)
+- Sin embargo, su valor de AIC resultó superior al del ARIMA(3,1,2)
+- Un análisis de residuos confirmó la validez del modelo seleccionado
+
+## Resultados y Pronósticos
+
+El modelo predictivo indica que:
+- El consumo de energía **continuará creciendo**
+- Pero a un ritmo **moderado, por debajo del 10%**
+
+## Recomendación Metodológica
+
+Proponemos optimizar la recolección de datos mediante:
+- Registro de **variaciones interperiodales** en lugar de recurrir siempre al año base
+- Ventajas:
+  - Más sencillo observar aumentos/disminuciones entre periodos consecutivos
+  - Elimina la necesidad de transformaciones adicionales
+```
